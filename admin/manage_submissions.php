@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = $sub['title'];
             $author = $sub['author_name'];
             $category = $sub['category'] ?: 'सामान्य';
-            $excerpt = $sub['excerpt'] ?: make_excerpt($sub['content'], 140);
-            $content = $sub['content'];
+            $content = normalize_content_text($sub['content']);
+            $excerpt = $sub['excerpt'] ? normalize_content_text($sub['excerpt']) : make_excerpt($content, 140);
             $image_url = $sub['image_url'] ?: 'images/featured-1.jpg';
             $published_id = 0;
 
@@ -88,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title = trim($_POST['title'] ?? '');
         $author = trim($_POST['author_name'] ?? '');
         $category = trim($_POST['category'] ?? 'सामान्य');
-        $excerpt = trim($_POST['excerpt'] ?? '');
-        $content = trim($_POST['content'] ?? '');
+        $excerpt = normalize_content_text($_POST['excerpt'] ?? '');
+        $content = normalize_content_text($_POST['content'] ?? '');
         $type = trim($_POST['content_type'] ?? 'poem');
         $image_url = trim($_POST['image_url'] ?? 'images/featured-1.jpg');
         $published_id = 0;

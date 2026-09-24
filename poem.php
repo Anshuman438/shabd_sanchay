@@ -27,7 +27,7 @@ $conn->query("UPDATE poems SET views = views + 1 WHERE id = $poem_id");
 $poem['views'] = ($poem['views'] ?? 0) + 1;
 
 // Calculate reading metrics
-$content_lines = explode("\n", trim($poem['content']));
+$content_lines = explode("\n", normalize_content_text($poem['content']));
 $stanza_count = 0;
 $current_stanza = [];
 $stanzas = [];

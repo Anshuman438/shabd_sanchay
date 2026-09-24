@@ -167,8 +167,9 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
     // Format Excerpt Lines cleanly (2-3 stanzas/lines)
     function formatExcerpt(content) {
         if (!content) return '';
-        const lines = content.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        const excerptLines = lines.slice(0, 2);
+        const cleanContent = content.replace(/\\r\\n|\\n|\\r/g, '\n');
+        const lines = cleanContent.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        const excerptLines = lines.slice(0, 3);
         return excerptLines.map(line => `<p>${escapeHtml(line)}</p>`).join('');
     }
 

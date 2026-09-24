@@ -50,6 +50,7 @@ $result = $stmt->get_result();
 
 $poems = [];
 while ($row = $result->fetch_assoc()) {
+    $row['content'] = normalize_content_text($row['content']);
     $row['formatted_date'] = format_hindi_date($row['created_at']);
     $row['preview'] = make_excerpt($row['content'], 180);
     $poems[] = $row;

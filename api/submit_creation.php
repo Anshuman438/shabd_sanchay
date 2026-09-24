@@ -26,8 +26,8 @@ $author_name = trim($_POST['author_name'] ?? ($logged_user['name'] ?? ''));
 $author_email = trim($_POST['author_email'] ?? ($logged_user['email'] ?? ''));
 $author_bio = trim($_POST['author_bio'] ?? ($logged_user['bio'] ?? ''));
 $category = trim($_POST['category'] ?? 'सामान्य');
-$excerpt = trim($_POST['excerpt'] ?? '');
-$content = trim($_POST['content'] ?? '');
+$excerpt = normalize_content_text($_POST['excerpt'] ?? '');
+$content = normalize_content_text($_POST['content'] ?? '');
 $author_photo = $logged_user['profile_photo'] ?? 'images/authors/author-default.jpg';
 $image_url = trim($_POST['image_url'] ?? '');
 

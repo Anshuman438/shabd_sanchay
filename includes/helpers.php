@@ -57,9 +57,22 @@ function estimate_reading_time($text, $words_per_minute = 180) {
 }
 
 /**
+ * Normalize line endings and convert literal escaped '\n', '\r\n' to actual newlines
+ */
+function normalize_content_text($text) {
+    if (!is_string($text)) return '';
+    // Convert literal escaped strings \r\n, \n, \r (e.g. from JSON or bad form escaping)
+    $text = str_replace(["\\r\\n", "\\n", "\\r"], "\n", $text);
+    // Normalize Windows and legacy Mac line endings to standard LF (\n)
+    $text = str_replace(["\r\n", "\r"], "\n", $text);
+    return trim($text);
+}
+
+/**
  * Generate a short excerpt safely from text
  */
 function make_excerpt($text, $length = 150) {
+    $text = normalize_content_text($text);
     $clean_text = strip_tags($text);
     if (mb_strlen($clean_text, 'UTF-8') <= $length) {
         return $clean_text;
