@@ -1,46 +1,48 @@
 <?php
-header('Content-Type: application/json');
-require_once '../config.php';
+// api/get_poems.php
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/helpers.php';
+
+header('Content-Type: application/json; charset=utf-8');
 
 $category = $_GET['category'] ?? 'all';
+$search = trim($_GET['search'] ?? '');
 $sort = $_GET['sort'] ?? 'newest';
-$search = $_GET['search'] ?? '';
 
-// Start query
-$query = "SELECT * FROM poems WHERE 1=1";
+$sql = "SELECT id, title, content, author_name, category, image_url, views, likes, created_at FROM poems WHERE 1=1";
+$params = [];
+$types = "";
 
-// Filter by category
-if ($category !== 'all') {
-    $query .= " AND category = ?";
+if ($category !== 'all' && !empty($category)) {
+    $sql .= " AND category = ?";
     $params[] = $category;
     $types .= "s";
 }
 
-// Search
 if (!empty($search)) {
-    $query .= " AND (title LIKE ? OR content LIKE ? OR author_name LIKE ?)";
-    $searchParam = "%$search%";
-    $params[] = $searchParam;
-    $params[] = $searchParam;
-    $params[] = $searchParam;
+    $sql .= " AND (title LIKE ? OR content LIKE ? OR author_name LIKE ?)";
+    $searchTerm = "%$search%";
+    $params[] = $searchTerm;
+    $params[] = $searchTerm;
+    $params[] = $searchTerm;
     $types .= "sss";
 }
 
-// Sort
 switch ($sort) {
-    case 'oldest':
-        $query .= " ORDER BY created_at ASC";
-        break;
     case 'popular':
-        $query .= " ORDER BY likes DESC";
+        $sql .= " ORDER BY likes DESC, views DESC, created_at DESC";
         break;
+    case 'oldest':
+        $sql .= " ORDER BY created_at ASC";
+        break;
+    case 'newest':
     default:
-        $query .= " ORDER BY created_at DESC";
+        $sql .= " ORDER BY created_at DESC";
+        break;
 }
 
-// Prepare and execute
-$stmt = $conn->prepare($query);
-if (!empty($types)) {
+$stmt = $conn->prepare($sql);
+if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
 }
 $stmt->execute();
@@ -48,10 +50,11 @@ $result = $stmt->get_result();
 
 $poems = [];
 while ($row = $result->fetch_assoc()) {
-    $row['content'] = nl2br(htmlspecialchars($row['content']));
+    $row['formatted_date'] = format_hindi_date($row['created_at']);
+    $row['preview'] = make_excerpt($row['content'], 180);
     $poems[] = $row;
 }
+$stmt->close();
 
-echo json_encode($poems);
-$conn->close();
+echo json_encode($poems, JSON_UNESCAPED_UNICODE);
 ?>

@@ -1,19 +1,33 @@
 <?php
-header('Content-Type: application/json');
-require_once '../config.php';
+// api/like_article.php
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/helpers.php';
 
-if (!isset($_GET['id'])) {
-    echo json_encode(['success' => false, 'message' => 'Invalid request']);
-    exit();
+header('Content-Type: application/json; charset=utf-8');
+
+$id = intval($_GET['id'] ?? $_POST['id'] ?? 0);
+$action = strtolower(trim($_GET['action'] ?? $_POST['action'] ?? 'like'));
+
+if ($id <= 0) {
+    send_json_response(false, 'अवैध अनुरोध (Invalid Request)', [], 400);
 }
 
-$article_id = intval($_GET['id']);
-$conn->query("UPDATE articles SET likes = likes + 1 WHERE id = $article_id");
+if ($action === 'unlike') {
+    $stmt = $conn->prepare("UPDATE articles SET likes = GREATEST(0, likes - 1) WHERE id = ?");
+} else {
+    $stmt = $conn->prepare("UPDATE articles SET likes = likes + 1 WHERE id = ?");
+}
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$stmt->close();
 
-// Get new like count
-$result = $conn->query("SELECT likes FROM articles WHERE id = $article_id");
-$newLikes = $result->fetch_assoc()['likes'];
+$stmt2 = $conn->prepare("SELECT likes FROM articles WHERE id = ?");
+$stmt2->bind_param("i", $id);
+$stmt2->execute();
+$res = $stmt2->get_result()->fetch_assoc();
+$newLikes = $res['likes'] ?? 0;
+$stmt2->close();
 
-echo json_encode(['success' => true, 'newLikes' => $newLikes]);
-$conn->close();
+$msg = ($action === 'unlike') ? 'पसंद हटा दी गई' : 'सफलतापूर्वक लाइक किया गया';
+send_json_response(true, $msg, ['newLikes' => $newLikes, 'isLiked' => ($action !== 'unlike')]);
 ?>

@@ -1,3 +1,31 @@
+// Theme Toggle Functionality
+const themeToggle = document.querySelector('.theme-toggle');
+const currentTheme = localStorage.getItem('theme') || 'light';
+
+// Set initial theme
+document.documentElement.setAttribute('data-theme', currentTheme);
+
+// Update toggle button based on current theme
+if (currentTheme === 'dark') {
+    themeToggle.setAttribute('aria-label', 'Switch to light mode');
+} else {
+    themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+}
+
+// Toggle theme on button click
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    if (newTheme === 'dark') {
+        themeToggle.setAttribute('aria-label', 'Switch to light mode');
+    } else {
+        themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+    }
+});
 
 // Contact Form Submission
 const contactForm = document.getElementById('contactForm');
@@ -77,6 +105,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Mobile Menu Toggle (can be added if needed)
+// const mobileMenuButton = document.createElement('button');
+// mobileMenuButton.className = 'mobile-menu-button';
+// mobileMenuButton.innerHTML = '☰';
+// mobileMenuButton.setAttribute('aria-label', 'Toggle menu');
+// 
+// const header = document.querySelector('.site-header .container');
+// header.prepend(mobileMenuButton);
+// 
+// mobileMenuButton.addEventListener('click', () => {
+//     const nav = document.querySelector('.main-nav');
+//     nav.classList.toggle('active');
+// });
 
 // Lazy Loading Images
 if ('IntersectionObserver' in window) {
@@ -152,6 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+
+
 // Mobile Menu Functionality
 function setupMobileMenu() {
     const mobileMenuButton = document.createElement('button');
@@ -176,4 +220,3 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMobileMenu();
     // ... rest of your existing DOMContentLoaded code
 });
-

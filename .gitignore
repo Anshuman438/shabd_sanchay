@@ -1,0 +1,12 @@
+# Environment & Credentials
+# config.php is kept locally, config.sample.php is tracked in git
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & temp
+*.log
+tmp/
+error_log

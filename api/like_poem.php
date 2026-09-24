@@ -1,19 +1,33 @@
 <?php
-header('Content-Type: application/json');
-require_once '../config.php';
+// api/like_poem.php
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/helpers.php';
 
-if (!isset($_GET['id'])) {
-    echo json_encode(['success' => false, 'message' => 'Invalid request']);
-    exit();
+header('Content-Type: application/json; charset=utf-8');
+
+$id = intval($_GET['id'] ?? $_POST['id'] ?? 0);
+$action = strtolower(trim($_GET['action'] ?? $_POST['action'] ?? 'like'));
+
+if ($id <= 0) {
+    send_json_response(false, 'अवैध अनुरोध (Invalid Request)', [], 400);
 }
 
-$poem_id = intval($_GET['id']);
-$conn->query("UPDATE poems SET likes = likes + 1 WHERE id = $poem_id");
+if ($action === 'unlike') {
+    $stmt = $conn->prepare("UPDATE poems SET likes = GREATEST(0, likes - 1) WHERE id = ?");
+} else {
+    $stmt = $conn->prepare("UPDATE poems SET likes = likes + 1 WHERE id = ?");
+}
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$stmt->close();
 
-// Get new like count
-$result = $conn->query("SELECT likes FROM poems WHERE id = $poem_id");
-$newLikes = $result->fetch_assoc()['likes'];
+$stmt2 = $conn->prepare("SELECT likes FROM poems WHERE id = ?");
+$stmt2->bind_param("i", $id);
+$stmt2->execute();
+$res = $stmt2->get_result()->fetch_assoc();
+$newLikes = $res['likes'] ?? 0;
+$stmt2->close();
 
-echo json_encode(['success' => true, 'newLikes' => $newLikes]);
-$conn->close();
+$msg = ($action === 'unlike') ? 'पसंद हटा दी गई' : 'सफलतापूर्वक लाइक किया गया';
+send_json_response(true, $msg, ['newLikes' => $newLikes, 'isLiked' => ($action !== 'unlike')]);
 ?>

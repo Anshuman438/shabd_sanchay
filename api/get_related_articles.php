@@ -1,23 +1,32 @@
 <?php
-header('Content-Type: application/json');
-require_once '../config.php';
+// api/get_related_articles.php
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/helpers.php';
 
-if (!isset($_GET['id']) || !isset($_GET['category'])) {
+header('Content-Type: application/json; charset=utf-8');
+
+$article_id = intval($_GET['id'] ?? 0);
+$category = trim($_GET['category'] ?? '');
+
+if ($article_id <= 0) {
     echo json_encode([]);
     exit();
 }
 
-$article_id = intval($_GET['id']);
-$category = $conn->real_escape_string($_GET['category']);
-
-$query = "SELECT * FROM articles WHERE id != $article_id AND category = '$category' ORDER BY RAND() LIMIT 5";
-$result = $conn->query($query);
+$stmt = $conn->prepare("SELECT id, title, author_name, category, image_url, excerpt, content, read_time, created_at FROM articles WHERE id != ? AND (category = ? OR ? = '') ORDER BY created_at DESC LIMIT 4");
+$stmt->bind_param("iss", $article_id, $category, $category);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $articles = [];
 while ($row = $result->fetch_assoc()) {
+    $row['formatted_date'] = format_hindi_date($row['created_at']);
+    if (empty($row['excerpt'])) {
+        $row['excerpt'] = make_excerpt($row['content'], 140);
+    }
     $articles[] = $row;
 }
+$stmt->close();
 
-echo json_encode($articles);
-$conn->close();
+echo json_encode($articles, JSON_UNESCAPED_UNICODE);
 ?>
