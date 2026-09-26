@@ -145,7 +145,7 @@ function process_image_input($file_key, $url_key, $default_fallback = '', $uploa
 }
 
 /**
- * Single Like Per User / Session Helper
+ * Single Like Per User / Session Helper (Ultra-fast & reliable)
  */
 function toggle_user_like($conn, $content_type, $content_id, $action = 'like') {
     if (session_status() === PHP_SESSION_NONE) {
@@ -163,36 +163,36 @@ function toggle_user_like($conn, $content_type, $content_id, $action = 'like') {
     ];
     $target_table = $table_map[$content_type] ?? 'poems';
 
-    // Check if already liked
-    $stmt_check = $conn->prepare("SELECT id FROM user_likes WHERE session_key = ? AND content_type = ? AND content_id = ? LIMIT 1");
-    if ($stmt_check) {
-        $stmt_check->bind_param("ssi", $session_key, $content_type, $content_id);
-        $stmt_check->execute();
-        $already_liked = $stmt_check->get_result()->num_rows > 0;
-        $stmt_check->close();
-    } else {
-        $already_liked = false;
-    }
-
     if ($action === 'unlike' || $action === 'dislike') {
-        if ($already_liked) {
-            $del = $conn->prepare("DELETE FROM user_likes WHERE session_key = ? AND content_type = ? AND content_id = ?");
-            if ($del) {
-                $del->bind_param("ssi", $session_key, $content_type, $content_id);
-                $del->execute();
-                $del->close();
-            }
-
-            $upd = $conn->prepare("UPDATE {$target_table} SET likes = GREATEST(0, likes - 1) WHERE id = ?");
-            if ($upd) {
-                $upd->bind_param("i", $content_id);
-                $upd->execute();
-                $upd->close();
-            }
+        // Unconditionally delete matching like record if exists
+        $del = $conn->prepare("DELETE FROM user_likes WHERE session_key = ? AND content_type = ? AND content_id = ?");
+        if ($del) {
+            $del->bind_param("ssi", $session_key, $content_type, $content_id);
+            $del->execute();
+            $del->close();
         }
+
+        // Unconditionally decrement likes counter for target content
+        $upd = $conn->prepare("UPDATE {$target_table} SET likes = GREATEST(0, likes - 1) WHERE id = ?");
+        if ($upd) {
+            $upd->bind_param("i", $content_id);
+            $upd->execute();
+            $upd->close();
+        }
+
         $msg = 'पसंद हटा दी गई';
         $is_liked = false;
     } else {
+        // Check if already liked in user_likes table
+        $already_liked = false;
+        $stmt_check = $conn->prepare("SELECT id FROM user_likes WHERE session_key = ? AND content_type = ? AND content_id = ? LIMIT 1");
+        if ($stmt_check) {
+            $stmt_check->bind_param("ssi", $session_key, $content_type, $content_id);
+            $stmt_check->execute();
+            $already_liked = $stmt_check->get_result()->num_rows > 0;
+            $stmt_check->close();
+        }
+
         if (!$already_liked) {
             $ins = $conn->prepare("INSERT INTO user_likes (user_id, session_key, content_type, content_id) VALUES (?, ?, ?, ?)");
             if ($ins) {
@@ -217,7 +217,7 @@ function toggle_user_like($conn, $content_type, $content_id, $action = 'like') {
     }
 
     // Fetch updated count
-    $stmt_cnt = $conn->prepare("SELECT likes FROM {$target_table} WHERE id = ?");
+    $stmt_cnt = $conn->prepare("SELECT likes FROM {$target_table} WHERE id = ? LIMIT 1");
     if ($stmt_cnt) {
         $stmt_cnt->bind_param("i", $content_id);
         $stmt_cnt->execute();
