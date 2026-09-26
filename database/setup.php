@@ -282,6 +282,41 @@ if ($about_check && $about_check->num_rows === 0) {
 }
 echo "<p style='color:green;'>✓ About Content table verified!</p>";
 
+// 14. About Page Content Table (Key-Value pairs for narrative management)
+$conn->query("
+CREATE TABLE IF NOT EXISTS `about_page_content` (
+  `key_name` VARCHAR(100) PRIMARY KEY,
+  `content_value` TEXT NOT NULL,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+
+$about_p_check = $conn->query("SELECT key_name FROM `about_page_content` LIMIT 1");
+if ($about_p_check && $about_p_check->num_rows === 0) {
+    $default_about = [
+        'hero_eyebrow' => 'हमारी दृष्टि, यात्रा एवं साहित्य-साधना • ABOUT SHABD SANCHAY',
+        'hero_title' => 'शब्द संचय : विचारों के नए प्रतिमान',
+        'hero_lead' => 'हिंदी साहित्य, संवेदना और विचारों का एक गरिमामयी डिजिटल मंच — जहाँ हर शब्द आत्मा से निकलकर सीधे हृदय से जुड़ता है।',
+        'story_badge' => 'हमारी यात्रा • OUR GENESIS',
+        'story_title' => 'शब्दों का संचय, संवेदनाओं का विस्तार',
+        'story_p1' => "'शब्द संचय' की नींव इस अटूट विश्वास पर रखी गई कि तीव्र गति से बदलती डिजिटल दुनिया में भी हिंदी साहित्य, विचार और काव्य की शक्ति शाश्वत है। जब चारों ओर सतही सामग्री का शोर बढ़ रहा था, तब हमने महसूस किया कि हिंदी भाषा में गंभीर, सौंदर्यपरक और विचारोत्तेजक साहित्य के लिए एक समर्पित, सुरुचिपूर्ण मंच की नितांत आवश्यकता है।",
+        'story_p2' => "यहाँ केवल शब्द नहीं लिखे जाते, बल्कि संवेदनाएँ नया आकार पाती हैं। कबीर की साखियों से लेकर आधुनिक मुक्त छंद तक, तुलसी की चौपाइयों से लेकर समकालीन यथार्थवादी कहानियों तक — 'शब्द संचय' परंपरा और आधुनिक चेतना का एक जीवंत सेतु है।",
+        'story_p3' => "आज यह मंच केवल एक वेबसाइट नहीं, बल्कि देश-विदेश में फैले हजारों साहित्य-प्रेमियों, लेखकों, शोधकर्ताओं और कवियों का एक आत्मीय परिवार बन चुका है।",
+        'seal_quote' => "“शब्द केवल अक्षर नहीं होते, वे मनुष्य की चेतना, विचार और आत्मीय अनुभूतियों का जीवंत आलोक हैं।”",
+        'seal_author' => "— शब्द संचय साहित्य दर्शन",
+        'seal_tagline' => "साहित्य • संस्कृति • चिंतन"
+    ];
+    foreach ($default_about as $k => $v) {
+        $stmt = $conn->prepare("INSERT INTO about_page_content (key_name, content_value) VALUES (?, ?)");
+        if ($stmt) {
+            $stmt->bind_param("ss", $k, $v);
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+}
+echo "<p style='color:green;'>✓ About Page Content table verified!</p>";
+
 echo "<br><h3 style='color:green; font-weight:bold;'>🎉 Master Database Schema Sync Completed!</h3>";
 echo "<p><a href='../index.php' style='padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Homepage</a> &nbsp; <a href='../admin/login.php' style='padding: 8px 16px; background: #059669; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Admin Login</a> &nbsp; <a href='../login.php' style='padding: 8px 16px; background: #7c3aed; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to User Login</a></p>";
 echo "</div>";

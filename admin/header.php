@@ -7,6 +7,8 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_admin_auth();
 
+$csrf_token = generate_csrf_token();
+
 $current_page = basename($_SERVER['PHP_SELF']);
 
 // Get quick badge counts
