@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `newsletter_subscribers` (
 ");
 echo "<p style='color:green;'>✓ Newsletter table verified!</p>";
 
-// 6. Team Members Table (supports both `role` and `position` columns)
+// 6. Team Members Table (supports both `role` and `position` columns, and LONGTEXT image_url)
 $conn->query("
 CREATE TABLE IF NOT EXISTS `team_members` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -114,13 +114,51 @@ CREATE TABLE IF NOT EXISTS `team_members` (
   `position` VARCHAR(150) NOT NULL DEFAULT 'संपादक',
   `role` VARCHAR(150) NOT NULL DEFAULT 'संपादक',
   `bio` TEXT,
-  `image_url` VARCHAR(255) DEFAULT 'images/authors/author-default.jpg',
+  `image_url` LONGTEXT,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
 @$conn->query("ALTER TABLE `team_members` ADD COLUMN `position` VARCHAR(150) NULL AFTER `name`");
 @$conn->query("ALTER TABLE `team_members` ADD COLUMN `role` VARCHAR(150) NULL AFTER `position`");
-echo "<p style='color:green;'>✓ Team Members table verified (role & position columns active)!</p>";
+@$conn->query("ALTER TABLE `team_members` MODIFY COLUMN `image_url` LONGTEXT NULL");
+echo "<p style='color:green;'>✓ Team Members table verified!</p>";
+
+// Seed Default Team Members
+$tm_check = $conn->query("SELECT id FROM `team_members` LIMIT 1");
+if ($tm_check && $tm_check->num_rows === 0) {
+    $default_team = [
+        [
+            'name' => 'अंशुमन सिंह',
+            'position' => 'संस्थापक एवं मुख्य संपादक',
+            'role' => 'संस्थापक एवं मुख्य संपादक',
+            'bio' => 'हिंदी साहित्य के प्रति गहरा अनुराग, काव्य-सृजन और डिजिटल माध्यमों से साहित्य को जन-सुलभ बनाने के लिए प्रयासरत।',
+            'image_url' => 'images/authors/author-default.jpg'
+        ],
+        [
+            'name' => 'संपादकीय मंडल',
+            'position' => 'छंद-शास्त्र एवं समीक्षा विशेषज्ञ',
+            'role' => 'छंद-शास्त्र एवं समीक्षा विशेषज्ञ',
+            'bio' => 'शास्त्रीय दोहा, चौपाई, ग़ज़ल के अनुशासन व आधुनिक कविता के मर्मज्ञ समीक्षकों का समर्पित समूह।',
+            'image_url' => 'images/authors/author-default.jpg'
+        ],
+        [
+            'name' => 'रचनाकार परिवार',
+            'position' => 'समस्त लेखक एवं पाठक',
+            'role' => 'समस्त लेखक एवं पाठक',
+            'bio' => 'देश-विदेश के वे सभी कवि, लेखक व सुधी पाठक जो अपनी लेखनी और प्रतिक्रियाओं से इस मंच को जीवंत बनाते हैं।',
+            'image_url' => 'images/authors/author-default.jpg'
+        ]
+    ];
+    foreach ($default_team as $tm) {
+        $stmt = $conn->prepare("INSERT INTO `team_members` (`name`, `position`, `role`, `bio`, `image_url`) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt) {
+            $stmt->bind_param("sssss", $tm['name'], $tm['position'], $tm['role'], $tm['bio'], $tm['image_url']);
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+    echo "<p style='color:green;'>✓ Default Team Members seeded into database!</p>";
+}
 
 // 7. Testimonials Table
 $conn->query("
@@ -134,6 +172,32 @@ CREATE TABLE IF NOT EXISTS `testimonials` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
 echo "<p style='color:green;'>✓ Testimonials table verified!</p>";
+
+// Seed Default Testimonials
+$ts_check = $conn->query("SELECT id FROM `testimonials` LIMIT 1");
+if ($ts_check && $ts_check->num_rows === 0) {
+    $default_tests = [
+        [
+            'name' => 'डॉ. रामेश्वर प्रसाद',
+            'location' => 'वाराणसी (उत्तर प्रदेश)',
+            'content' => 'शब्द संचय ने डिजिटल पटल पर हिंदी साहित्य की गरिमा को पुनर्जीवित किया है। यहाँ की प्रस्तुतियाँ अत्यंत स्तरीय और प्रेरणादायक हैं।'
+        ],
+        [
+            'name' => 'सुमन शर्मा',
+            'location' => 'भोपाल (मध्य प्रदेश)',
+            'content' => 'नए और स्थापित दोनों रचनाकारों के लिए एक उत्कृष्ट और पारदर्शी मंच। हर साहित्य प्रेमी को इससे जुड़ना चाहिए।'
+        ]
+    ];
+    foreach ($default_tests as $ts) {
+        $stmt = $conn->prepare("INSERT INTO `testimonials` (`name`, `location`, `content`, `approved`) VALUES (?, ?, ?, 1)");
+        if ($stmt) {
+            $stmt->bind_param("sss", $ts['name'], $ts['location'], $ts['content']);
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+    echo "<p style='color:green;'>✓ Default Testimonials seeded into database!</p>";
+}
 
 // 8. Users Table
 $conn->query("
@@ -316,6 +380,17 @@ if ($about_p_check && $about_p_check->num_rows === 0) {
     }
 }
 echo "<p style='color:green;'>✓ About Page Content table verified!</p>";
+
+// 15. Ensure all image columns across all tables support LONGTEXT (URLs, Drive links, base64 uploads)
+@$conn->query("ALTER TABLE `poems` MODIFY COLUMN `image_url` LONGTEXT NULL");
+@$conn->query("ALTER TABLE `articles` MODIFY COLUMN `image_url` LONGTEXT NULL");
+@$conn->query("ALTER TABLE `stories` MODIFY COLUMN `image_url` LONGTEXT NULL");
+@$conn->query("ALTER TABLE `plays` MODIFY COLUMN `image_url` LONGTEXT NULL");
+@$conn->query("ALTER TABLE `team_members` MODIFY COLUMN `image_url` LONGTEXT NULL");
+@$conn->query("ALTER TABLE `users` MODIFY COLUMN `profile_photo` LONGTEXT NULL");
+@$conn->query("ALTER TABLE `user_submissions` MODIFY COLUMN `image_url` LONGTEXT NULL");
+@$conn->query("ALTER TABLE `user_submissions` MODIFY COLUMN `author_photo` LONGTEXT NULL");
+echo "<p style='color:green;'>✓ Image & Profile photo columns upgraded to LONGTEXT across all tables!</p>";
 
 echo "<br><h3 style='color:green; font-weight:bold;'>🎉 Master Database Schema Sync Completed!</h3>";
 echo "<p><a href='../index.php' style='padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Homepage</a> &nbsp; <a href='../admin/login.php' style='padding: 8px 16px; background: #059669; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Admin Login</a> &nbsp; <a href='../login.php' style='padding: 8px 16px; background: #7c3aed; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to User Login</a></p>";
