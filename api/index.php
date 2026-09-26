@@ -1,6 +1,11 @@
 <?php
 // Vercel Serverless Entrypoint Router for Shabd Sanchay
 
+// Ensure browser renders HTML content instead of prompting file download
+if (!headers_sent()) {
+    header('Content-Type: text/html; charset=UTF-8');
+}
+
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // If root path or empty, serve main index.php
