@@ -905,9 +905,9 @@ $total_works = $total_poems + $total_articles + $total_stories;
         }
     }
 
-    // Clean, Non-Blocking Native Smooth Scroll & Reveal System for All Devices
+    // Scroll Animation & Clean Intersection Observer
     function initScrollAnimations() {
-        // IntersectionObserver for lightweight elements reveal on scroll
+        // IntersectionObserver for elements reveal on scroll
         if ('IntersectionObserver' in window) {
             const revealObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -917,15 +917,14 @@ $total_works = $total_poems + $total_articles + $total_stories;
                     }
                 });
             }, {
-                threshold: 0.08,
-                rootMargin: '0px 0px -20px 0px'
+                threshold: 0.1,
+                rootMargin: '0px 0px -30px 0px'
             });
 
             document.querySelectorAll('.reveal-zoom-fade').forEach(el => {
                 revealObserver.observe(el);
             });
         } else {
-            // Fallback for older browsers without IntersectionObserver
             document.querySelectorAll('.reveal-zoom-fade').forEach(el => {
                 el.classList.add('is-revealed');
             });
@@ -951,13 +950,8 @@ $total_works = $total_poems + $total_articles + $total_stories;
         });
     }
 
-    // 3D Perspective Tilt & Cursor Glare Controller (Desktop Fine Pointers Only)
+    // 3D Perspective Tilt & Cursor Glare Controller for Magical Cards
     function initMagicalTiltCards() {
-        // Only run tilt effects on devices with actual mouse hover (desktop/laptop)
-        if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-            return;
-        }
-
         const cards = document.querySelectorAll('.magical-card');
         
         cards.forEach(card => {
