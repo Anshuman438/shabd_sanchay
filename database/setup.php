@@ -6,7 +6,7 @@ if (!headers_sent()) {
 }
 
 echo "<div style='font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; line-height: 1.6;'>";
-echo "<h2>शब्द संचय (Shabd Sanchay) - Master Database Setup & Seeder</h2>";
+echo "<h2>शब्द संचय (Shabd Sanchay) - Complete Database Setup & Schema Sync</h2>";
 
 if ($conn->connect_error) {
     die("<p style='color:red;'>Connection Error: " . htmlspecialchars($conn->connect_error) . "</p>");
@@ -106,7 +106,36 @@ CREATE TABLE IF NOT EXISTS `newsletter_subscribers` (
 ");
 echo "<p style='color:green;'>✓ Newsletter table verified!</p>";
 
-// 6. Users Table
+// 6. Team Members Table (supports both `role` and `position` columns)
+$conn->query("
+CREATE TABLE IF NOT EXISTS `team_members` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(100) NOT NULL,
+  `position` VARCHAR(150) NOT NULL DEFAULT 'संपादक',
+  `role` VARCHAR(150) NOT NULL DEFAULT 'संपादक',
+  `bio` TEXT,
+  `image_url` VARCHAR(255) DEFAULT 'images/authors/author-default.jpg',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+@$conn->query("ALTER TABLE `team_members` ADD COLUMN `position` VARCHAR(150) NULL AFTER `name`");
+@$conn->query("ALTER TABLE `team_members` ADD COLUMN `role` VARCHAR(150) NULL AFTER `position`");
+echo "<p style='color:green;'>✓ Team Members table verified (role & position columns active)!</p>";
+
+// 7. Testimonials Table
+$conn->query("
+CREATE TABLE IF NOT EXISTS `testimonials` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(100) NOT NULL,
+  `location` VARCHAR(150) DEFAULT 'साहित्य-प्रेमी',
+  `content` TEXT NOT NULL,
+  `approved` TINYINT(1) DEFAULT 1,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+echo "<p style='color:green;'>✓ Testimonials table verified!</p>";
+
+// 8. Users Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -123,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 ");
 echo "<p style='color:green;'>✓ Users table verified!</p>";
 
-// 7. Admin Users Table
+// 9. Admin Users Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `admin_users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -160,7 +189,7 @@ if ($admin_check && $admin_check->num_rows === 0) {
     echo "<p style='color:green;'>✓ Admin user reset/active! Username: <b>admin</b> | Password: <b>admin123</b></p>";
 }
 
-// 8. User Submissions Table
+// 10. User Submissions Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `user_submissions` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -187,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `user_submissions` (
 ");
 echo "<p style='color:green;'>✓ User Submissions table verified!</p>";
 
-// 9. Stories Table
+// 11. Stories Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `stories` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -205,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `stories` (
 ");
 echo "<p style='color:green;'>✓ Stories table verified!</p>";
 
-// 10. Plays Table
+// 12. Plays Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `plays` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -223,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `plays` (
 ");
 echo "<p style='color:green;'>✓ Plays table verified!</p>";
 
-// 11. About Content Table
+// 13. About Content Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `about_content` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -253,6 +282,6 @@ if ($about_check && $about_check->num_rows === 0) {
 }
 echo "<p style='color:green;'>✓ About Content table verified!</p>";
 
-echo "<br><h3 style='color:green; font-weight:bold;'>🎉 Master Database Setup & Seeder Completed!</h3>";
+echo "<br><h3 style='color:green; font-weight:bold;'>🎉 Master Database Schema Sync Completed!</h3>";
 echo "<p><a href='../index.php' style='padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Homepage</a> &nbsp; <a href='../admin/login.php' style='padding: 8px 16px; background: #059669; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Admin Login</a> &nbsp; <a href='../login.php' style='padding: 8px 16px; background: #7c3aed; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to User Login</a></p>";
 echo "</div>";

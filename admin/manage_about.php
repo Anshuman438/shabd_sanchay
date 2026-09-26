@@ -51,14 +51,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image_url = process_image_input('image_file', 'image_url', $existing_url, 'authors');
 
         if (!empty($name) && !empty($position)) {
+            // Check whether column is position or role
             $stmt = $conn->prepare("INSERT INTO team_members (name, position, bio, image_url) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $name, $position, $bio, $image_url);
-            if ($stmt->execute()) {
-                $msg = "नया संपादकीय सदस्य सफलतापूर्वक जोड़ा गया!";
-            } else {
-                $error = "त्रुटि: " . $stmt->error;
+            if (!$stmt) {
+                $stmt = $conn->prepare("INSERT INTO team_members (name, role, bio, image_url) VALUES (?, ?, ?, ?)");
             }
-            $stmt->close();
+            if ($stmt) {
+                $stmt->bind_param("ssss", $name, $position, $bio, $image_url);
+                if ($stmt->execute()) {
+                    $msg = "नया संपादकीय सदस्य सफलतापूर्वक जोड़ा गया!";
+                } else {
+                    $error = "त्रुटि: " . $stmt->error;
+                }
+                $stmt->close();
+            } else {
+                $error = "डेटाबेस त्रुटि: " . $conn->error;
+            }
         } else {
             $error = "कृपया नाम और पद/दायित्व अवश्य भरें।";
         }
@@ -73,23 +81,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($id > 0 && !empty($name) && !empty($position)) {
             $stmt = $conn->prepare("UPDATE team_members SET name = ?, position = ?, bio = ?, image_url = ? WHERE id = ?");
-            $stmt->bind_param("ssssi", $name, $position, $bio, $image_url, $id);
-            if ($stmt->execute()) {
-                $msg = "संपादकीय सदस्य की जानकारी अपडेट कर दी गई!";
-            } else {
-                $error = "अपडेट त्रुटि: " . $stmt->error;
+            if (!$stmt) {
+                $stmt = $conn->prepare("UPDATE team_members SET name = ?, role = ?, bio = ?, image_url = ? WHERE id = ?");
             }
-            $stmt->close();
+            if ($stmt) {
+                $stmt->bind_param("ssssi", $name, $position, $bio, $image_url, $id);
+                if ($stmt->execute()) {
+                    $msg = "संपादकीय सदस्य की जानकारी अपडेट कर दी गई!";
+                } else {
+                    $error = "अपडेट त्रुटि: " . $stmt->error;
+                }
+                $stmt->close();
+            } else {
+                $error = "डेटाबेस त्रुटि: " . $conn->error;
+            }
         }
         $tab = 'team';
     } elseif ($action === 'delete_team') {
         $id = intval($_POST['member_id'] ?? 0);
         if ($id > 0) {
             $stmt = $conn->prepare("DELETE FROM team_members WHERE id = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->close();
-            $msg = "सदस्य को सफलतापूर्वक हटा दिया गया।";
+            if ($stmt) {
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $stmt->close();
+                $msg = "सदस्य को सफलतापूर्वक हटा दिया गया।";
+            }
         }
         $tab = 'team';
     }
@@ -102,13 +119,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($name) && !empty($content)) {
             $stmt = $conn->prepare("INSERT INTO testimonials (name, location, content, approved) VALUES (?, ?, ?, 1)");
-            $stmt->bind_param("sss", $name, $location, $content);
-            if ($stmt->execute()) {
-                $msg = "नई पाठक अनुभूति सफलतापूर्वक जोड़ी गई!";
+            if ($stmt) {
+                $stmt->bind_param("sss", $name, $location, $content);
+                if ($stmt->execute()) {
+                    $msg = "नई पाठक अनुभूति सफलतापूर्वक जोड़ी गई!";
+                } else {
+                    $error = "त्रुटि: " . $stmt->error;
+                }
+                $stmt->close();
             } else {
-                $error = "त्रुटि: " . $stmt->error;
+                $error = "डेटाबेस त्रुटि: " . $conn->error;
             }
-            $stmt->close();
         } else {
             $error = "कृपया नाम और समीक्षा सामग्री भरें।";
         }
