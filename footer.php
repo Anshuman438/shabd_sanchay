@@ -48,7 +48,7 @@
             <div class="footer-links-col">
                 <h3 class="footer-col-heading">त्वरित लिंक</h3>
                 <ul class="footer-nav-list">
-                    <li><a href="index.php">Home</a></li>
+                    <li><a href="index.php">होम</a></li>
                     <li><a href="poetry.php">कविताएँ</a></li>
                     <li><a href="articles.php">लेख व विचार</a></li>
                     <li><a href="stories.php">कहानियाँ</a></li>

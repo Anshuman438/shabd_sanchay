@@ -9887,6 +9887,61 @@ body.mobile-nav-expanded {
     overflow: hidden;
 }
 
+/* 5. Mobile Poster Creator & Hero Trust Strip Overflow Fixes */
+@media (max-width: 576px) {
+    .poster-studio-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.65rem !important;
+        width: 100%;
+    }
+    .template-selector-pills {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        flex-wrap: nowrap !important;
+        padding: 0.3rem !important;
+        gap: 0.3rem !important;
+    }
+    .template-selector-pills::-webkit-scrollbar {
+        display: none !important;
+    }
+    .tmpl-btn {
+        flex-shrink: 0 !important;
+        padding: 0.35rem 0.65rem !important;
+        font-size: 0.78rem !important;
+    }
+    .hero-trust-strip {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 0.45rem !important;
+        width: 100%;
+    }
+    .trust-pill {
+        font-size: 0.72rem !important;
+        padding: 0.2rem 0.55rem !important;
+        white-space: nowrap;
+    }
+    .header-right-actions {
+        gap: 0.45rem !important;
+    }
+}
+
+@media (max-width: 380px) {
+    .logo-brand-subtitle {
+        display: none !important;
+    }
+    .header-right-actions {
+        gap: 0.35rem !important;
+    }
+    .btn-header-login {
+        padding: 0 0.6rem !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+
 
 
 
