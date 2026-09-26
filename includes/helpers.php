@@ -174,7 +174,7 @@ function toggle_user_like($conn, $content_type, $content_id, $action = 'like') {
         $already_liked = false;
     }
 
-    if ($action === 'unlike') {
+    if ($action === 'unlike' || $action === 'dislike') {
         if ($already_liked) {
             $del = $conn->prepare("DELETE FROM user_likes WHERE session_key = ? AND content_type = ? AND content_id = ?");
             if ($del) {
