@@ -179,6 +179,48 @@ $csrf_token = generate_csrf_token();
         <button type="submit" class="btn-submit">लॉगिन करें</button>
     </form>
 
+    <!-- Google OAuth 2.0 Sign-In Button -->
+    <div style="margin-top: 1.5rem; text-align: center;">
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        
+        <div id="g_id_onload"
+             data-client_id="<?= htmlspecialchars(getenv('GOOGLE_CLIENT_ID') ?: '782946102837-shabdsanchay.apps.googleusercontent.com') ?>"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="handleGoogleSignIn"
+             data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="signin_with"
+             data-size="large"
+             data-logo_alignment="left"
+             data-width="100%">
+        </div>
+    </div>
+
+    <script>
+    function handleGoogleSignIn(response) {
+        if (response && response.credential) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '../google_auth.php?redirect=admin/dashboard.php';
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'credential';
+            input.value = response.credential;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    </script>
+
     <div class="demo-credentials">
         डिफ़ॉल्ट लॉगिन: <code>admin</code> / <code>admin123</code>
     </div>

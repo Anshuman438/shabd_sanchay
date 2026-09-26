@@ -273,9 +273,43 @@ $page_title = "लॉग इन एवं रचनाकार खाता | �
                     <p style="color: #64748b; font-size: 0.92rem; margin: 0;">व्यवस्थापक एवं रचनाकार दोनों के लिए साझा प्रवेश द्वार</p>
                 </div>
 
-                <?php if (!empty($error)): ?>
-                    <div class="auth-msg-alert"><?= htmlspecialchars($error) ?></div>
+                <?php 
+                $google_err = $_GET['error'] ?? $_SESSION['login_error'] ?? '';
+                unset($_SESSION['login_error']);
+                if (!empty($error) || !empty($google_err)): 
+                    $disp_err = !empty($error) ? $error : $google_err;
+                ?>
+                    <div class="auth-msg-alert"><?= htmlspecialchars($disp_err) ?></div>
                 <?php endif; ?>
+
+                <!-- Google OAuth 2.0 Sign-In Button -->
+                <div style="margin-bottom: 1.2rem; text-align: center;">
+                    <script src="https://accounts.google.com/gsi/client" async defer></script>
+                    
+                    <div id="g_id_onload"
+                         data-client_id="<?= htmlspecialchars(getenv('GOOGLE_CLIENT_ID') ?: '782946102837-shabdsanchay.apps.googleusercontent.com') ?>"
+                         data-context="signin"
+                         data-ux_mode="popup"
+                         data-callback="handleGoogleSignIn"
+                         data-auto_prompt="false">
+                    </div>
+
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-shape="rectangular"
+                         data-theme="outline"
+                         data-text="signin_with"
+                         data-size="large"
+                         data-logo_alignment="left"
+                         data-width="100%">
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin: 1.2rem 0 0.8rem;">
+                        <hr style="flex: 1; border: none; border-top: 1px solid rgba(0,0,0,0.12);">
+                        <span style="padding: 0 10px; font-size: 0.82rem; color: #64748b; font-weight: 600;">अथवा ई-मेल / पासवर्ड से</span>
+                        <hr style="flex: 1; border: none; border-top: 1px solid rgba(0,0,0,0.12);">
+                    </div>
+                </div>
 
                 <!-- Tab switcher -->
                 <div class="auth-tab-row">
@@ -345,6 +379,23 @@ $page_title = "लॉग इन एवं रचनाकार खाता | �
     <?php include 'footer.php'; ?>
 
     <script>
+    function handleGoogleSignIn(response) {
+        if (response && response.credential) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'google_auth.php<?= !empty($redirect) ? "?redirect=" . urlencode($redirect) : "" ?>';
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'credential';
+            input.value = response.credential;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
     function switchLoginTab(tab) {
         const loginPane = document.getElementById('form-login-pane');
         const regPane = document.getElementById('form-register-pane');
