@@ -11,7 +11,10 @@ $error = '';
 // POST HANDLERS
 // -------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
+    if (!validate_csrf_token($_POST['csrf_token'] ?? '')) {
+        $error = "सत्र सुरक्षा टोकन अमान्य है। (Invalid CSRF Token)";
+    } else {
+        $action = $_POST['action'] ?? '';
 
     // 1. UPDATE ABOUT CONTENT
     if ($action === 'update_content') {
@@ -119,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $tab = 'testimonials';
     }
+    }
 }
 
 // -------------------------------------------------------------
@@ -138,6 +142,8 @@ $team_members = $conn->query("SELECT * FROM team_members ORDER BY id ASC");
 
 // Fetch testimonials
 $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC");
+
+$csrf_token = generate_csrf_token();
 ?>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
@@ -178,6 +184,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC");
         <h2 style="font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid var(--admin-border); padding-bottom: 10px;">मुख्य परिचय एवं साहित्यिक दर्शन</h2>
         
         <form action="manage_about.php?tab=content" method="POST">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
             <input type="hidden" name="action" value="update_content">
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -259,6 +266,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC");
         <div class="form-card">
             <h3 style="font-size: 17px; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 8px;">+ नया संपादकीय सदस्य जोड़ें</h3>
             <form action="manage_about.php?tab=team" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <input type="hidden" name="action" value="add_team">
 
                 <div class="form-group">
@@ -314,6 +322,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC");
                                     </td>
                                     <td style="text-align: right; white-space: nowrap;">
                                         <form action="manage_about.php?tab=team" method="POST" style="display: inline-block;" onsubmit="return confirm('क्या आप इस सदस्य को हटाना चाहते हैं?');">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                             <input type="hidden" name="action" value="delete_team">
                                             <input type="hidden" name="member_id" value="<?= $m['id'] ?>">
                                             <button type="submit" class="btn-action btn-delete">✕ हटाएँ</button>
@@ -339,6 +348,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC");
         <div class="form-card">
             <h3 style="font-size: 17px; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 8px;">+ नई पाठक अनुभूति जोड़ें</h3>
             <form action="manage_about.php?tab=testimonials" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <input type="hidden" name="action" value="add_testimonial">
 
                 <div class="form-group">
@@ -385,6 +395,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC");
                                     </td>
                                     <td style="text-align: right; white-space: nowrap;">
                                         <form action="manage_about.php?tab=testimonials" method="POST" style="display: inline-block;" onsubmit="return confirm('क्या आप इस समीक्षा को हटाना चाहते हैं?');">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                             <input type="hidden" name="action" value="delete_testimonial">
                                             <input type="hidden" name="test_id" value="<?= $t['id'] ?>">
                                             <button type="submit" class="btn-action btn-delete">✕ हटाएँ</button>

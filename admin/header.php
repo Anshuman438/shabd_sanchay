@@ -367,6 +367,9 @@ $admin_name = $_SESSION['admin_name'] ?? 'व्यवस्थापक';
             <a href="manage_about.php" class="sidebar-link <?= $current_page == 'manage_about.php' ? 'active' : '' ?>">
                 <span class="link-content">हमारे बारे में (About Us)</span>
             </a>
+            <a href="change_password.php" class="sidebar-link <?= $current_page == 'change_password.php' ? 'active' : '' ?>">
+                <span class="link-content">पासवर्ड बदलें (Security)</span>
+            </a>
             <hr style="margin: 16px 0; border: 0; border-top: 1px solid var(--admin-border);">
             <a href="../index.php" target="_blank" class="sidebar-link">
                 <span class="link-content">मुख्य वेबसाइट देखें</span>
