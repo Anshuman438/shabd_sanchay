@@ -16,22 +16,35 @@ $port       = getenv('DB_PORT') ? intval(getenv('DB_PORT')) : 3306;
 $ports_to_try = getenv('DB_PORT') ? [intval(getenv('DB_PORT'))] : [3306, 3307];
 $conn = null;
 
+function try_mysqli_connect($host, $user, $pass, $db, $p) {
+    $c = mysqli_init();
+    if (!$c) return false;
+    if (getenv('DB_HOST')) {
+        @mysqli_ssl_set($c, NULL, NULL, NULL, NULL, NULL);
+        $flags = defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT') ? MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT : (defined('MYSQLI_CLIENT_SSL') ? MYSQLI_CLIENT_SSL : 0);
+        @mysqli_real_connect($c, $host, $user, $pass, $db, $p, NULL, $flags);
+    } else {
+        @mysqli_real_connect($c, $host, $user, $pass, $db, $p);
+    }
+    return $c;
+}
+
 foreach ($ports_to_try as $p) {
-    $test_conn = @new mysqli($servername, $username, $password, $dbname, $p);
-    if (!$test_conn->connect_error) {
+    $test_conn = try_mysqli_connect($servername, $username, $password, $dbname, $p);
+    if ($test_conn && !$test_conn->connect_error) {
         $conn = $test_conn;
         $port = $p;
         break;
     }
     
-    // Attempt connecting without selecting a DB (in case SHABD_SANCHAY is not created yet)
-    $root_conn = @new mysqli($servername, $username, $password, "", $p);
-    if (!$root_conn->connect_error) {
+    // Attempt connecting without selecting a DB (in case database is not created yet)
+    $root_conn = try_mysqli_connect($servername, $username, $password, "", $p);
+    if ($root_conn && !$root_conn->connect_error) {
         $root_conn->query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
         $root_conn->close();
         
-        $conn = @new mysqli($servername, $username, $password, $dbname, $p);
-        if (!$conn->connect_error) {
+        $conn = try_mysqli_connect($servername, $username, $password, $dbname, $p);
+        if ($conn && !$conn->connect_error) {
             $port = $p;
             break;
         }
@@ -39,7 +52,7 @@ foreach ($ports_to_try as $p) {
 }
 
 if (!$conn) {
-    $conn = @new mysqli($servername, $username, $password, $dbname, $port);
+    $conn = try_mysqli_connect($servername, $username, $password, $dbname, $port);
 }
 
 if ($conn->connect_error) {
