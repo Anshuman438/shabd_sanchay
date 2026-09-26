@@ -31,6 +31,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
 
         <nav class="main-nav" id="main-nav">
+            <div class="mobile-nav-search-container">
+                <form action="search.php" method="GET" class="mobile-nav-search-form">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" name="q" placeholder="शब्द संचय पर खोजें..." aria-label="Search content">
+                </form>
+            </div>
             <ul>
                 <li><a href="index.php" <?= $current_page == 'index.php' ? 'class="active"' : '' ?>>होम</a></li>
                 <li><a href="poetry.php" <?= in_array($current_page, ['poetry.php', 'poem.php']) ? 'class="active"' : '' ?>>कविताएँ</a></li>
@@ -43,7 +52,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </nav>
 
         <div class="header-right-actions">
-            <div class="header-search-box">
+            <div class="header-search-box desktop-search-only">
                 <form action="search.php" method="GET" class="nav-search-form">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -61,9 +70,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <?php if (!empty($_SESSION['admin_logged_in'])): ?>
                 <a href="admin/dashboard.php" class="btn-header-login" style="background: #1e3a8a; color: white;">व्यवस्थापक</a>
             <?php elseif (!empty($_SESSION['user_logged_in'])): ?>
-                <a href="submit.php" class="btn-header-login" title="रचनाकार प्रोफ़ाइल (<?= htmlspecialchars($_SESSION['user_name'] ?? '') ?>)" style="display: inline-flex; align-items: center; gap: 8px; padding: 0 1rem;">
-                    <img src="<?= htmlspecialchars($_SESSION['user_photo'] ?? 'images/authors/author-default.jpg') ?>" alt="User" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,0.7);">
-                    <span style="font-size: 13px; font-weight: bold;"><?= htmlspecialchars(mb_substr($_SESSION['user_name'] ?? 'रचनाकार', 0, 8)) ?></span>
+                <a href="submit.php" class="btn-header-login" title="रचनाकार प्रोफ़ाइल (<?= htmlspecialchars($_SESSION['user_name'] ?? '') ?>)" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 0.75rem;">
+                    <img src="<?= htmlspecialchars($_SESSION['user_photo'] ?? 'images/authors/author-default.jpg') ?>" alt="User" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,0.7);">
+                    <span class="header-user-name-text" style="font-size: 13px; font-weight: bold; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= htmlspecialchars(mb_substr($_SESSION['user_name'] ?? 'रचनाकार', 0, 8)) ?></span>
                 </a>
             <?php else: ?>
                 <a href="login.php" class="btn-header-login">लॉग इन</a>

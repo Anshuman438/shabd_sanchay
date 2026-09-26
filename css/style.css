@@ -9642,5 +9642,251 @@ body.home-doodle-page {
     }
 }
 
+/* =========================================================
+   PERFECT DYNAMIC MOBILE RESPONSIVENESS & UI OPTIMIZATION
+   (100% Mobile-First Responsive, Fluid, & Touch-Optimized)
+========================================================= */
+
+/* 1. Mobile Header & Dynamic Drawer Navigation */
+@media (max-width: 992px) {
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10000;
+        width: 100%;
+    }
+    .header-container {
+        padding: 0.5rem 1rem !important;
+        min-height: 62px !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        position: relative;
+    }
+    .logo-brand-title {
+        font-size: 1.25rem !important;
+    }
+    .logo-brand-subtitle {
+        font-size: 0.55rem !important;
+    }
+    .desktop-search-only {
+        display: none !important;
+    }
+    .mobile-menu-btn {
+        display: flex !important;
+    }
+    .main-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background: var(--bg);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 99999;
+        flex-direction: column !important;
+        padding: 0 1.25rem;
+    }
+    [data-theme="dark"] .main-nav {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+    }
+    .main-nav.mobile-open,
+    .main-nav.active {
+        max-height: 85vh;
+        overflow-y: auto;
+        opacity: 1;
+        visibility: visible;
+        padding: 1rem 1.25rem 1.5rem !important;
+    }
+    .main-nav ul {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.35rem !important;
+        width: 100%;
+    }
+    .main-nav a {
+        width: 100%;
+        padding: 0.8rem 1rem !important;
+        font-size: 1.05rem !important;
+        font-weight: 600;
+        border-radius: 10px;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(0, 0, 0, 0.02);
+    }
+    [data-theme="dark"] .main-nav a {
+        background: rgba(255, 255, 255, 0.04);
+    }
+    .main-nav a:hover,
+    .main-nav a.active {
+        background: rgba(200, 90, 23, 0.12) !important;
+        color: var(--primary) !important;
+    }
+    .main-nav a.active::after {
+        display: none !important;
+    }
+    .mobile-nav-search-container {
+        display: block !important;
+        margin-bottom: 0.85rem;
+        width: 100%;
+    }
+    .mobile-nav-search-form {
+        display: flex;
+        align-items: center;
+        background: var(--muted);
+        border: 1.5px solid rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        padding: 0 1rem;
+        height: 44px;
+        width: 100%;
+    }
+    [data-theme="dark"] .mobile-nav-search-form {
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+    .mobile-nav-search-form input {
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 16px;
+        width: 100%;
+        margin-left: 0.5rem;
+    }
+}
+
+@media (min-width: 993px) {
+    .mobile-nav-search-container {
+        display: none !important;
+    }
+}
+
+/* Animated Hamburger Menu Icon */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--muted);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+[data-theme="dark"] .mobile-menu-btn {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+}
+.mobile-menu-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--text);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+}
+.mobile-menu-btn.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.mobile-menu-btn.open span:nth-child(2) {
+    opacity: 0;
+}
+.mobile-menu-btn.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* 2. Prevent iOS / Android Input Focus Auto-Zoom */
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="url"],
+    input[type="number"],
+    input[type="file"],
+    textarea,
+    select,
+    .form-control {
+        font-size: 16px !important;
+        min-height: 44px;
+    }
+    .btn, button, a.btn, input[type="submit"] {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+}
+
+/* 3. Fluid Responsive Grids & Layout Containers */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem !important;
+    }
+    .hero-title, h1 {
+        font-size: clamp(1.75rem, 6.5vw, 2.6rem) !important;
+        line-height: 1.25 !important;
+    }
+    .hero-subtitle {
+        font-size: 0.95rem !important;
+    }
+    .poetry-grid,
+    .articles-grid,
+    .stories-grid,
+    .plays-grid,
+    .offerings-grid,
+    .selected-works-grid,
+    .topics-grid,
+    .discussion-grid,
+    .daily-duo-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.15rem !important;
+    }
+    .poem-reading-card,
+    .story-notebook-book,
+    .form-card,
+    .contact-form-parchment {
+        padding: 1.5rem 1.15rem !important;
+        border-radius: 14px !important;
+    }
+    /* Mobile Reading & Devanagari Typography Optimization */
+    .poem-body, .article-content, .story-body {
+        font-size: 1.1rem !important;
+        line-height: 1.85 !important;
+        word-break: break-word;
+    }
+    /* Dynamic Touch Active Feedback */
+    .post-card:active,
+    .btn:active,
+    .social-icon:active {
+        transform: scale(0.98);
+    }
+}
+
+/* 4. Table & Container Overflow Safety */
+.admin-table-container,
+.table-responsive-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+body.mobile-nav-expanded {
+    overflow: hidden;
+}
+
+
 
 

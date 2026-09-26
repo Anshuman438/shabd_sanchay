@@ -90,13 +90,35 @@
 
 <script src="js/theme.js"></script>
 <script>
-// Mobile navigation toggle
+// Mobile navigation toggle with backdrop & outdoor click handler
 document.addEventListener('DOMContentLoaded', () => {
     const menuBtn = document.getElementById('mobile-menu-btn');
     const nav = document.getElementById('main-nav');
     if (menuBtn && nav) {
-        menuBtn.addEventListener('click', () => {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuBtn.classList.toggle('open');
             nav.classList.toggle('mobile-open');
+            nav.classList.toggle('active');
+            document.body.classList.toggle('mobile-nav-expanded');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (nav.classList.contains('mobile-open') && !nav.contains(e.target) && !menuBtn.contains(e.target)) {
+                menuBtn.classList.remove('open');
+                nav.classList.remove('mobile-open');
+                nav.classList.remove('active');
+                document.body.classList.remove('mobile-nav-expanded');
+            }
+        });
+
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('open');
+                nav.classList.remove('mobile-open');
+                nav.classList.remove('active');
+                document.body.classList.remove('mobile-nav-expanded');
+            });
         });
     }
 });

@@ -119,6 +119,13 @@ $page_title = "लॉग इन एवं रचनाकार खाता | �
             border-color: rgba(246, 173, 85, 0.25);
             box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45);
         }
+        @media (max-width: 520px) {
+            .unified-auth-container {
+                margin: 1.5rem 0.85rem 2.5rem;
+                padding: 1.6rem 1.15rem;
+                border-radius: 18px;
+            }
+        }
         .auth-portal-header {
             text-align: center;
             margin-bottom: 1.8rem;
