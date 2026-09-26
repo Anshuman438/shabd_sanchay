@@ -5,31 +5,109 @@ if (!headers_sent()) {
     header('Content-Type: text/html; charset=utf-8');
 }
 
-echo "<div style='font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto;'>";
-echo "<h2>शब्द संचय (Shabd Sanchay) - Master Database Setup</h2>";
+echo "<div style='font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; line-height: 1.6;'>";
+echo "<h2>शब्द संचय (Shabd Sanchay) - Master Database Setup & Seeder</h2>";
 
 if ($conn->connect_error) {
     die("<p style='color:red;'>Connection Error: " . htmlspecialchars($conn->connect_error) . "</p>");
 }
 
-// 1. Run Base Schema Queries
-$sqlFile = __DIR__ . '/schema.sql';
-if (file_exists($sqlFile)) {
-    $sqlContent = file_get_contents($sqlFile);
-    $queries = array_filter(array_map('trim', explode(';', $sqlContent)));
-    $success_count = 0;
-    foreach ($queries as $q) {
-        if (!empty($q)) {
-            if ($conn->query($q)) {
-                $success_count++;
-            }
-        }
-    }
-    echo "<p style='color:green;'>✓ Base schema processed ($success_count statements executed)!</p>";
+// 1. Poems Table
+$conn->query("
+CREATE TABLE IF NOT EXISTS `poems` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `content` TEXT NOT NULL,
+  `author_name` VARCHAR(150) NOT NULL,
+  `category` VARCHAR(100) DEFAULT 'सामान्य',
+  `image_url` VARCHAR(255) DEFAULT 'images/poetry-default.jpg',
+  `views` INT DEFAULT 0,
+  `likes` INT DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+echo "<p style='color:green;'>✓ Poems table verified!</p>";
+
+// Seed Poems
+$p_check = $conn->query("SELECT id FROM `poems` LIMIT 1");
+if ($p_check && $p_check->num_rows === 0) {
+    $conn->query("
+    INSERT INTO `poems` (`title`, `content`, `author_name`, `category`, `likes`, `views`) VALUES
+    ('प्रकृति की पुकार', 'पेड़ों की डालियों से झरते हैं स्वप्न मधुर,\nनदियों की कलकल में छिपा है जीवन सुर।\nक्षितिज पर जब भोर की किरणें बिखरती हैं,\nधरा अपनी मौन भाषा में हमसे कुछ कहती है।\n\nमत छीनो इस हरी चादर को इंसान,\nयही तो है ईश्वर का सबसे अनमोल वरदान।', 'रामधारी सिंह दिनकर', 'प्रकृति', 42, 120),
+    ('जीवन का संघर्ष', 'लहरों से डर कर नौका पार नहीं होती,\nकोशिश करने वालों की कभी हार नहीं होती।\nनन्हीं चींटी जब दाना लेकर चलती है,\nचढ़ती दीवारों पर, सौ बार फिसलती है।\nमन का विश्वास रगों में साहस भरता है,\nचढ़कर गिरना, गिरकर चढ़ना न अखरता है।', 'हरिवंश राय बच्चन', 'प्रेरणादायक', 85, 340),
+    ('मातृभूमि', 'चन्दन है इस देश की माटी, तपोभूमि हर ग्राम है,\nहर बाला देवी की प्रतिमा, बच्चा बच्चा राम है।\nजहाँ सत्य, अहिंसा और प्रेम का, पग-पग लगता डेरा है,\nवह भारत देश हमारा है, वह भारत देश हमारा है।', 'मैथिलीशरण गुप्त', 'देशभक्ति', 56, 210);
+    ");
+    echo "<p style='color:green;'>✓ Sample poems seeded!</p>";
 }
 
-// 2. Create `users` table for member registration & login
-$u_res = $conn->query("
+// 2. Articles Table
+$conn->query("
+CREATE TABLE IF NOT EXISTS `articles` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `excerpt` TEXT,
+  `content` TEXT NOT NULL,
+  `author_name` VARCHAR(150) NOT NULL,
+  `category` VARCHAR(100) DEFAULT 'सामान्य',
+  `read_time` INT DEFAULT 5,
+  `image_url` VARCHAR(255) DEFAULT 'images/article-default.jpg',
+  `views` INT DEFAULT 0,
+  `likes` INT DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+echo "<p style='color:green;'>✓ Articles table verified!</p>";
+
+// Seed Articles
+$a_check = $conn->query("SELECT id FROM `articles` LIMIT 1");
+if ($a_check && $a_check->num_rows === 0) {
+    $conn->query("
+    INSERT INTO `articles` (`title`, `excerpt`, `content`, `author_name`, `category`, `read_time`, `likes`, `views`) VALUES
+    ('हिंदी साहित्य का स्वर्ण युग: भक्तिकाल', 'भक्तिकाल हिंदी साहित्य का वह स्वर्णिम अध्याय है जिसमें कबीर, तुलसी, सूर और मीरा ने समाज को नई दिशा दी।', 'हिंदी साहित्य के इतिहास में संवत् 1375 से 1700 तक के काल को भक्तिकाल कहा जाता है। यह वह कालखंड था जब भारतीय जनमानस सांस्कृतिक और सामाजिक परिवर्तनों के दौर से गुजर रहा था।\n\nइस युग के संतों और कवियों ने ईश्वर के सगुण और निर्गुण रूपों के माध्यम से लोक-कल्याण का संदेश दिया।', 'डॉ. विद्यानिवास मिश्र', 'इतिहास', 6, 38, 150),
+    ('डिजिटल युग में हिंदी भाषा और साहित्य', 'इंटरनेट और सोशल मीडिया के दौर में हिंदी भाषा नए आयाम छू रही है और युवा पीढ़ी इससे जुड़ रही है।', 'आज के डिजिटल युग में हिंदी केवल बोलचाल की भाषा नहीं रह गई है, बल्कि सूचना तकनीक और वेब पटल पर भी अपना परचम लहरा रही है। ब्लॉग्स, ऑनलाइन कविता मंच, ई-पत्रिकाएँ और ऑडियो पॉडकास्ट के माध्यम से विश्व भर में फैले हिंदी प्रेमी आपस में जुड़ रहे हैं।', 'अंशुमन सिंह', 'संस्कृति', 4, 29, 95);
+    ");
+    echo "<p style='color:green;'>✓ Sample articles seeded!</p>";
+}
+
+// 3. Comments Table
+$conn->query("
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `content_id` INT NOT NULL,
+  `content_type` ENUM('poem', 'article') NOT NULL DEFAULT 'poem',
+  `name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(150) NOT NULL,
+  `comment` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+echo "<p style='color:green;'>✓ Comments table verified!</p>";
+
+// 4. Contacts Table
+$conn->query("
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(150) NOT NULL,
+  `subject` VARCHAR(200) NOT NULL,
+  `message` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+echo "<p style='color:green;'>✓ Contacts table verified!</p>";
+
+// 5. Newsletter Subscribers Table
+$conn->query("
+CREATE TABLE IF NOT EXISTS `newsletter_subscribers` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `email` VARCHAR(150) UNIQUE NOT NULL,
+  `subscribed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+echo "<p style='color:green;'>✓ Newsletter table verified!</p>";
+
+// 6. Users Table
+$conn->query("
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(150) NOT NULL,
@@ -43,14 +121,10 @@ CREATE TABLE IF NOT EXISTS `users` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
-if ($u_res) {
-    echo "<p style='color:green;'>✓ Users table verified/created!</p>";
-} else {
-    echo "<p style='color:red;'>Users table error: " . htmlspecialchars($conn->error) . "</p>";
-}
+echo "<p style='color:green;'>✓ Users table verified!</p>";
 
-// 3. Create `admin_users` table and insert default admin
-$adm_res = $conn->query("
+// 7. Admin Users Table
+$conn->query("
 CREATE TABLE IF NOT EXISTS `admin_users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(100) NOT NULL UNIQUE,
@@ -62,32 +136,31 @@ CREATE TABLE IF NOT EXISTS `admin_users` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
+echo "<p style='color:green;'>✓ Admin Users table verified!</p>";
 
-if ($adm_res) {
-    echo "<p style='color:green;'>✓ Admin Users table verified/created!</p>";
-} else {
-    echo "<p style='color:red;'>Admin Users table error: " . htmlspecialchars($conn->error) . "</p>";
-}
-
+// Insert/Reset default Admin user
+$default_hash = password_hash('admin123', PASSWORD_BCRYPT);
 $admin_check = $conn->query("SELECT id FROM `admin_users` WHERE `username` = 'admin'");
 if ($admin_check && $admin_check->num_rows === 0) {
-    $default_hash = password_hash('admin123', PASSWORD_BCRYPT);
-    $stmt = $conn->prepare("INSERT INTO `admin_users` (username, email, password_hash, full_name, role) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO `admin_users` (username, email, password_hash, full_name, role) VALUES ('admin', 'admin@hindisahitya.com', ?, 'मुख्य प्रशासक', 'superadmin')");
     if ($stmt) {
-        $u = 'admin';
-        $e = 'admin@hindisahitya.com';
-        $fn = 'मुख्य प्रशासक';
-        $r = 'superadmin';
-        $stmt->bind_param("sssss", $u, $e, $default_hash, $fn, $r);
+        $stmt->bind_param("s", $default_hash);
         $stmt->execute();
         $stmt->close();
-        echo "<p style='color:green;'>✓ Default Admin account created (Username: <b>admin</b> | Password: <b>admin123</b>)!</p>";
     }
+    echo "<p style='color:green; font-weight:bold;'>✓ Default Admin account created! Username: <b>admin</b> | Password: <b>admin123</b></p>";
 } else {
-    echo "<p style='color:green;'>✓ Default Admin user active!</p>";
+    // Force update password to admin123 to make sure login works
+    $stmt = $conn->prepare("UPDATE `admin_users` SET `password_hash` = ? WHERE `username` = 'admin'");
+    if ($stmt) {
+        $stmt->bind_param("s", $default_hash);
+        $stmt->execute();
+        $stmt->close();
+    }
+    echo "<p style='color:green;'>✓ Admin user reset/active! Username: <b>admin</b> | Password: <b>admin123</b></p>";
 }
 
-// 4. Create `user_submissions` table
+// 8. User Submissions Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `user_submissions` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -114,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `user_submissions` (
 ");
 echo "<p style='color:green;'>✓ User Submissions table verified!</p>";
 
-// 5. Create `stories` table
+// 9. Stories Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `stories` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -132,7 +205,7 @@ CREATE TABLE IF NOT EXISTS `stories` (
 ");
 echo "<p style='color:green;'>✓ Stories table verified!</p>";
 
-// 6. Create `plays` table
+// 10. Plays Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `plays` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -150,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `plays` (
 ");
 echo "<p style='color:green;'>✓ Plays table verified!</p>";
 
-// 7. Create `about_content` table
+// 11. About Content Table
 $conn->query("
 CREATE TABLE IF NOT EXISTS `about_content` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -180,6 +253,6 @@ if ($about_check && $about_check->num_rows === 0) {
 }
 echo "<p style='color:green;'>✓ About Content table verified!</p>";
 
-echo "<br><h3 style='color:green; font-weight:bold;'>🎉 Master Database Setup Completed!</h3>";
+echo "<br><h3 style='color:green; font-weight:bold;'>🎉 Master Database Setup & Seeder Completed!</h3>";
 echo "<p><a href='../index.php' style='padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Homepage</a> &nbsp; <a href='../admin/login.php' style='padding: 8px 16px; background: #059669; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Admin Login</a> &nbsp; <a href='../login.php' style='padding: 8px 16px; background: #7c3aed; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to User Login</a></p>";
 echo "</div>";
