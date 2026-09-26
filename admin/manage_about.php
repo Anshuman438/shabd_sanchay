@@ -47,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = trim($_POST['name'] ?? '');
         $position = trim($_POST['position'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
-        $image_url = trim($_POST['image_url'] ?? 'images/authors/author-default.jpg');
+        $existing_url = $_POST['existing_image_url'] ?? 'images/authors/author-default.jpg';
+        $image_url = process_image_input('image_file', 'image_url', $existing_url, 'authors');
 
         if (!empty($name) && !empty($position)) {
             $stmt = $conn->prepare("INSERT INTO team_members (name, position, bio, image_url) VALUES (?, ?, ?, ?)");
@@ -67,7 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = trim($_POST['name'] ?? '');
         $position = trim($_POST['position'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
-        $image_url = trim($_POST['image_url'] ?? '');
+        $existing_url = $_POST['existing_image_url'] ?? 'images/authors/author-default.jpg';
+        $image_url = process_image_input('image_file', 'image_url', $existing_url, 'authors');
 
         if ($id > 0 && !empty($name) && !empty($position)) {
             $stmt = $conn->prepare("UPDATE team_members SET name = ?, position = ?, bio = ?, image_url = ? WHERE id = ?");
@@ -265,7 +267,7 @@ $csrf_token = generate_csrf_token();
         <!-- Add Team Member Form -->
         <div class="form-card">
             <h3 style="font-size: 17px; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 8px;">+ नया संपादकीय सदस्य जोड़ें</h3>
-            <form action="manage_about.php?tab=team" method="POST">
+            <form action="manage_about.php?tab=team" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <input type="hidden" name="action" value="add_team">
 
@@ -285,8 +287,13 @@ $csrf_token = generate_csrf_token();
                 </div>
 
                 <div class="form-group">
-                    <label>फ़ोटो पाथ (Photo URL / Path)</label>
-                    <input type="text" name="image_url" class="form-control" value="images/authors/author-default.jpg">
+                    <label>कंप्यूटर से फोटो चुनें (File Upload)</label>
+                    <input type="file" name="image_file" class="form-control" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label>या डायरेक्ट / Google Drive फ़ोटो लिंक (URL)</label>
+                    <input type="text" name="image_url" class="form-control" placeholder="https://... या Google Drive Link" value="images/authors/author-default.jpg">
                 </div>
 
                 <button type="submit" class="btn-action btn-approve" style="padding: 9px 20px; font-weight: 700;">+ सदस्य जोड़ें</button>

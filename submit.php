@@ -392,9 +392,15 @@ $page_title = "अपनी रचना भेजें | शब्द सं�
                             </select>
                         </div>
 
+                    <div class="submit-row-2">
                         <div class="submit-input-group">
-                            <label for="input-image">कवर चित्र (Cover Image File) <span class="input-hint">वैकल्पिक</span></label>
+                            <label for="input-image">कवर चित्र अपलोड करें (Computer File) <span class="input-hint">कंप्यूटर से चुनें</span></label>
                             <input type="file" name="image_file" id="input-image" class="submit-control" accept="image/*">
+                        </div>
+
+                        <div class="submit-input-group">
+                            <label for="input-image-url">या कवर चित्र लिंक (Google Drive / Web URL)</label>
+                            <input type="text" name="image_url" id="input-image-url" class="submit-control" placeholder="https://... या Google Drive Link">
                         </div>
                     </div>
 

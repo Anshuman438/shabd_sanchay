@@ -29,38 +29,19 @@ $category = trim($_POST['category'] ?? 'सामान्य');
 $excerpt = normalize_content_text($_POST['excerpt'] ?? '');
 $content = normalize_content_text($_POST['content'] ?? '');
 $author_photo = $logged_user['profile_photo'] ?? 'images/authors/author-default.jpg';
-$image_url = trim($_POST['image_url'] ?? '');
 
-// Handle optional featured banner upload
-if (!empty($_FILES['image_file']['name'])) {
-    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-    $ext = strtolower(pathinfo($_FILES['image_file']['name'], PATHINFO_EXTENSION));
-    if (in_array($ext, $allowed)) {
-        $upload_dir = __DIR__ . '/../uploads/submissions/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
-        $filename = 'sub_' . time() . '_' . rand(100, 999) . '.' . $ext;
-        if (move_uploaded_file($_FILES['image_file']['tmp_name'], $upload_dir . $filename)) {
-            $image_url = 'uploads/submissions/' . $filename;
-        }
-    }
-}
+// Determine default cover image fallback
+if ($content_type === 'poem') $default_banner = 'images/featured-1.jpg';
+elseif ($content_type === 'story') $default_banner = 'images/story-default.jpg';
+elseif ($content_type === 'play') $default_banner = 'images/play-default.jpg';
+else $default_banner = 'images/article-default.jpg';
 
-// Handle optional author photo upload if not logged in
-if (empty($logged_user) && !empty($_FILES['author_photo_file']['name'])) {
-    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-    $ext = strtolower(pathinfo($_FILES['author_photo_file']['name'], PATHINFO_EXTENSION));
-    if (in_array($ext, $allowed)) {
-        $upload_dir = __DIR__ . '/../uploads/authors/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
-        $filename = 'author_' . time() . '_' . rand(100, 999) . '.' . $ext;
-        if (move_uploaded_file($_FILES['author_photo_file']['tmp_name'], $upload_dir . $filename)) {
-            $author_photo = 'uploads/authors/' . $filename;
-        }
-    }
+// Handle cover image from file upload or URL/Google Drive
+$image_url = process_image_input('image_file', 'image_url', $default_banner, 'submissions');
+
+// Handle author photo from file upload or URL/Google Drive if not logged in
+if (empty($logged_user)) {
+    $author_photo = process_image_input('author_photo_file', 'author_photo_url', $author_photo, 'authors');
 }
 
 // Validation

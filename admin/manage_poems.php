@@ -34,8 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $content = trim($_POST['content'] ?? '');
         $author_name = trim($_POST['author_name'] ?? '');
         $category = trim($_POST['category'] ?? 'सामान्य');
-        $image_url = trim($_POST['image_url'] ?? 'images/poetry-default.jpg');
         $edit_id = intval($_POST['edit_id'] ?? 0);
+        $existing_url = $_POST['existing_image_url'] ?? 'images/poetry-default.jpg';
+
+        // Process image from computer file upload OR Google Drive / URL link
+        $image_url = process_image_input('image_file', 'image_url', $existing_url, 'poems');
 
         if (empty($title) || empty($content) || empty($author_name)) {
             $error = "कृपया शीर्षक, रचना और कवि का नाम अवश्य भरें।";
@@ -101,9 +104,10 @@ $csrf_token = generate_csrf_token();
     <!-- Create / Edit Form -->
     <div class="form-card">
         <h2 style="font-size: 18px; margin-bottom: 20px;"><?= $action === 'edit' ? 'कविता संपादित करें' : 'नई कविता जोड़ें' ?></h2>
-        <form method="POST" action="manage_poems.php">
+        <form method="POST" action="manage_poems.php" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
             <input type="hidden" name="edit_id" value="<?= $edit_data['id'] ?? 0 ?>">
+            <input type="hidden" name="existing_image_url" value="<?= htmlspecialchars($edit_data['image_url'] ?? 'images/poetry-default.jpg') ?>">
 
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
                 <div class="form-group">
@@ -116,7 +120,7 @@ $csrf_token = generate_csrf_token();
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
                 <div class="form-group">
                     <label>श्रेणी (Category)</label>
                     <select name="category" class="form-control">
@@ -129,8 +133,12 @@ $csrf_token = generate_csrf_token();
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>कवर छवि यूआरएल (Image URL)</label>
-                    <input type="text" name="image_url" class="form-control" value="<?= htmlspecialchars($edit_data['image_url'] ?? 'images/poetry-default.jpg') ?>">
+                    <label>कंप्यूटर से फोटो चुनें (File Upload)</label>
+                    <input type="file" name="image_file" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>या डायरेक्ट/Google Drive लिंक (Image URL)</label>
+                    <input type="text" name="image_url" class="form-control" placeholder="https://... या Google Drive Link" value="<?= htmlspecialchars($edit_data['image_url'] ?? '') ?>">
                 </div>
             </div>
 

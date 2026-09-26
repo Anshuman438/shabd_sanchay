@@ -36,8 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $author_name = trim($_POST['author_name'] ?? '');
         $category = trim($_POST['category'] ?? 'ऐतिहासिक');
         $acts_count = intval($_POST['acts_count'] ?? 3);
-        $image_url = trim($_POST['image_url'] ?? 'images/play-default.jpg');
         $edit_id = intval($_POST['edit_id'] ?? 0);
+        $existing_url = $_POST['existing_image_url'] ?? 'images/play-default.jpg';
+
+        // Process image from computer upload OR Google Drive / URL link
+        $image_url = process_image_input('image_file', 'image_url', $existing_url, 'plays');
 
         if (empty($excerpt)) {
             $excerpt = make_excerpt($content, 180);
@@ -106,9 +109,10 @@ $csrf_token = generate_csrf_token();
 <?php if ($action === 'create' || $action === 'edit'): ?>
     <div class="form-card">
         <h2 style="font-size: 18px; margin-bottom: 20px;"><?= $action === 'edit' ? 'नाटक संपादित करें' : 'नया नाटक जोड़ें' ?></h2>
-        <form method="POST" action="manage_plays.php">
+        <form method="POST" action="manage_plays.php" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
             <input type="hidden" name="edit_id" value="<?= $edit_data['id'] ?? 0 ?>">
+            <input type="hidden" name="existing_image_url" value="<?= htmlspecialchars($edit_data['image_url'] ?? 'images/play-default.jpg') ?>">
 
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
                 <div class="form-group">
@@ -121,7 +125,7 @@ $csrf_token = generate_csrf_token();
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px;">
                 <div class="form-group">
                     <label>श्रेणी (Category)</label>
                     <select name="category" class="form-control">
@@ -134,12 +138,16 @@ $csrf_token = generate_csrf_token();
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>अंक / दृश्य संख्या (Acts Count)</label>
+                    <label>अंक / दृश्य संख्या</label>
                     <input type="number" name="acts_count" class="form-control" value="<?= intval($edit_data['acts_count'] ?? 3) ?>" min="1">
                 </div>
                 <div class="form-group">
-                    <label>कवर छवि यूआरएल (Image URL)</label>
-                    <input type="text" name="image_url" class="form-control" value="<?= htmlspecialchars($edit_data['image_url'] ?? 'images/play-default.jpg') ?>">
+                    <label>कंप्यूटर से फोटो चुनें</label>
+                    <input type="file" name="image_file" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>या Google Drive / URL लिंक</label>
+                    <input type="text" name="image_url" class="form-control" placeholder="https://... या Google Drive Link" value="<?= htmlspecialchars($edit_data['image_url'] ?? '') ?>">
                 </div>
             </div>
 
