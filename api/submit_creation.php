@@ -30,11 +30,15 @@ $excerpt = normalize_content_text($_POST['excerpt'] ?? '');
 $content = normalize_content_text($_POST['content'] ?? '');
 $author_photo = $logged_user['profile_photo'] ?? 'images/authors/author-default.jpg';
 
-// Determine default cover image fallback
-if ($content_type === 'poem') $default_banner = 'images/featured-1.jpg';
-elseif ($content_type === 'story') $default_banner = 'images/story-default.jpg';
-elseif ($content_type === 'play') $default_banner = 'images/play-default.jpg';
-else $default_banner = 'images/article-default.jpg';
+// Check if user provided custom image file or URL link
+$has_custom_image = (!empty($_FILES['image_file']['name']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) || !empty(trim($_POST['image_url'] ?? ''));
+
+// User Profile Photo from Gmail / Account
+$user_profile_img = $_SESSION['user_photo'] ?? ($logged_user['profile_photo'] ?? '');
+
+if (!$has_custom_image && !empty($user_profile_img) && $user_profile_img !== 'images/authors/author-default.jpg') {
+    $default_banner = $user_profile_img;
+}
 
 // Handle cover image from file upload or URL/Google Drive
 $image_url = process_image_input('image_file', 'image_url', $default_banner, 'submissions');
@@ -65,10 +69,14 @@ if (empty($excerpt)) {
 
 // Set default fallback cover image if none provided
 if (empty($image_url)) {
-    if ($content_type === 'poem') $image_url = 'images/featured-1.jpg';
-    elseif ($content_type === 'story') $image_url = 'images/story-default.jpg';
-    elseif ($content_type === 'play') $image_url = 'images/play-default.jpg';
-    else $image_url = 'images/article-default.jpg';
+    if (!empty($user_profile_img) && $user_profile_img !== 'images/authors/author-default.jpg') {
+        $image_url = $user_profile_img;
+    } else {
+        if ($content_type === 'poem') $image_url = 'images/featured-1.jpg';
+        elseif ($content_type === 'story') $image_url = 'images/story-default.jpg';
+        elseif ($content_type === 'play') $image_url = 'images/play-default.jpg';
+        else $image_url = 'images/article-default.jpg';
+    }
 }
 
 // Insert into user_submissions

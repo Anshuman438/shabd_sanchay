@@ -143,4 +143,95 @@ function process_image_input($file_key, $url_key, $default_fallback = '', $uploa
     // 3. Fallback to default image URL
     return clean_google_drive_url($default_fallback);
 }
+
+/**
+ * Single Like Per User / Session Helper
+ */
+function toggle_user_like($conn, $content_type, $content_id, $action = 'like') {
+    if (session_status() === PHP_SESSION_NONE) {
+        @session_start();
+    }
+    
+    $user_id = $_SESSION['user_id'] ?? $_SESSION['admin_id'] ?? null;
+    $session_key = $user_id ? 'user_' . $user_id : (session_id() ?: md5($_SERVER['REMOTE_ADDR'] ?? 'guest'));
+    
+    $table_map = [
+        'poem' => 'poems',
+        'article' => 'articles',
+        'story' => 'stories',
+        'play' => 'plays'
+    ];
+    $target_table = $table_map[$content_type] ?? 'poems';
+
+    // Check if already liked
+    $stmt_check = $conn->prepare("SELECT id FROM user_likes WHERE session_key = ? AND content_type = ? AND content_id = ? LIMIT 1");
+    if ($stmt_check) {
+        $stmt_check->bind_param("ssi", $session_key, $content_type, $content_id);
+        $stmt_check->execute();
+        $already_liked = $stmt_check->get_result()->num_rows > 0;
+        $stmt_check->close();
+    } else {
+        $already_liked = false;
+    }
+
+    if ($action === 'unlike') {
+        if ($already_liked) {
+            $del = $conn->prepare("DELETE FROM user_likes WHERE session_key = ? AND content_type = ? AND content_id = ?");
+            if ($del) {
+                $del->bind_param("ssi", $session_key, $content_type, $content_id);
+                $del->execute();
+                $del->close();
+            }
+
+            $upd = $conn->prepare("UPDATE {$target_table} SET likes = GREATEST(0, likes - 1) WHERE id = ?");
+            if ($upd) {
+                $upd->bind_param("i", $content_id);
+                $upd->execute();
+                $upd->close();
+            }
+        }
+        $msg = 'पसंद हटा दी गई';
+        $is_liked = false;
+    } else {
+        if (!$already_liked) {
+            $ins = $conn->prepare("INSERT INTO user_likes (user_id, session_key, content_type, content_id) VALUES (?, ?, ?, ?)");
+            if ($ins) {
+                $ins->bind_param("issi", $user_id, $session_key, $content_type, $content_id);
+                $ins->execute();
+                $ins->close();
+            }
+
+            $upd = $conn->prepare("UPDATE {$target_table} SET likes = likes + 1 WHERE id = ?");
+            if ($upd) {
+                $upd->bind_param("i", $content_id);
+                $upd->execute();
+                $upd->close();
+            }
+
+            $msg = 'सफलतापूर्वक लाइक किया गया';
+            $is_liked = true;
+        } else {
+            $msg = 'आप इसे पहले ही पसंद कर चुके हैं।';
+            $is_liked = true;
+        }
+    }
+
+    // Fetch updated count
+    $stmt_cnt = $conn->prepare("SELECT likes FROM {$target_table} WHERE id = ?");
+    if ($stmt_cnt) {
+        $stmt_cnt->bind_param("i", $content_id);
+        $stmt_cnt->execute();
+        $res = $stmt_cnt->get_result()->fetch_assoc();
+        $newLikes = $res['likes'] ?? 0;
+        $stmt_cnt->close();
+    } else {
+        $newLikes = 0;
+    }
+
+    return [
+        'newLikes' => intval($newLikes),
+        'isLiked' => $is_liked,
+        'message' => $msg
+    ];
+}
 ?>

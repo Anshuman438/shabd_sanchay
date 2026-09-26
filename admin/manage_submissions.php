@@ -27,61 +27,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         if ($sub) {
-            $type = $sub['content_type'];
-            $title = $sub['title'];
-            $author = $sub['author_name'];
-            $category = $sub['category'] ?: 'सामान्य';
-            $content = normalize_content_text($sub['content']);
-            $excerpt = $sub['excerpt'] ? normalize_content_text($sub['excerpt']) : make_excerpt($content, 140);
-            $image_url = $sub['image_url'] ?: 'images/featured-1.jpg';
-            $published_id = 0;
-
-            if ($type === 'poem') {
-                $ins = $conn->prepare("INSERT INTO poems (title, content, author_name, category, image_url) VALUES (?, ?, ?, ?, ?)");
-                $ins->bind_param("sssss", $title, $content, $author, $category, $image_url);
-                if ($ins->execute()) {
-                    $published_id = $ins->insert_id;
-                }
-                $ins->close();
-            } elseif ($type === 'article') {
-                $read_time = estimate_reading_time($content);
-                $ins = $conn->prepare("INSERT INTO articles (title, excerpt, content, author_name, category, read_time, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $ins->bind_param("sssssis", $title, $excerpt, $content, $author, $category, $read_time, $image_url);
-                if ($ins->execute()) {
-                    $published_id = $ins->insert_id;
-                }
-                $ins->close();
-            } elseif ($type === 'story') {
-                $read_time = estimate_reading_time($content);
-                $ins = $conn->prepare("INSERT INTO stories (title, excerpt, content, author_name, category, read_time, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $ins->bind_param("sssssis", $title, $excerpt, $content, $author, $category, $read_time, $image_url);
-                if ($ins->execute()) {
-                    $published_id = $ins->insert_id;
-                }
-                $ins->close();
-            } elseif ($type === 'play') {
-                $acts_count = 3;
-                $ins = $conn->prepare("INSERT INTO plays (title, excerpt, content, author_name, category, acts_count, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $ins->bind_param("sssssis", $title, $excerpt, $content, $author, $category, $acts_count, $image_url);
-                if ($ins->execute()) {
-                    $published_id = $ins->insert_id;
-                }
-                $ins->close();
-            }
-
-            if ($published_id > 0) {
-                // Update submission status
-                $now = date('Y-m-d H:i:s');
-                $upd = $conn->prepare("UPDATE user_submissions SET status = 'approved', published_content_id = ?, reviewed_at = ? WHERE id = ?");
-                $upd->bind_param("isi", $published_id, $now, $id);
-                $upd->execute();
-                $upd->close();
-
-                $alert_msg = "रचना '{$title}' को सफलतापूर्वक स्वीकृत कर मुख्य वेबसाइट पर प्रकाशित कर दिया गया है!";
-                $alert_type = "success";
+            if ($sub['status'] === 'approved' && $sub['published_content_id'] > 0) {
+                $alert_msg = "यह रचना प्रस्ताव पहले ही स्वीकृत और मुख्य वेबसाइट पर प्रकाशित किया जा चुका है!";
+                $alert_type = "warning";
             } else {
-                $alert_msg = "रचना प्रकाशित करने में त्रुटि आई: " . $conn->error;
-                $alert_type = "danger";
+                $type = $sub['content_type'];
+                $title = $sub['title'];
+                $author = $sub['author_name'];
+                $category = $sub['category'] ?: 'सामान्य';
+                $content = normalize_content_text($sub['content']);
+                $excerpt = $sub['excerpt'] ? normalize_content_text($sub['excerpt']) : make_excerpt($content, 140);
+                $image_url = $sub['image_url'] ?: 'images/featured-1.jpg';
+                $published_id = 0;
+
+                if ($type === 'poem') {
+                    $ins = $conn->prepare("INSERT INTO poems (title, content, author_name, category, image_url) VALUES (?, ?, ?, ?, ?)");
+                    $ins->bind_param("sssss", $title, $content, $author, $category, $image_url);
+                    if ($ins->execute()) {
+                        $published_id = $ins->insert_id;
+                    }
+                    $ins->close();
+                } elseif ($type === 'article') {
+                    $read_time = estimate_reading_time($content);
+                    $ins = $conn->prepare("INSERT INTO articles (title, excerpt, content, author_name, category, read_time, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $ins->bind_param("sssssis", $title, $excerpt, $content, $author, $category, $read_time, $image_url);
+                    if ($ins->execute()) {
+                        $published_id = $ins->insert_id;
+                    }
+                    $ins->close();
+                } elseif ($type === 'story') {
+                    $read_time = estimate_reading_time($content);
+                    $ins = $conn->prepare("INSERT INTO stories (title, excerpt, content, author_name, category, read_time, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $ins->bind_param("sssssis", $title, $excerpt, $content, $author, $category, $read_time, $image_url);
+                    if ($ins->execute()) {
+                        $published_id = $ins->insert_id;
+                    }
+                    $ins->close();
+                } elseif ($type === 'play') {
+                    $acts_count = 3;
+                    $ins = $conn->prepare("INSERT INTO plays (title, excerpt, content, author_name, category, acts_count, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $ins->bind_param("sssssis", $title, $excerpt, $content, $author, $category, $acts_count, $image_url);
+                    if ($ins->execute()) {
+                        $published_id = $ins->insert_id;
+                    }
+                    $ins->close();
+                }
+
+                if ($published_id > 0) {
+                    // Update submission status
+                    $now = date('Y-m-d H:i:s');
+                    $upd = $conn->prepare("UPDATE user_submissions SET status = 'approved', published_content_id = ?, reviewed_at = ? WHERE id = ?");
+                    $upd->bind_param("isi", $published_id, $now, $id);
+                    $upd->execute();
+                    $upd->close();
+
+                    $alert_msg = "रचना '{$title}' को सफलतापूर्वक स्वीकृत कर मुख्य वेबसाइट पर प्रकाशित कर दिया गया है!";
+                    $alert_type = "success";
+                } else {
+                    $alert_msg = "रचना प्रकाशित करने में त्रुटि आई: " . $conn->error;
+                    $alert_type = "danger";
+                }
             }
         }
     } elseif ($post_action === 'edit_and_approve' && $id > 0) {
@@ -139,11 +144,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $alert_msg = "रचना प्रस्ताव को अस्वीकृत कर दिया गया है।";
         $alert_type = "danger";
     } elseif ($post_action === 'delete' && $id > 0) {
+        // Fetch submission details first
+        $stmt_sub = $conn->prepare("SELECT content_type, published_content_id FROM user_submissions WHERE id = ? LIMIT 1");
+        if ($stmt_sub) {
+            $stmt_sub->bind_param("i", $id);
+            $stmt_sub->execute();
+            $sub_info = $stmt_sub->get_result()->fetch_assoc();
+            $stmt_sub->close();
+
+            if ($sub_info && !empty($sub_info['published_content_id'])) {
+                $pub_id = intval($sub_info['published_content_id']);
+                $table_map = ['poem' => 'poems', 'article' => 'articles', 'story' => 'stories', 'play' => 'plays'];
+                $target_table = $table_map[$sub_info['content_type']] ?? null;
+                if ($target_table && $pub_id > 0) {
+                    @$conn->query("DELETE FROM {$target_table} WHERE id = {$pub_id}");
+                }
+            }
+        }
+
         $stmt = $conn->prepare("DELETE FROM user_submissions WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $stmt->close();
-        $alert_msg = "प्रस्ताव सफलतापूर्वक हटा दिया गया।";
+        $alert_msg = "प्रस्ताव एवं संबद्ध सामग्री स्थायी रूप से हटा दी गई।";
         $alert_type = "success";
     }
 }

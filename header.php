@@ -77,3 +77,75 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
     </div>
 </header>
+
+<!-- Page Shift Loader Overlay -->
+<div id="page-shift-loader" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg, #fdfbf7);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+">
+    <div style="
+        width: 28px;
+        height: 28px;
+        border: 3px solid rgba(37, 99, 235, 0.18);
+        border-top: 3px solid #2563eb;
+        border-radius: 50%;
+        animation: pageSpin 0.65s linear infinite;
+    "></div>
+</div>
+
+<style>
+@keyframes pageSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+[data-theme="dark"] #page-shift-loader {
+    background-color: #16120e !important;
+}
+</style>
+
+<script>
+(function() {
+    function initLoader() {
+        const loader = document.getElementById('page-shift-loader');
+        if (!loader) return;
+
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a');
+            if (link && link.href && !link.target && !link.hasAttribute('download')) {
+                const url = new URL(link.href, window.location.href);
+                if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
+                    loader.style.visibility = 'visible';
+                    loader.style.opacity = '1';
+                }
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (loader) {
+                loader.style.visibility = 'visible';
+                loader.style.opacity = '1';
+            }
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLoader);
+    } else {
+        initLoader();
+    }
+})();
+</script>

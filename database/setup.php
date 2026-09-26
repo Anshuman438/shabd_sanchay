@@ -381,6 +381,20 @@ if ($about_p_check && $about_p_check->num_rows === 0) {
 }
 echo "<p style='color:green;'>✓ About Page Content table verified!</p>";
 
+// 15. User Likes Tracking Table (Ensures 1 like per user per post)
+$conn->query("
+CREATE TABLE IF NOT EXISTS `user_likes` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NULL,
+  `session_key` VARCHAR(128) NOT NULL,
+  `content_type` ENUM('poem', 'article', 'story', 'play') NOT NULL,
+  `content_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_like` (`session_key`, `content_type`, `content_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
+echo "<p style='color:green;'>✓ User Likes tracking table verified!</p>";
+
 // 15. Ensure all image columns across all tables support LONGTEXT (URLs, Drive links, base64 uploads)
 @$conn->query("ALTER TABLE `poems` MODIFY COLUMN `image_url` LONGTEXT NULL");
 @$conn->query("ALTER TABLE `articles` MODIFY COLUMN `image_url` LONGTEXT NULL");
