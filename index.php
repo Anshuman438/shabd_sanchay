@@ -905,203 +905,59 @@ $total_works = $total_poems + $total_articles + $total_stories;
         }
     }
 
-    // Scroll Animation, Parallax & Page-2 Stoppage Controller
+    // Clean, Non-Blocking Native Smooth Scroll & Reveal System for All Devices
     function initScrollAnimations() {
-        const heroBg = document.getElementById('hero-bg-layer');
-        const heroContent = document.getElementById('hero-content-wrap');
-        const heroCue = document.querySelector('.hero-scroll-cue');
-        const slidingSheet = document.querySelector('.sliding-card-sheet');
-
-        function getHeaderOffset() {
-            const header = document.querySelector('.site-header');
-            return header ? header.offsetHeight : 68;
-        }
-
-        function getDockY() {
-            if (!slidingSheet) return window.innerHeight - 68;
-            return Math.max(0, slidingSheet.offsetTop - getHeaderOffset());
-        }
-
-        // Parallax and zoom/fade visual transforms
-        function onScroll() {
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            const vh = window.innerHeight;
-            const heroSection = document.querySelector('.section-hero.panoramic-hero-section');
-
-            if (scrollY <= vh * 1.15) {
-                if (heroSection) {
-                    heroSection.style.visibility = 'visible';
-                    heroSection.style.pointerEvents = scrollY > vh * 0.7 ? 'none' : 'auto';
-                }
-
-                const progress = Math.min(1, Math.max(0, scrollY / (vh * 0.85)));
-
-                // Background artwork smooth zoom-in & subtle fade
-                if (heroBg) {
-                    const scale = 1 + progress * 0.15;
-                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                    const baseOpacity = isDark ? 0.12 : 0.22;
-                    const opacity = Math.max(0, baseOpacity * (1 - progress * 1.2));
-                    heroBg.style.transform = `scale(${scale})`;
-                    heroBg.style.opacity = opacity;
-                }
-
-                // Hero typography translate upward and fade
-                if (heroContent) {
-                    const translateY = -progress * 60;
-                    const opacity = Math.max(0, 1 - progress * 1.4);
-                    heroContent.style.transform = `translateY(${translateY}px)`;
-                    heroContent.style.opacity = opacity;
-                }
-
-                // Floating scroll cue fade out
-                if (heroCue) {
-                    const cueOpacity = Math.max(0, 1 - progress * 2.5);
-                    heroCue.style.opacity = cueOpacity;
-                    heroCue.style.pointerEvents = progress > 0.2 ? 'none' : 'auto';
-                }
-
-                // Sliding card sheet bloom/scale docking
-                if (slidingSheet) {
-                    const sheetScale = 0.98 + progress * 0.02;
-                    slidingSheet.style.transform = `scale(${sheetScale})`;
-                    slidingSheet.style.transformOrigin = 'center top';
-                }
-            } else {
-                // Completely hide and disable the sticky hero when scrolled past
-                // to eliminate background ghosting / glitching on page refresh or deep scrolling
-                if (heroSection) {
-                    heroSection.style.visibility = 'hidden';
-                    heroSection.style.pointerEvents = 'none';
-                }
-                if (heroBg) {
-                    heroBg.style.opacity = '0';
-                }
-                if (heroContent) {
-                    heroContent.style.opacity = '0';
-                }
-                if (heroCue) {
-                    heroCue.style.opacity = '0';
-                    heroCue.style.pointerEvents = 'none';
-                }
-                if (slidingSheet) {
-                    slidingSheet.style.transform = 'none';
-                }
-            }
-        }
-
-        window.addEventListener('scroll', () => {
-            requestAnimationFrame(onScroll);
-        }, { passive: true });
-        onScroll(); // initial call on page load/refresh
-
-        // IntersectionObserver for elements reveal on scroll
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-revealed');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.12,
-            rootMargin: '0px 0px -40px 0px'
-        });
-
-        document.querySelectorAll('.reveal-zoom-fade').forEach(el => {
-            revealObserver.observe(el);
-        });
-
-        // -----------------------------------------------------------------
-        // Intelligent Page 1 -> Page 2 Stoppage & Magnetic Snap Controller
-        // -----------------------------------------------------------------
-        let isSnapping = false;
-        let snapTimeout = null;
-
-        function scrollToPosition(targetY, duration = 650) {
-            isSnapping = true;
-            window.scrollTo({
-                top: targetY,
-                behavior: 'smooth'
+        // IntersectionObserver for lightweight elements reveal on scroll
+        if ('IntersectionObserver' in window) {
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.08,
+                rootMargin: '0px 0px -20px 0px'
             });
 
-            clearTimeout(snapTimeout);
-            snapTimeout = setTimeout(() => {
-                isSnapping = false;
-            }, duration + 100);
+            document.querySelectorAll('.reveal-zoom-fade').forEach(el => {
+                revealObserver.observe(el);
+            });
+        } else {
+            // Fallback for older browsers without IntersectionObserver
+            document.querySelectorAll('.reveal-zoom-fade').forEach(el => {
+                el.classList.add('is-revealed');
+            });
         }
 
-        // Wheel interceptor for distinct Page 1 to Page 2 stop
-        window.addEventListener('wheel', (e) => {
-            if (isSnapping) {
-                // If currently snapping to second page or back, absorb extra wheel momentum to ensure clean stoppage
-                e.preventDefault();
-                return;
-            }
-
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            const dockY = getDockY();
-
-            // Case 1: On Hero (Page 1) and user scrolls DOWN -> stop cleanly at Page 2
-            if (scrollY < 40 && e.deltaY > 15) {
-                e.preventDefault();
-                scrollToPosition(dockY, 650);
-            }
-            // Case 2: In transition between Page 1 and Page 2 and user scrolls DOWN -> snap to Page 2
-            else if (scrollY > 40 && scrollY < dockY - 30 && e.deltaY > 10) {
-                e.preventDefault();
-                scrollToPosition(dockY, 500);
-            }
-            // Case 3: Exactly docked at Page 2 and user scrolls UP -> snap back to Page 1 (Hero)
-            else if (scrollY <= dockY + 25 && scrollY >= dockY - 15 && e.deltaY < -15) {
-                e.preventDefault();
-                scrollToPosition(0, 650);
-            }
-        }, { passive: false });
-
-        // Touch swipe support for mobile/tablets
-        let touchStartY = 0;
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches && e.touches.length > 0) {
-                touchStartY = e.touches[0].clientY;
-            }
-        }, { passive: true });
-
-        window.addEventListener('touchmove', (e) => {
-            if (isSnapping) {
-                e.preventDefault();
-                return;
-            }
-            if (!e.touches || e.touches.length === 0) return;
-
-            const touchCurrentY = e.touches[0].clientY;
-            const deltaY = touchStartY - touchCurrentY;
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            const dockY = getDockY();
-
-            // Swipe UP (scroll down) from Hero
-            if (scrollY < 30 && deltaY > 35) {
-                e.preventDefault();
-                scrollToPosition(dockY, 600);
-            }
-            // Swipe DOWN (scroll up) from docked Page 2
-            else if (scrollY <= dockY + 20 && scrollY >= dockY - 10 && deltaY < -35) {
-                e.preventDefault();
-                scrollToPosition(0, 600);
-            }
-        }, { passive: false });
-
-        // Smooth handler for CTA and Scroll Cue links
-        document.querySelectorAll('a[href="#what-we-offer"]').forEach(link => {
+        // Smooth handler for CTA and Scroll Cue anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
-                scrollToPosition(getDockY(), 700);
+                const href = link.getAttribute('href');
+                if (href && href !== '#' && href.startsWith('#')) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        const headerOffset = document.querySelector('.site-header')?.offsetHeight || 64;
+                        const targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+                        window.scrollTo({
+                            top: targetPos,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
             });
         });
     }
 
-    // 3D Perspective Tilt & Cursor Glare Controller for Magical Cards
+    // 3D Perspective Tilt & Cursor Glare Controller (Desktop Fine Pointers Only)
     function initMagicalTiltCards() {
+        // Only run tilt effects on devices with actual mouse hover (desktop/laptop)
+        if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            return;
+        }
+
         const cards = document.querySelectorAll('.magical-card');
         
         cards.forEach(card => {

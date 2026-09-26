@@ -407,25 +407,10 @@ html {
 
 html.home-snap-active, 
 body.home-doodle-page {
-    scroll-snap-type: y proximity;
+    /* scroll-snap disabled for free scrolling */
 }
 
-.section-hero.panoramic-hero-section {
-    position: sticky;
-    top: 68px;
-    z-index: 1;
-    width: 100%;
-    height: calc(100vh - 68px);
-    min-height: calc(100vh - 68px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.8rem 0 3.2rem;
-    overflow: hidden;
-    background-color: #fdfbf7;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-}
+.section-hero.panoramic-hero-section { position: relative !important; top: auto !important; height: auto !important; width: 100% !important; }
 
 [data-theme="dark"] .section-hero.panoramic-hero-section {
     background-color: #120d0a;
@@ -469,7 +454,7 @@ body.home-doodle-page {
     padding-top: 0;
     transition: background-color 0.35s ease, box-shadow 0.35s ease;
     will-change: transform;
-    scroll-snap-align: start;
+    /* scroll-snap disabled */
     scroll-snap-stop: always;
     scroll-margin-top: 68px;
 }
@@ -1331,7 +1316,7 @@ body.home-doodle-page {
     box-sizing: border-box;
     width: 100%;
     overflow: hidden;
-    scroll-snap-align: start;
+    /* scroll-snap disabled */
     scroll-snap-stop: always;
     scroll-margin-top: 68px;
 }
@@ -10748,6 +10733,69 @@ img, svg, video, canvas {
 
     .header-user-name-text {
         display: none !important;
+    }
+}
+
+
+
+/* ==========================================================================
+   NATURAL FLUID SCROLLING & HARDWARE-ACCELERATED ADAPTIVE ANIMATIONS
+   Guarantees 100% Smooth Native Scrolling on All Mobile, Touch & Desktop Devices
+   ========================================================================== */
+
+/* 1. Global Free-Scroll Engine */
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scroll-behavior: smooth !important;
+    height: auto !important;
+    min-height: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Eliminate sticky overlays interfering with document flow */
+.section-hero.panoramic-hero-section {
+    position: relative !important;
+    top: auto !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+}
+
+.sliding-card-sheet {
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    z-index: 2 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 2. Hardware-Accelerated Smooth Reveal Animations */
+.reveal-zoom-fade {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-zoom-fade.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Disable heavy transitions for users or devices requesting reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .reveal-zoom-fade {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
     }
 }
 
