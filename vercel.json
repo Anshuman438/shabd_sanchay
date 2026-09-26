@@ -1,16 +1,13 @@
 {
   "functions": {
-    "api/**/*.php": {
-      "runtime": "vercel-php@0.9.0"
-    },
-    "admin/**/*.php": {
-      "runtime": "vercel-php@0.9.0"
-    },
-    "database/**/*.php": {
-      "runtime": "vercel-php@0.9.0"
-    },
-    "*.php": {
+    "api/index.php": {
       "runtime": "vercel-php@0.9.0"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.php"
+    }
+  ]
 }
