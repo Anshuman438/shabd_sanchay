@@ -1,8 +1,60 @@
 <?php
 // includes/auth.php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+    @session_start();
 }
+
+/**
+ * Serverless Cookie Session Persistence Helper for Vercel
+ */
+function sync_serverless_session() {
+    $secret_key = md5('shabd_sanchay_serverless_secret_' . (getenv('DB_PASS') ?: 'default_key'));
+    $cookie_name = 'ss_session_data';
+
+    // 1. Restore $_SESSION if empty on new lambda invocation
+    if (empty($_SESSION['admin_logged_in']) && empty($_SESSION['user_logged_in'])) {
+        if (!empty($_COOKIE[$cookie_name])) {
+            $data = json_decode(@base64_decode($_COOKIE[$cookie_name]), true);
+            if (is_array($data) && !empty($data['hash']) && !empty($data['payload']) && is_array($data['payload'])) {
+                $expected_hash = hash_hmac('sha256', json_encode($data['payload']), $secret_key);
+                if (hash_equals($expected_hash, $data['hash'])) {
+                    foreach ($data['payload'] as $k => $v) {
+                        $_SESSION[$k] = $v;
+                    }
+                }
+            }
+        }
+    }
+
+    // 2. Persist active session payload to HMAC-signed HTTP-only cookie on response shutdown
+    register_shutdown_function(function() use ($cookie_name, $secret_key) {
+        if (!headers_sent()) {
+            $active_session = array_filter($_SESSION, function($k) {
+                return strpos($k, 'admin_') === 0 || strpos($k, 'user_') === 0 || $k === 'csrf_token';
+            }, ARRAY_FILTER_USE_KEY);
+
+            if (!empty($active_session['admin_logged_in']) || !empty($active_session['user_logged_in'])) {
+                $hash = hash_hmac('sha256', json_encode($active_session), $secret_key);
+                $cookie_val = base64_encode(json_encode(['payload' => $active_session, 'hash' => $hash]));
+                setcookie($cookie_name, $cookie_val, [
+                    'expires' => time() + 86400 * 7,
+                    'path' => '/',
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+            } else {
+                setcookie($cookie_name, '', [
+                    'expires' => time() - 3600,
+                    'path' => '/',
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+            }
+        }
+    });
+}
+
+sync_serverless_session();
 
 require_once __DIR__ . '/../config.php';
 
