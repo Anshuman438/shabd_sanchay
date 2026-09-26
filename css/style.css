@@ -10906,3 +10906,152 @@ html, body {
         margin-top: 1.5rem !important;
     }
 }
+
+
+/* ==========================================================================
+   PERFECT FIXED HEADER & CINEMATIC SLIDING CARD SHEET SYSTEM
+   ========================================================================== */
+
+/* 1. Universal Fixed Navigation Bar */
+.site-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 68px !important;
+    z-index: 999999 !important;
+    background-color: rgba(252, 249, 244, 0.94) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+[data-theme="dark"] .site-header {
+    background-color: rgba(18, 14, 11, 0.94) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Compensate body padding so content starts neatly below fixed header */
+body {
+    padding-top: 68px !important;
+}
+
+/* 2. Hero Section: Sticky Cinematic Anchor on Desktop */
+@media (min-width: 993px) {
+    .section-hero.panoramic-hero-section {
+        position: sticky !important;
+        top: 68px !important;
+        height: calc(100vh - 68px) !important;
+        min-height: 580px !important;
+        max-height: 900px !important;
+        width: 100% !important;
+        z-index: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1.5rem 2rem 2rem !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+    }
+
+    .panoramic-hero-section .hero-container {
+        position: relative !important;
+        z-index: 2 !important;
+        display: grid !important;
+        grid-template-columns: 1.08fr 0.92fr !important;
+        gap: clamp(1.5rem, 3.5vw, 3.5rem) !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 1260px !important;
+        margin: 0 auto !important;
+    }
+
+    /* 3. The Iconic Sliding Card Sheet */
+    .sliding-card-sheet {
+        position: relative !important;
+        z-index: 10 !important;
+        background-color: var(--bg, #fdfbf7) !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        border-top-left-radius: 40px !important;
+        border-top-right-radius: 40px !important;
+        box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.14), 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
+        border-top: 1.5px solid rgba(200, 90, 23, 0.25) !important;
+        padding-top: 3.5rem !important;
+        margin-top: 0 !important;
+        transition: background-color 0.35s ease, box-shadow 0.35s ease !important;
+    }
+
+    [data-theme="dark"] .sliding-card-sheet {
+        background-color: #120d0a !important;
+        box-shadow: 0 -28px 70px rgba(0, 0, 0, 0.85), 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
+        border-top: 1.5px solid rgba(246, 173, 85, 0.25) !important;
+    }
+
+    .card-sheet-pill-handle {
+        display: flex !important;
+        position: absolute !important;
+        top: 14px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 15 !important;
+    }
+
+    .pill-handle-bar {
+        width: 58px !important;
+        height: 5px !important;
+        border-radius: 10px !important;
+        background: rgba(200, 90, 23, 0.4) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .sliding-card-sheet:hover .pill-handle-bar {
+        width: 80px !important;
+        background: var(--primary, #c85a17) !important;
+    }
+}
+
+/* Mobile & Tablet Fallback */
+@media (max-width: 992px) {
+    .section-hero.panoramic-hero-section {
+        position: relative !important;
+        top: auto !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 2rem 1rem 2.5rem 1rem !important;
+        z-index: 1 !important;
+    }
+
+    .sliding-card-sheet {
+        position: relative !important;
+        z-index: 5 !important;
+        border-top-left-radius: 28px !important;
+        border-top-right-radius: 28px !important;
+        box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.16) !important;
+        border-top: 1.5px solid rgba(200, 90, 23, 0.22) !important;
+        padding-top: 2.5rem !important;
+        margin-top: 0 !important;
+    }
+
+    .card-sheet-pill-handle {
+        display: flex !important;
+        position: absolute !important;
+        top: 10px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .pill-handle-bar {
+        width: 44px !important;
+        height: 4px !important;
+        border-radius: 10px !important;
+        background: rgba(200, 90, 23, 0.4) !important;
+    }
+}
+

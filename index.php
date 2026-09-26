@@ -907,6 +907,31 @@ $total_works = $total_poems + $total_articles + $total_stories;
 
     // Scroll Animation & Clean Intersection Observer
     function initScrollAnimations() {
+        const heroBg = document.getElementById('hero-bg-layer');
+        const heroContent = document.getElementById('hero-content-wrap');
+
+        // Smooth Parallax for Desktop Sliding Card Sheet
+        function onScroll() {
+            if (window.innerWidth > 992) {
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                const vh = window.innerHeight;
+                if (scrollY < vh * 1.1) {
+                    const progress = Math.min(1, Math.max(0, scrollY / (vh * 0.85)));
+                    if (heroBg) {
+                        heroBg.style.transform = `scale(${1 + progress * 0.12})`;
+                    }
+                    if (heroContent) {
+                        heroContent.style.transform = `translateY(${-progress * 45}px)`;
+                        heroContent.style.opacity = `${Math.max(0, 1 - progress * 1.2)}`;
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(onScroll);
+        }, { passive: true });
+
         // IntersectionObserver for elements reveal on scroll
         if ('IntersectionObserver' in window) {
             const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -938,7 +963,7 @@ $total_works = $total_poems + $total_articles + $total_stories;
                     const target = document.querySelector(href);
                     if (target) {
                         e.preventDefault();
-                        const headerOffset = document.querySelector('.site-header')?.offsetHeight || 64;
+                        const headerOffset = document.querySelector('.site-header')?.offsetHeight || 68;
                         const targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
                         window.scrollTo({
                             top: targetPos,
