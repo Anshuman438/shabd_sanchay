@@ -1,31 +1,31 @@
 <?php
 // Vercel Serverless Entrypoint Router for Shabd Sanchay
 
-// Ensure browser renders HTML content instead of prompting file download
 if (!headers_sent()) {
     header('Content-Type: text/html; charset=UTF-8');
 }
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$uri = strtok($uri, '?');
 
-// If root path or empty, serve main index.php
+$root_dir = dirname(__DIR__);
+
+// Default route to home
 if ($uri === '/' || $uri === '' || $uri === '/index.php') {
-    chdir(__DIR__ . '/..');
-    require __DIR__ . '/../index.php';
+    chdir($root_dir);
+    require $root_dir . '/index.php';
     exit;
 }
 
-// Build target file path relative to project root
-$target = realpath(__DIR__ . '/..' . $uri);
-$project_root = realpath(__DIR__ . '/..');
+$target = $root_dir . $uri;
 
-// Ensure target exists, is a file, and stays inside project root (security check)
-if ($target && is_file($target) && strpos($target, $project_root) === 0) {
+// If specific file requested exists
+if (file_exists($target) && is_file($target)) {
     chdir(dirname($target));
     require $target;
     exit;
 }
 
-// Fallback to main index.php
-chdir(__DIR__ . '/..');
-require __DIR__ . '/../index.php';
+// Fallback to home page
+chdir($root_dir);
+require $root_dir . '/index.php';
