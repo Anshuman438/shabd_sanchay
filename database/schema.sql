@@ -3,9 +3,6 @@
 -- Charset: utf8mb4 (Full Devanagari & Emoji Support)
 -- =========================================================
 
-CREATE DATABASE IF NOT EXISTS `SHABD_SANCHAY` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `SHABD_SANCHAY`;
-
 -- 1. Poems Table (कविताएँ)
 CREATE TABLE IF NOT EXISTS `poems` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,

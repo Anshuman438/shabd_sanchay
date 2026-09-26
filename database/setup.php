@@ -5,26 +5,31 @@ if (!headers_sent()) {
     header('Content-Type: text/html; charset=utf-8');
 }
 
-echo "<h2>शब्द संचय (Shabd Sanchay) - Database Master Setup</h2>";
+echo "<div style='font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto;'>";
+echo "<h2>शब्द संचय (Shabd Sanchay) - Master Database Setup</h2>";
 
-// 1. Run Base Schema
+if ($conn->connect_error) {
+    die("<p style='color:red;'>Connection Error: " . htmlspecialchars($conn->connect_error) . "</p>");
+}
+
+// 1. Run Base Schema Queries
 $sqlFile = __DIR__ . '/schema.sql';
 if (file_exists($sqlFile)) {
     $sqlContent = file_get_contents($sqlFile);
-    if ($conn->multi_query($sqlContent)) {
-        do {
-            if ($result = $conn->store_result()) {
-                $result->free();
+    $queries = array_filter(array_map('trim', explode(';', $sqlContent)));
+    $success_count = 0;
+    foreach ($queries as $q) {
+        if (!empty($q)) {
+            if ($conn->query($q)) {
+                $success_count++;
             }
-        } while ($conn->more_results() && $conn->next_result());
-        echo "<p style='color:green;'>✓ Base schema & sample data loaded successfully!</p>";
-    } else {
-        echo "<p style='color:red;'>Schema error: " . htmlspecialchars($conn->error) . "</p>";
+        }
     }
+    echo "<p style='color:green;'>✓ Base schema processed ($success_count statements executed)!</p>";
 }
 
 // 2. Create `users` table for member registration & login
-$conn->query("
+$u_res = $conn->query("
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(150) NOT NULL,
@@ -38,10 +43,14 @@ CREATE TABLE IF NOT EXISTS `users` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
-echo "<p style='color:green;'>✓ Users table verified/created!</p>";
+if ($u_res) {
+    echo "<p style='color:green;'>✓ Users table verified/created!</p>";
+} else {
+    echo "<p style='color:red;'>Users table error: " . htmlspecialchars($conn->error) . "</p>";
+}
 
 // 3. Create `admin_users` table and insert default admin
-$conn->query("
+$adm_res = $conn->query("
 CREATE TABLE IF NOT EXISTS `admin_users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(100) NOT NULL UNIQUE,
@@ -54,20 +63,28 @@ CREATE TABLE IF NOT EXISTS `admin_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
 
+if ($adm_res) {
+    echo "<p style='color:green;'>✓ Admin Users table verified/created!</p>";
+} else {
+    echo "<p style='color:red;'>Admin Users table error: " . htmlspecialchars($conn->error) . "</p>";
+}
+
 $admin_check = $conn->query("SELECT id FROM `admin_users` WHERE `username` = 'admin'");
 if ($admin_check && $admin_check->num_rows === 0) {
     $default_hash = password_hash('admin123', PASSWORD_BCRYPT);
     $stmt = $conn->prepare("INSERT INTO `admin_users` (username, email, password_hash, full_name, role) VALUES (?, ?, ?, ?, ?)");
-    $u = 'admin';
-    $e = 'admin@hindisahitya.com';
-    $fn = 'मुख्य प्रशासक';
-    $r = 'superadmin';
-    $stmt->bind_param("sssss", $u, $e, $default_hash, $fn, $r);
-    $stmt->execute();
-    $stmt->close();
-    echo "<p style='color:green;'>✓ Default Admin account created (Username: <b>admin</b> | Password: <b>admin123</b>)!</p>";
+    if ($stmt) {
+        $u = 'admin';
+        $e = 'admin@hindisahitya.com';
+        $fn = 'मुख्य प्रशासक';
+        $r = 'superadmin';
+        $stmt->bind_param("sssss", $u, $e, $default_hash, $fn, $r);
+        $stmt->execute();
+        $stmt->close();
+        echo "<p style='color:green;'>✓ Default Admin account created (Username: <b>admin</b> | Password: <b>admin123</b>)!</p>";
+    }
 } else {
-    echo "<p style='color:green;'>✓ Admin table verified (Default Admin exists)!</p>";
+    echo "<p style='color:green;'>✓ Default Admin user active!</p>";
 }
 
 // 4. Create `user_submissions` table
@@ -95,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `user_submissions` (
     INDEX (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
-echo "<p style='color:green;'>✓ User submissions table verified/created!</p>";
+echo "<p style='color:green;'>✓ User Submissions table verified!</p>";
 
 // 5. Create `stories` table
 $conn->query("
@@ -113,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `stories` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
-echo "<p style='color:green;'>✓ Stories table verified/created!</p>";
+echo "<p style='color:green;'>✓ Stories table verified!</p>";
 
 // 6. Create `plays` table
 $conn->query("
@@ -131,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `plays` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ");
-echo "<p style='color:green;'>✓ Plays table verified/created!</p>";
+echo "<p style='color:green;'>✓ Plays table verified!</p>";
 
 // 7. Create `about_content` table
 $conn->query("
@@ -160,11 +177,9 @@ if ($about_check && $about_check->num_rows === 0) {
         'विश्व भर के हिंदी प्रेमियों के लिए एक सशक्त और प्रेरणादायक साहित्यिक मंच का निर्माण करना।'
     );
     ");
-    echo "<p style='color:green;'>✓ About Content table initialized with default text!</p>";
-} else {
-    echo "<p style='color:green;'>✓ About Content table verified!</p>";
 }
+echo "<p style='color:green;'>✓ About Content table verified!</p>";
 
-echo "<br><h3 style='color:green; font-weight:bold;'>🎉 All database tables, users, and admin accounts set up successfully!</h3>";
+echo "<br><h3 style='color:green; font-weight:bold;'>🎉 Master Database Setup Completed!</h3>";
 echo "<p><a href='../index.php' style='padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Homepage</a> &nbsp; <a href='../admin/login.php' style='padding: 8px 16px; background: #059669; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to Admin Login</a> &nbsp; <a href='../login.php' style='padding: 8px 16px; background: #7c3aed; color: white; text-decoration: none; border-radius: 4px; display: inline-block;'>Go to User Login</a></p>";
-?>
+echo "</div>";
