@@ -283,33 +283,39 @@ $page_title = "लॉग इन एवं रचनाकार खाता | �
                 <?php endif; ?>
 
                 <!-- Google OAuth 2.0 Sign-In Button -->
-                <div style="margin-bottom: 1.2rem; text-align: center;">
-                    <script src="https://accounts.google.com/gsi/client" async defer></script>
-                    
-                    <div id="g_id_onload"
-                         data-client_id="<?= htmlspecialchars(getenv('GOOGLE_CLIENT_ID') ?: '782946102837-shabdsanchay.apps.googleusercontent.com') ?>"
-                         data-context="signin"
-                         data-ux_mode="popup"
-                         data-callback="handleGoogleSignIn"
-                         data-auto_prompt="false">
-                    </div>
+                <?php if (!empty($google_client_id)): ?>
+                    <div style="margin-bottom: 1.2rem; text-align: center;">
+                        <script src="https://accounts.google.com/gsi/client" async defer></script>
+                        
+                        <div id="g_id_onload"
+                             data-client_id="<?= htmlspecialchars($google_client_id) ?>"
+                             data-context="signin"
+                             data-ux_mode="popup"
+                             data-callback="handleGoogleSignIn"
+                             data-auto_prompt="false">
+                        </div>
 
-                    <div class="g_id_signin"
-                         data-type="standard"
-                         data-shape="rectangular"
-                         data-theme="outline"
-                         data-text="signin_with"
-                         data-size="large"
-                         data-logo_alignment="left"
-                         data-width="100%">
-                    </div>
+                        <div class="g_id_signin"
+                             data-type="standard"
+                             data-shape="rectangular"
+                             data-theme="outline"
+                             data-text="signin_with"
+                             data-size="large"
+                             data-logo_alignment="left"
+                             data-width="100%">
+                        </div>
 
-                    <div style="display: flex; align-items: center; margin: 1.2rem 0 0.8rem;">
-                        <hr style="flex: 1; border: none; border-top: 1px solid rgba(0,0,0,0.12);">
-                        <span style="padding: 0 10px; font-size: 0.82rem; color: #64748b; font-weight: 600;">अथवा ई-मेल / पासवर्ड से</span>
-                        <hr style="flex: 1; border: none; border-top: 1px solid rgba(0,0,0,0.12);">
+                        <div style="display: flex; align-items: center; margin: 1.2rem 0 0.8rem;">
+                            <hr style="flex: 1; border: none; border-top: 1px solid rgba(0,0,0,0.12);">
+                            <span style="padding: 0 10px; font-size: 0.82rem; color: #64748b; font-weight: 600;">अथवा ई-मेल / पासवर्ड से</span>
+                            <hr style="flex: 1; border: none; border-top: 1px solid rgba(0,0,0,0.12);">
+                        </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <div style="margin-bottom: 1.2rem; padding: 10px 14px; background: rgba(234, 179, 8, 0.08); border: 1px dashed #eab308; border-radius: 10px; font-size: 0.82rem; color: #a16207; text-align: center;">
+                        🔑 गूगल लॉगिन सक्रिय करने के लिए अपना <strong>Google Client ID</strong> Vercel या <code>config.php</code> में जोड़ें।
+                    </div>
+                <?php endif; ?>
 
                 <!-- Tab switcher -->
                 <div class="auth-tab-row">

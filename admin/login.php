@@ -180,27 +180,29 @@ $csrf_token = generate_csrf_token();
     </form>
 
     <!-- Google OAuth 2.0 Sign-In Button -->
-    <div style="margin-top: 1.5rem; text-align: center;">
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-        
-        <div id="g_id_onload"
-             data-client_id="<?= htmlspecialchars(getenv('GOOGLE_CLIENT_ID') ?: '782946102837-shabdsanchay.apps.googleusercontent.com') ?>"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="handleGoogleSignIn"
-             data-auto_prompt="false">
-        </div>
+    <?php if (!empty($google_client_id)): ?>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <script src="https://accounts.google.com/gsi/client" async defer></script>
+            
+            <div id="g_id_onload"
+                 data-client_id="<?= htmlspecialchars($google_client_id) ?>"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-callback="handleGoogleSignIn"
+                 data-auto_prompt="false">
+            </div>
 
-        <div class="g_id_signin"
-             data-type="standard"
-             data-shape="rectangular"
-             data-theme="outline"
-             data-text="signin_with"
-             data-size="large"
-             data-logo_alignment="left"
-             data-width="100%">
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="outline"
+                 data-text="signin_with"
+                 data-size="large"
+                 data-logo_alignment="left"
+                 data-width="100%">
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 
     <script>
     function handleGoogleSignIn(response) {

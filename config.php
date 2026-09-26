@@ -95,4 +95,8 @@ if ($conn->connect_error) {
 
 // Set charset to support Hindi Devanagari
 $conn->set_charset("utf8mb4");
+
+// Google OAuth 2.0 Client ID Configuration
+// Paste your Client ID from Google Cloud Console below or set GOOGLE_CLIENT_ID in Vercel Environment Variables
+$google_client_id = getenv('GOOGLE_CLIENT_ID') ?: '';
 ?>
