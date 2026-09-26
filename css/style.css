@@ -10799,3 +10799,110 @@ html, body {
     }
 }
 
+
+
+/* ==========================================================================
+   PERFECT HERO SECTION & POSTER STUDIO LAYOUT FIX
+   ========================================================================== */
+
+/* 1. Hero Section Layout & Geometry */
+.section-hero.panoramic-hero-section {
+    position: relative !important;
+    width: 100% !important;
+    min-height: calc(100vh - 70px) !important;
+    padding: clamp(2.5rem, 5vw, 4rem) 1.5rem clamp(2.5rem, 4vw, 3.5rem) 1.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    margin: 0 !important;
+}
+
+.panoramic-hero-section .hero-container {
+    position: relative !important;
+    z-index: 2 !important;
+    display: grid !important;
+    grid-template-columns: 1.08fr 0.92fr !important;
+    gap: clamp(1.5rem, 3.5vw, 3.2rem) !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 1240px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+
+.panoramic-hero-section .hero-left {
+    width: 100% !important;
+    max-width: 600px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    margin: 0 !important;
+}
+
+.panoramic-hero-section .hero-right {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.poster-studio-card {
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    border-radius: 18px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+.hero-scroll-cue {
+    position: static !important;
+    margin: 2.2rem auto 0 auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 5 !important;
+    transform: none !important;
+}
+
+.card-sheet-pill-handle {
+    display: none !important;
+}
+
+.sliding-card-sheet {
+    position: relative !important;
+    z-index: 2 !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    padding-top: clamp(2.5rem, 5vw, 4rem) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="dark"] .sliding-card-sheet {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+@media (max-width: 992px) {
+    .section-hero.panoramic-hero-section {
+        min-height: auto !important;
+        padding: 2rem 1rem 2.5rem 1rem !important;
+    }
+    .panoramic-hero-section .hero-container {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+    .panoramic-hero-section .hero-left {
+        align-items: center !important;
+        text-align: center !important;
+        max-width: 100% !important;
+    }
+    .hero-scroll-cue {
+        margin-top: 1.5rem !important;
+    }
+}
