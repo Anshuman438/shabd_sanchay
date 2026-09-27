@@ -11001,29 +11001,28 @@ body.home-doodle-page main.main-content {
     filter: brightness(0.75) contrast(1.15) !important;
 }
 
-/* 2. Hero Section: Sticky Cinematic Anchor (Stationary, Zero Gap Under Navbar) */
+/* 2. Hero Section: Truly Fixed Stationary Anchor (Never Moves On Scroll) */
 .section-hero.panoramic-hero-section {
-    position: sticky !important;
+    position: fixed !important;
     top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     width: 100% !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
     z-index: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: calc(68px + 1rem) 2rem 4rem 2rem !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
     margin: 0 !important;
 }
 
 @media (min-width: 993px) {
-    .section-hero.panoramic-hero-section {
-        height: 100vh !important;
-        min-height: 100vh !important;
-        max-height: 100vh !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: calc(68px + 1rem) 2rem 4rem 2rem !important;
-        box-sizing: border-box !important;
-        overflow: hidden !important;
-    }
-
     .panoramic-hero-section .hero-container {
         position: relative !important;
         z-index: 2 !important;
@@ -11062,98 +11061,84 @@ body.home-doodle-page main.main-content {
         aspect-ratio: 1 / 1 !important;
         border-radius: 12px !important;
     }
-
-    /* Fixed Clean Floating Scroll Cue in Viewport */
-    .hero-scroll-cue {
-        position: absolute !important;
-        bottom: 16px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        z-index: 8 !important;
-        margin: 0 !important;
-    }
-
-    /* 3. The Sliding Card Sheet (Second Page) */
-    .sliding-card-sheet {
-        position: relative !important;
-        z-index: 10 !important;
-        background-color: var(--bg, #fdfbf7) !important;
-        width: 100% !important;
-        min-height: 100vh !important;
-        border-top-left-radius: 44px !important;
-        border-top-right-radius: 44px !important;
-        box-shadow: 0 -32px 80px rgba(0, 0, 0, 0.22), 0 -6px 22px rgba(0, 0, 0, 0.08) !important;
-        border-top: 1.5px solid rgba(200, 90, 23, 0.35) !important;
-        padding-top: 3.5rem !important;
-        margin-top: 0 !important;
-        transition: background-color 0.35s ease, box-shadow 0.35s ease !important;
-    }
-
-    [data-theme="dark"] .sliding-card-sheet {
-        background-color: #120d0a !important;
-        box-shadow: 0 -36px 95px rgba(0, 0, 0, 0.95), 0 -6px 25px rgba(0, 0, 0, 0.5) !important;
-        border-top: 1.5px solid rgba(246, 173, 85, 0.35) !important;
-    }
-
-    .card-sheet-pill-handle {
-        display: flex !important;
-        position: absolute !important;
-        top: 14px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        z-index: 15 !important;
-    }
-
-    .pill-handle-bar {
-        width: 58px !important;
-        height: 5px !important;
-        border-radius: 10px !important;
-        background: rgba(200, 90, 23, 0.45) !important;
-        transition: all 0.3s ease !important;
-    }
-
-    .sliding-card-sheet:hover .pill-handle-bar {
-        width: 80px !important;
-        background: var(--primary, #c85a17) !important;
-    }
 }
 
-/* Mobile & Tablet */
+/* Fixed Clean Floating Scroll Cue in Viewport */
+.hero-scroll-cue {
+    position: absolute !important;
+    bottom: 16px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 8 !important;
+    margin: 0 !important;
+}
+
+/* 3. The Sliding Card Sheet: Slides Directly Over The Fixed First Page */
+.sliding-card-sheet {
+    position: relative !important;
+    z-index: 10 !important;
+    margin-top: 100vh !important;
+    background-color: var(--bg, #fdfbf7) !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    border-top-left-radius: 44px !important;
+    border-top-right-radius: 44px !important;
+    box-shadow: 0 -32px 80px rgba(0, 0, 0, 0.22), 0 -6px 22px rgba(0, 0, 0, 0.08) !important;
+    border-top: 1.5px solid rgba(200, 90, 23, 0.35) !important;
+    padding-top: 3.5rem !important;
+    transition: background-color 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+[data-theme="dark"] .sliding-card-sheet {
+    background-color: #120d0a !important;
+    box-shadow: 0 -36px 95px rgba(0, 0, 0, 0.95), 0 -6px 25px rgba(0, 0, 0, 0.5) !important;
+    border-top: 1.5px solid rgba(246, 173, 85, 0.35) !important;
+}
+
+.card-sheet-pill-handle {
+    display: flex !important;
+    position: absolute !important;
+    top: 14px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 15 !important;
+}
+
+.pill-handle-bar {
+    width: 58px !important;
+    height: 5px !important;
+    border-radius: 10px !important;
+    background: rgba(200, 90, 23, 0.45) !important;
+    transition: all 0.3s ease !important;
+}
+
+.sliding-card-sheet:hover .pill-handle-bar {
+    width: 80px !important;
+    background: var(--primary, #c85a17) !important;
+}
+
+/* Mobile & Tablet Adjustments */
 @media (max-width: 992px) {
     .section-hero.panoramic-hero-section {
-        position: sticky !important;
-        top: 0 !important;
-        height: auto !important;
-        min-height: 100vh !important;
-        padding: calc(68px + 1.25rem) 1rem 2.5rem 1rem !important;
-        z-index: 1 !important;
-        margin: 0 !important;
+        padding: calc(68px + 0.5rem) 1rem 2rem 1rem !important;
     }
 
     .sliding-card-sheet {
-        position: relative !important;
-        z-index: 5 !important;
+        margin-top: 100vh !important;
         border-top-left-radius: 32px !important;
         border-top-right-radius: 32px !important;
         box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.18) !important;
         border-top: 1.5px solid rgba(200, 90, 23, 0.28) !important;
         padding-top: 2.5rem !important;
-        margin-top: 0 !important;
     }
 
     .card-sheet-pill-handle {
-        display: flex !important;
-        position: absolute !important;
         top: 10px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
     }
 
     .pill-handle-bar {
         width: 44px !important;
         height: 4px !important;
-        border-radius: 10px !important;
-        background: rgba(200, 90, 23, 0.4) !important;
     }
 }
 
