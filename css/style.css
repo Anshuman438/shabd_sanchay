@@ -11003,8 +11003,8 @@ body.home-doodle-page main.main-content {
 
 .panoramic-hero-section .hero-container {
     transform-origin: center center !important;
-    will-change: transform, opacity !important;
-    transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s linear !important;
+    will-change: transform !important;
+    transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 
 /* 2. Hero Section: Sticky Cinematic Anchor on Desktop (Zero Gap Under Navbar) */

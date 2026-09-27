@@ -911,27 +911,30 @@ $total_works = $total_poems + $total_articles + $total_stories;
         const heroContent = document.getElementById('hero-content-wrap');
         const heroSection = document.querySelector('.section-hero.panoramic-hero-section');
 
-        // Cinematic Zoom-In & Fade for Fixed Hero Background & Content
+        // Pure Zoom-In for Fixed First Page (Stationary, No Upward Movement)
         function onScroll() {
             const scrollY = window.pageYOffset || document.documentElement.scrollTop;
             const heroH = (heroSection && heroSection.offsetHeight > 200) ? heroSection.offsetHeight : window.innerHeight;
 
             if (scrollY <= heroH * 1.35) {
-                const progress = Math.min(1, Math.max(0, scrollY / (heroH * 0.88)));
+                const progress = Math.min(1, Math.max(0, scrollY / (heroH * 0.92)));
                 
                 if (heroBg) {
-                    // Smooth, tangible zoom-in on the background vintage texture & foliage
-                    const bgScale = 1 + progress * 0.24;
+                    // Smooth, tangible zoom-in on the background vintage artwork
+                    const bgScale = 1 + progress * 0.22;
                     heroBg.style.transform = `scale(${bgScale.toFixed(4)})`;
                 }
                 
                 if (heroContent) {
-                    // Gentle upward parallax lift and soft fade-out as the sliding card sheet comes on top
-                    const contentScale = 1 + progress * 0.06;
-                    const translateY = -progress * 48;
-                    const opacityVal = Math.max(0, 1 - progress * 1.22);
-                    heroContent.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0) scale(${contentScale.toFixed(4)})`;
-                    heroContent.style.opacity = opacityVal.toFixed(3);
+                    // First page stays firmly anchored (NO upward movement, NO fade-out) - purely subtle zoom-in
+                    const contentScale = 1 + progress * 0.08;
+                    heroContent.style.transform = `scale(${contentScale.toFixed(4)})`;
+                    heroContent.style.opacity = '1';
+                }
+
+                const scrollCue = document.querySelector('.hero-scroll-cue');
+                if (scrollCue) {
+                    scrollCue.style.opacity = `${Math.max(0, 1 - progress * 2.2)}`;
                 }
             }
         }
