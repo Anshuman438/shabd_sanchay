@@ -261,6 +261,7 @@ ul {
 }
 
 .main-nav a.active::after {
+    display: none !important;
     content: '';
     position: absolute;
     bottom: 0px;
@@ -11055,3 +11056,154 @@ body {
     }
 }
 
+
+
+/* ==========================================================================
+   PERFECT CLEAN NAVBAR (NO UNWANTED LINES) & SEAMLESS SLIDING CARD ANIMATION
+   ========================================================================== */
+
+/* 1. Remove All Unwanted Bottom Border Lines & Underlines on Header */
+.site-header,
+[data-theme="dark"] .site-header,
+[data-theme="light"] .site-header {
+    border-bottom: none !important;
+    border: none !important;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="dark"] .site-header {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Remove Active Tab Bottom Underline Bar */
+.main-nav a.active::after,
+.main-nav a::after {
+    display: none !important;
+    content: none !important;
+}
+
+.main-nav a.active {
+    color: var(--primary, #c85a17) !important;
+    background: rgba(200, 90, 23, 0.1) !important;
+    border-radius: 20px !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .main-nav a.active {
+    color: #f6ad55 !important;
+    background: rgba(246, 173, 85, 0.12) !important;
+}
+
+/* 2. Seamless Desktop Cinematic Sliding Card Sheet & Hero Fitting */
+@media (min-width: 993px) {
+    .section-hero.panoramic-hero-section {
+        position: sticky !important;
+        top: 68px !important;
+        height: calc(100vh - 68px) !important;
+        min-height: calc(100vh - 68px) !important;
+        max-height: calc(100vh - 68px) !important;
+        width: 100% !important;
+        z-index: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1rem 2rem 4rem 2rem !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+    }
+
+    .panoramic-hero-section .hero-container {
+        position: relative !important;
+        z-index: 2 !important;
+        display: grid !important;
+        grid-template-columns: 1.12fr 0.88fr !important;
+        gap: clamp(1.5rem, 3vw, 3rem) !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 1240px !important;
+        margin: 0 auto !important;
+    }
+
+    .hero-title {
+        font-size: clamp(1.8rem, 3.2vw, 2.75rem) !important;
+        line-height: 1.25 !important;
+        margin-bottom: 0.85rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(0.92rem, 1.3vw, 1.08rem) !important;
+        line-height: 1.7 !important;
+        margin-bottom: 1.25rem !important;
+    }
+
+    .poster-studio-card {
+        width: 100% !important;
+        max-width: 440px !important;
+        margin: 0 auto !important;
+        border-radius: 16px !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+        padding: 1rem 1.15rem 1.15rem !important;
+    }
+
+    .poster-photo-box {
+        max-height: clamp(230px, 32vh, 300px) !important;
+        aspect-ratio: 1 / 1 !important;
+        border-radius: 12px !important;
+    }
+
+    /* Fixed Clean Floating Scroll Cue in Viewport */
+    .hero-scroll-cue {
+        position: absolute !important;
+        bottom: 16px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 8 !important;
+        margin: 0 !important;
+    }
+
+    /* 3. The Sliding Card Sheet (Second Page) */
+    .sliding-card-sheet {
+        position: relative !important;
+        z-index: 10 !important;
+        background-color: var(--bg, #fdfbf7) !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        border-top-left-radius: 40px !important;
+        border-top-right-radius: 40px !important;
+        box-shadow: 0 -28px 70px rgba(0, 0, 0, 0.16), 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
+        border-top: 1.5px solid rgba(200, 90, 23, 0.28) !important;
+        padding-top: 3.5rem !important;
+        margin-top: 0 !important;
+        transition: background-color 0.35s ease, box-shadow 0.35s ease !important;
+    }
+
+    [data-theme="dark"] .sliding-card-sheet {
+        background-color: #120d0a !important;
+        box-shadow: 0 -32px 80px rgba(0, 0, 0, 0.9), 0 -4px 20px rgba(0, 0, 0, 0.45) !important;
+        border-top: 1.5px solid rgba(246, 173, 85, 0.28) !important;
+    }
+
+    .card-sheet-pill-handle {
+        display: flex !important;
+        position: absolute !important;
+        top: 14px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 15 !important;
+    }
+
+    .pill-handle-bar {
+        width: 58px !important;
+        height: 5px !important;
+        border-radius: 10px !important;
+        background: rgba(200, 90, 23, 0.45) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .sliding-card-sheet:hover .pill-handle-bar {
+        width: 80px !important;
+        background: var(--primary, #c85a17) !important;
+    }
+}
