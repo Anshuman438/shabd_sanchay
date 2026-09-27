@@ -911,7 +911,7 @@ $total_works = $total_poems + $total_articles + $total_stories;
         const heroContent = document.getElementById('hero-content-wrap');
         const heroSection = document.querySelector('.section-hero.panoramic-hero-section');
 
-        // Pure Zoom-In for Fixed First Page (Stationary, No Upward Movement)
+        // Pure Zoom-In on Background (First Page Stays 100% Stationary, No Content Movement)
         function onScroll() {
             const scrollY = window.pageYOffset || document.documentElement.scrollTop;
             const heroH = (heroSection && heroSection.offsetHeight > 200) ? heroSection.offsetHeight : window.innerHeight;
@@ -923,13 +923,6 @@ $total_works = $total_poems + $total_articles + $total_stories;
                     // Smooth, tangible zoom-in on the background vintage artwork
                     const bgScale = 1 + progress * 0.22;
                     heroBg.style.transform = `scale(${bgScale.toFixed(4)})`;
-                }
-                
-                if (heroContent) {
-                    // First page stays firmly anchored (NO upward movement, NO fade-out) - purely subtle zoom-in
-                    const contentScale = 1 + progress * 0.08;
-                    heroContent.style.transform = `scale(${contentScale.toFixed(4)})`;
-                    heroContent.style.opacity = '1';
                 }
 
                 const scrollCue = document.querySelector('.hero-scroll-cue');

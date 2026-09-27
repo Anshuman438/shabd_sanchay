@@ -11001,22 +11001,20 @@ body.home-doodle-page main.main-content {
     filter: brightness(0.75) contrast(1.15) !important;
 }
 
-.panoramic-hero-section .hero-container {
-    transform-origin: center center !important;
-    will-change: transform !important;
-    transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+/* 2. Hero Section: Sticky Cinematic Anchor (Stationary, Zero Gap Under Navbar) */
+.section-hero.panoramic-hero-section {
+    position: sticky !important;
+    top: 0 !important;
+    width: 100% !important;
+    z-index: 1 !important;
+    margin: 0 !important;
 }
 
-/* 2. Hero Section: Sticky Cinematic Anchor on Desktop (Zero Gap Under Navbar) */
 @media (min-width: 993px) {
     .section-hero.panoramic-hero-section {
-        position: sticky !important;
-        top: 0 !important;
         height: 100vh !important;
         min-height: 100vh !important;
         max-height: 100vh !important;
-        width: 100% !important;
-        z-index: 1 !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -11024,7 +11022,6 @@ body.home-doodle-page main.main-content {
         padding: calc(68px + 1rem) 2rem 4rem 2rem !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
-        margin: 0 !important;
     }
 
     .panoramic-hero-section .hero-container {
@@ -11121,13 +11118,13 @@ body.home-doodle-page main.main-content {
     }
 }
 
-/* Mobile & Tablet Fallback */
+/* Mobile & Tablet */
 @media (max-width: 992px) {
     .section-hero.panoramic-hero-section {
-        position: relative !important;
+        position: sticky !important;
         top: 0 !important;
         height: auto !important;
-        min-height: auto !important;
+        min-height: 100vh !important;
         padding: calc(68px + 1.25rem) 1rem 2.5rem 1rem !important;
         z-index: 1 !important;
         margin: 0 !important;
