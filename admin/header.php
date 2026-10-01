@@ -189,6 +189,117 @@ $admin_name = $_SESSION['admin_name'] ?? 'व्यवस्थापक';
             flex: 1;
         }
 
+        /* Admin UI Components: Cards, Grids, Tables & Buttons */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--admin-card-bg);
+            border: 1px solid var(--admin-border);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+        .stat-card .num {
+            font-size: 32px;
+            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 8px 0 4px;
+            line-height: 1.1;
+        }
+        .form-card {
+            background: var(--admin-card-bg);
+            border: 1px solid var(--admin-border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .admin-table th {
+            background: var(--admin-table-th-bg);
+            color: var(--admin-text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--admin-border);
+        }
+        .admin-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--admin-border);
+            font-size: 14px;
+        }
+        .admin-table tr:hover td {
+            background: var(--admin-table-hover);
+        }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-edit { background: #e0f2fe; color: #0284c7; }
+        .btn-edit:hover { background: #bae6fd; color: #0369a1; }
+        .btn-delete { background: #fee2e2; color: #dc2626; }
+        .btn-delete:hover { background: #fecaca; color: #b91c1c; }
+        .btn-approve { background: #dcfce7; color: #16a34a; }
+        .btn-approve:hover { background: #bbf7d0; color: #15803d; }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--admin-border);
+            border-radius: 8px;
+            background: var(--admin-card-bg);
+            color: var(--admin-text);
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--admin-text);
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .alert-success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .alert-danger { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
         /* Mobile & Tablet Responsiveness for Admin Panel */
         @media (max-width: 992px) {
             .admin-menu-toggle {
@@ -327,13 +438,6 @@ $admin_name = $_SESSION['admin_name'] ?? 'व्यवस्थापक';
                     <span style="font-size: 12px; color: #64748b; margin-left: 8px;">(<?= htmlspecialchars($_SESSION['admin_role'] ?? 'admin') ?>)</span>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="theme-toggle" aria-label="Toggle Theme" style="border: 1px solid var(--admin-border); padding: 6px 12px; border-radius: 8px; cursor: pointer; background: transparent; display: flex; align-items: center;">
-                    <span class="sun"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span><span class="moon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
-                </button>
-                <a href="logout.php" class="btn-action btn-delete">लॉगआउट</a>
-            </div>
-        </header>
             <div style="display: flex; align-items: center; gap: 12px;">
                 <button class="theme-toggle" aria-label="Toggle Theme" style="border: 1px solid var(--admin-border); padding: 6px 12px; border-radius: 8px; cursor: pointer; background: transparent; display: flex; align-items: center;">
                     <span class="sun"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span><span class="moon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
