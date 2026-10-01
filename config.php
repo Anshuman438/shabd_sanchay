@@ -20,8 +20,27 @@ function try_mysqli_connect($host, $user, $pass, $db, $p) {
     $c = mysqli_init();
     if (!$c) return false;
     if (getenv('DB_HOST')) {
-        @mysqli_ssl_set($c, NULL, NULL, NULL, NULL, NULL);
-        $flags = defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT') ? MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT : (defined('MYSQLI_CLIENT_SSL') ? MYSQLI_CLIENT_SSL : 0);
+        $ca_paths = [
+            '/etc/ssl/certs/ca-certificates.crt',
+            '/etc/pki/tls/certs/ca-bundle.crt',
+            '/etc/ssl/ca-bundle.pem',
+            '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem'
+        ];
+        $found_ca = NULL;
+        foreach ($ca_paths as $cap) {
+            if (@file_exists($cap)) {
+                $found_ca = $cap;
+                break;
+            }
+        }
+        @mysqli_ssl_set($c, NULL, NULL, $found_ca, NULL, NULL);
+        if (defined('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT')) {
+            @mysqli_options($c, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+        }
+        $flags = defined('MYSQLI_CLIENT_SSL') ? MYSQLI_CLIENT_SSL : 0;
+        if (defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT')) {
+            $flags |= MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
+        }
         @mysqli_real_connect($c, $host, $user, $pass, $db, $p, NULL, $flags);
     } else {
         @mysqli_real_connect($c, $host, $user, $pass, $db, $p);
