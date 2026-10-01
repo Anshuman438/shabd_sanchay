@@ -37,6 +37,14 @@ $admin_name = $_SESSION['admin_name'] ?? 'व्यवस्थापक';
         })();
     </script>
     <style>
+        /* Reset and eliminate any public body padding offset in Admin Panel */
+        html, body, body.admin-body {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+            margin: 0 !important;
+            background: var(--admin-bg, #f8fafc);
+        }
+
         :root {
             --admin-sidebar-w: 260px;
             --admin-primary: #1e3a8a;
@@ -66,6 +74,8 @@ $admin_name = $_SESSION['admin_name'] ?? 'व्यवस्थापक';
             color: var(--admin-text);
             font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
             transition: background 0.2s ease, color 0.2s ease;
+            margin: 0;
+            padding: 0;
         }
         .admin-sidebar {
             width: var(--admin-sidebar-w);
@@ -158,6 +168,9 @@ $admin_name = $_SESSION['admin_name'] ?? 'व्यवस्थापक';
             justify-content: space-between;
             transition: background 0.2s ease, border-color 0.2s ease;
             gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
         }
         .admin-menu-toggle {
             display: none;
@@ -363,7 +376,7 @@ $admin_name = $_SESSION['admin_name'] ?? 'व्यवस्थापक';
         }
     </style>
 </head>
-<body>
+<body class="admin-body">
 <div id="admin-sidebar-overlay" class="admin-sidebar-overlay"></div>
 <div class="admin-layout">
     <!-- Sidebar -->
