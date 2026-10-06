@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // footer.php
 ?>
 <footer class="site-footer modern-doodle-footer">
@@ -88,7 +88,7 @@
     </div>
 </footer>
 
-<script src="js/theme.js"></script>
+<script src="js/theme.js" defer></script>
 <script>
 // Mobile navigation toggle with backdrop & outdoor click handler
 document.addEventListener('DOMContentLoaded', () => {

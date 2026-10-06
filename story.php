@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config.php';
 require_once 'includes/helpers.php';
 
@@ -57,8 +57,11 @@ $has_custom_photo = !empty($story['image_url']) &&
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
     <meta name="description" content="<?= htmlspecialchars(mb_substr(str_replace(["\r", "\n"], ' ', $story['excerpt'] ?: $story['content']), 0, 160)) ?>...">
-    <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Serif+Devanagari:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+    <link rel="preload" href="css/style.min.css?v=2.1" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
 </head>
 <body class="poem-single-page story-single-page">
     <?php include 'header.php'; ?>
@@ -114,7 +117,7 @@ $has_custom_photo = !empty($story['image_url']) &&
 
                 <?php if ($has_custom_photo): ?>
                     <div class="article-featured-banner" style="max-width: 960px; margin: 0 auto 2rem; border-radius: 16px; overflow: hidden; max-height: 380px;">
-                        <img src="<?= htmlspecialchars($story['image_url']) ?>" alt="<?= htmlspecialchars($story['title']) ?>" class="article-banner-img" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img loading="lazy" decoding="async" src="<?= htmlspecialchars($story['image_url']) ?>" alt="<?= htmlspecialchars($story['title']) ?>" class="article-banner-img" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 <?php endif; ?>
 

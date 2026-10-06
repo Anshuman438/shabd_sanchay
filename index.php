@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 require_once 'config.php';
 require_once 'includes/helpers.php';
 $page_title = "शब्द संचय - शब्दों में एक बेहतर दुनिया";
@@ -36,9 +36,12 @@ $total_works = $total_poems + $total_articles + $total_stories;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Serif+Devanagari:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
-    <script src="js/matra_engine.js"></script>
+    <link rel="preload" href="css/style.min.css?v=2.1" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+    <script src="js/matra_engine.js" defer></script>
 </head>
 <body class="home-doodle-page">
     <?php include 'header.php'; ?>
@@ -870,7 +873,7 @@ $total_works = $total_poems + $total_articles + $total_stories;
                     <div class="card-body-content">
                         <div class="card-author-row">
                             <div class="author-avatar-small">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&auto=format&fit=crop&q=80" alt="${item.author}">
+                                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&auto=format&fit=crop&q=80" alt="${item.author}">
                             </div>
                             <div class="author-info-wrap">
                                 <span class="author-name-text">${item.author}</span>

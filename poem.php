@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config.php';
 require_once 'includes/helpers.php';
 
@@ -73,8 +73,11 @@ $has_custom_photo = !empty($poem['image_url']) &&
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
     <meta name="description" content="<?= htmlspecialchars(mb_substr(str_replace(["\r", "\n"], ' ', $poem['content']), 0, 160)) ?>...">
-    <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Serif+Devanagari:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+    <link rel="preload" href="css/style.min.css?v=2.1" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
 </head>
 <body class="poem-single-page">
     <?php include 'header.php'; ?>
@@ -221,7 +224,7 @@ $has_custom_photo = !empty($poem['image_url']) &&
                     <div class="author-portrait-column">
                         <div class="card-author-avatar-wrap author-showcase-avatar">
                             <?php if ($has_custom_photo): ?>
-                                <img src="<?= htmlspecialchars($poem['image_url']) ?>" alt="<?= htmlspecialchars($poem['author_name']) ?>" class="author-avatar-img" onerror="this.parentElement.innerHTML=getPoetDoodleSVG();">
+                                <img loading="lazy" decoding="async" src="<?= htmlspecialchars($poem['image_url']) ?>" alt="<?= htmlspecialchars($poem['author_name']) ?>" class="author-avatar-img" onerror="this.parentElement.innerHTML=getPoetDoodleSVG();">
                             <?php else: ?>
                                 <div class="author-doodle-fallback">
                                     <svg class="poet-doodle-svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -706,7 +709,7 @@ $has_custom_photo = !empty($poem['image_url']) &&
 
                             <div class="card-author-avatar-wrap">
                                 ${hasCustomPhoto ? `
-                                    <img src="${escapeHtml(poem.image_url)}" alt="${escapeHtml(poem.author_name)}" class="author-avatar-img" onerror="this.parentElement.innerHTML=getPoetDoodleSVG();">
+                                    <img loading="lazy" decoding="async" src="${escapeHtml(poem.image_url)}" alt="${escapeHtml(poem.author_name)}" class="author-avatar-img" onerror="this.parentElement.innerHTML=getPoetDoodleSVG();">
                                 ` : getPoetDoodleSVG()}
                             </div>
                         </div>

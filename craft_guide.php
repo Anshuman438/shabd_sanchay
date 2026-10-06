@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Shabd Sanchay - Comprehensive Literary Craft & Metrics Guide (काव्य-शिल्प एवं छंद शास्त्र)
  * Full-fledged educational chapters on Doha, Ghazal, Chaupai, and Matra Science.
@@ -18,7 +18,8 @@ if (!in_array($topic, $valid_topics)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($page_title) ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&family=Cinzel:wght@500;700;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800&family=Noto+Serif+Devanagari:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* Minimalist Editorial Chapter Styling */
