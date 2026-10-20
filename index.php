@@ -3,30 +3,44 @@ require_once 'config.php';
 require_once 'includes/helpers.php';
 $page_title = "शब्द संचय - शब्दों में एक बेहतर दुनिया";
 
-// Fetch dynamic real-time counts from database
-$total_poems = 0;
-$total_articles = 0;
-$total_stories = 0;
-$total_views = 0;
+// High-Speed Consolidated Stats Query (Single-hop DB call instead of 4 sequential queries)
+$total_poems = 50;
+$total_articles = 30;
+$total_stories = 15;
+$total_views = 915;
+$initial_selected_works = [];
 
 try {
-    $res_p = $conn->query("SELECT COUNT(*) as cnt FROM poems");
-    if ($res_p) $total_poems = (int)$res_p->fetch_assoc()['cnt'];
+    if ($conn && !$conn->connect_error) {
+        $stats_res = $conn->query("
+            SELECT 
+                (SELECT COUNT(*) FROM poems) as poems,
+                (SELECT COUNT(*) FROM articles) as articles,
+                (SELECT COUNT(*) FROM stories) as stories,
+                ((SELECT COALESCE(SUM(views),0) FROM poems) + (SELECT COALESCE(SUM(views),0) FROM articles) + (SELECT COALESCE(SUM(views),0) FROM stories) + (SELECT COALESCE(SUM(views),0) FROM plays)) as total_views
+        ");
+        if ($stats_res && $row = $stats_res->fetch_assoc()) {
+            $total_poems = (int)($row['poems'] ?? 50);
+            $total_articles = (int)($row['articles'] ?? 30);
+            $total_stories = (int)($row['stories'] ?? 15);
+            $total_views = (int)($row['total_views'] ?? 915);
+        }
 
-    $res_a = $conn->query("SELECT COUNT(*) as cnt FROM articles");
-    if ($res_a) $total_articles = (int)$res_a->fetch_assoc()['cnt'];
-
-    $res_s = $conn->query("SELECT COUNT(*) as cnt FROM stories");
-    if ($res_s) $total_stories = (int)$res_s->fetch_assoc()['cnt'];
-
-    $res_v = $conn->query("SELECT (SELECT COALESCE(SUM(views),0) FROM poems) + (SELECT COALESCE(SUM(views),0) FROM articles) + (SELECT COALESCE(SUM(views),0) FROM stories) + (SELECT COALESCE(SUM(views),0) FROM plays) as total_views");
-    if ($res_v) $total_views = (int)$res_v->fetch_assoc()['total_views'];
+        // Pre-fetch 4 featured selected works in PHP (Zero client buffer wait)
+        $fw_res = $conn->query("
+            (SELECT id, title, content, author_name, 'कविता' as type, CONCAT('poem.php?id=', id) as link, created_at FROM poems ORDER BY likes DESC, created_at DESC LIMIT 2)
+            UNION ALL
+            (SELECT id, title, COALESCE(excerpt, content) as content, author_name, 'लेख' as type, CONCAT('article.php?id=', id) as link, created_at FROM articles ORDER BY views DESC, created_at DESC LIMIT 2)
+        ");
+        if ($fw_res) {
+            while ($r = $fw_res->fetch_assoc()) {
+                $r['content'] = make_excerpt(normalize_content_text($r['content']), 110);
+                $initial_selected_works[] = $r;
+            }
+        }
+    }
 } catch (Exception $e) {
-    // Fallbacks
-    $total_poems = 50;
-    $total_articles = 30;
-    $total_stories = 15;
-    $total_views = 915;
+    // Graceful fallback defaults already initialized
 }
 $total_works = $total_poems + $total_articles + $total_stories;
 ?>
@@ -36,11 +50,11 @@ $total_works = $total_poems + $total_articles + $total_stories;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="preload" href="css/style.min.css?v=2.7" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.7">
+    <link rel="preload" href="css/style.min.css?v=2.8" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@700&family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;700&display=swap" rel="stylesheet">
     <script src="js/matra_engine.js" defer></script>
 </head>
 <body class="home-doodle-page">
@@ -777,44 +791,49 @@ $total_works = $total_poems + $total_articles + $total_stories;
         localStorage.setItem('shabd_bookmarks', JSON.stringify(bookmarks));
     }
 
+    const preloadedSelectedWorks = <?= !empty($initial_selected_works) ? json_encode($initial_selected_works, JSON_UNESCAPED_UNICODE) : '[]' ?>;
+
     async function fetchSelectedWorks() {
         const container = document.getElementById('selected-works-container');
         const bookmarks = getBookmarks();
 
         try {
-            const [poemsRes, articlesRes] = await Promise.all([
-                fetch('api/get_featured_poems.php'),
-                fetch('api/get_featured_articles.php')
-            ]);
-            
-            const poemsData = await poemsRes.json();
-            const articlesData = await articlesRes.json();
+            let allItems = [];
+            if (Array.isArray(preloadedSelectedWorks) && preloadedSelectedWorks.length > 0) {
+                allItems = preloadedSelectedWorks;
+            } else {
+                const [poemsRes, articlesRes] = await Promise.all([
+                    fetch('api/get_featured_poems.php'),
+                    fetch('api/get_featured_articles.php')
+                ]);
+                
+                const poemsData = await poemsRes.json();
+                const articlesData = await articlesRes.json();
 
-            const poems = (Array.isArray(poemsData) ? poemsData : []).map(p => ({
-                id: p.id,
-                title: p.title,
-                author: p.author_name || 'अंशुमान सिंह',
-                type: 'कविता',
-                link: `poem.php?id=${p.id}`,
-                image_url: p.image_url && !p.image_url.startsWith('images/') ? p.image_url : `https://picsum.photos/seed/${encodeURIComponent(p.title)}/600/400`,
-                created_at: p.created_at,
-                content: extractOneLinePreview(p.poem_content)
-            }));
+                const poems = (Array.isArray(poemsData) ? poemsData : []).map(p => ({
+                    id: p.id,
+                    title: p.title,
+                    author: p.author_name || 'अंशुमान सिंह',
+                    type: 'कविता',
+                    link: `poem.php?id=${p.id}`,
+                    created_at: p.created_at,
+                    content: extractOneLinePreview(p.poem_content)
+                }));
 
-            const articles = (Array.isArray(articlesData) ? articlesData : []).map(a => ({
-                id: a.id,
-                title: a.title,
-                author: a.author_name || 'अंशुमान सिंह',
-                type: a.category || 'लेख',
-                link: `article.php?id=${a.id}`,
-                image_url: a.image_url && !a.image_url.startsWith('images/') ? a.image_url : `https://picsum.photos/seed/${encodeURIComponent(a.title)}/600/400`,
-                created_at: a.created_at,
-                content: extractOneLinePreview(a.excerpt || a.content)
-            }));
+                const articles = (Array.isArray(articlesData) ? articlesData : []).map(a => ({
+                    id: a.id,
+                    title: a.title,
+                    author: a.author_name || 'अंशुमान सिंह',
+                    type: a.category || 'लेख',
+                    link: `article.php?id=${a.id}`,
+                    created_at: a.created_at,
+                    content: extractOneLinePreview(a.excerpt || a.content)
+                }));
 
-            let allItems = [...poems, ...articles]
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                .slice(0, 4);
+                allItems = [...poems, ...articles]
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .slice(0, 4);
+            }
 
             // Fallback content if empty
             if (allItems.length === 0) {

@@ -1,9 +1,26 @@
 ﻿<?php
 require_once 'config.php';
 require_once 'includes/helpers.php';
-
-$page_title = "हिंदी आलेख एवं विचार - शब्द संचय";
+$page_title = "साहित्यिक आलेख एवं विचार - शब्द संचय";
 $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['category']), ENT_QUOTES, 'UTF-8') : 'all';
+
+// Pre-fetch initial articles on server to eliminate initial client buffer spinner
+$preloaded_articles = [];
+try {
+    if ($conn && !$conn->connect_error) {
+        $res = $conn->query("SELECT id, title, excerpt, content, author_name, category, read_time, image_url, views, likes, created_at FROM articles ORDER BY created_at DESC LIMIT 60");
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $row['content'] = normalize_content_text($row['content']);
+                $row['formatted_date'] = format_hindi_date($row['created_at']);
+                if (empty($row['excerpt'])) {
+                    $row['excerpt'] = make_excerpt($row['content'], 160);
+                }
+                $preloaded_articles[] = $row;
+            }
+        }
+    }
+} catch (Exception $e) {}
 ?>
 <!DOCTYPE html>
 <html lang="hi">
@@ -11,11 +28,11 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="preload" href="css/style.min.css?v=2.7" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.7">
+    <link rel="preload" href="css/style.min.css?v=2.8" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body class="articles-index-page">
     <?php include 'header.php'; ?>
@@ -104,11 +121,12 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
 
     <?php include 'footer.php'; ?>
 
-    <script>
+        <script>
     let currentPage = 1;
     const articlesPerPage = 6;
-    let allArticles = [];
+    let allArticles = <?= !empty($preloaded_articles) ? json_encode($preloaded_articles, JSON_UNESCAPED_UNICODE) : '[]' ?>;
     let currentCategory = '<?= $initial_category ?>';
+    let searchDebounceTimer = null;
     let searchDebounceTimer = null;
 
     // Fetch all articles from API
