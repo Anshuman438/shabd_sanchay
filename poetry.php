@@ -124,7 +124,6 @@ try {
     let allPoems = <?= !empty($preloaded_poems) ? json_encode($preloaded_poems, JSON_UNESCAPED_UNICODE) : '[]' ?>;
     let currentCategory = '<?= $initial_category ?>';
     let searchDebounceTimer = null;
-    let searchDebounceTimer = null;
 
     // Fetch all poems from API
     async function fetchPoems() {

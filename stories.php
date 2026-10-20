@@ -130,7 +130,6 @@ try {
     let allStories = <?= !empty($preloaded_stories) ? json_encode($preloaded_stories, JSON_UNESCAPED_UNICODE) : '[]' ?>;
     let currentCategory = '<?= $initial_category ?>';
     let searchDebounceTimer = null;
-    let searchDebounceTimer = null;
 
     // Fetch all stories from API
     async function fetchStories() {

@@ -127,7 +127,6 @@ try {
     let allArticles = <?= !empty($preloaded_articles) ? json_encode($preloaded_articles, JSON_UNESCAPED_UNICODE) : '[]' ?>;
     let currentCategory = '<?= $initial_category ?>';
     let searchDebounceTimer = null;
-    let searchDebounceTimer = null;
 
     // Fetch all articles from API
     async function fetchArticles() {
