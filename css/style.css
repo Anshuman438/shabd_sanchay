@@ -11838,85 +11838,38 @@ body.mobile-nav-expanded {
 }
 
 /* =========================================================
-   9. "हम क्या साझा करते हैं?" - Circular Left-to-Right Rotation & Mobile Size Reduction
+   9. "हम क्या साझा करते हैं?" - Card Hover Effect & Mobile Size Reduction
 ========================================================= */
 
-/* Circular Orbit + Left-to-Right Tilt Rotation Keyframes */
-@keyframes cardCircularRotateLR {
-    0% {
-        transform: rotate(-3deg) translate3d(-3px, 0px, 0);
-    }
-    25% {
-        transform: rotate(-1deg) translate3d(0px, -3.5px, 0);
-    }
-    50% {
-        transform: rotate(3deg) translate3d(3px, 0px, 0);
-    }
-    75% {
-        transform: rotate(1deg) translate3d(0px, 3.5px, 0);
-    }
-    100% {
-        transform: rotate(-3deg) translate3d(-3px, 0px, 0);
-    }
-}
-
-@keyframes iconCircularSway {
-    0% {
-        transform: rotate(-6deg) scale(0.98);
-    }
-    50% {
-        transform: rotate(6deg) scale(1.03);
-    }
-    100% {
-        transform: rotate(-6deg) scale(0.98);
-    }
-}
-
-/* Base rotation applied to all 4 cards with staggered phase timing */
+/* Clean Floating Hover/Tap Effect (No continuous circular rotation) */
 .offering-card.magical-card.doodle-card {
-    animation: cardCircularRotateLR 5.5s ease-in-out infinite !important;
-    transform-origin: center center !important;
-    will-change: transform !important;
+    animation: none !important;
+    transform: none !important;
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease !important;
+    will-change: transform, box-shadow !important;
 }
 
-.offering-card.magical-card.doodle-card:nth-child(1) {
-    animation-delay: 0s !important;
-}
-
-.offering-card.magical-card.doodle-card:nth-child(2) {
-    animation-delay: -1.375s !important;
-}
-
-.offering-card.magical-card.doodle-card:nth-child(3) {
-    animation-delay: -2.75s !important;
-}
-
-.offering-card.magical-card.doodle-card:nth-child(4) {
-    animation-delay: -4.125s !important;
-}
-
-/* Pause smoothly when user interacts */
 .offering-card.magical-card.doodle-card:hover,
 .offering-card.magical-card.doodle-card:active {
-    animation-play-state: paused !important;
+    transform: translateY(-4px) scale(1.015) !important;
+    box-shadow: 0 12px 28px rgba(200, 90, 23, 0.16) !important;
+    border-color: rgba(200, 90, 23, 0.35) !important;
 }
 
-/* Complementary icon rotation sway */
+[data-theme="dark"] .offering-card.magical-card.doodle-card:hover,
+[data-theme="dark"] .offering-card.magical-card.doodle-card:active {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6) !important;
+    border-color: rgba(200, 90, 23, 0.45) !important;
+}
+
 .offering-card.magical-card.doodle-card .doodle-icon-circle {
-    animation: iconCircularSway 4s ease-in-out infinite alternate !important;
-    transform-origin: center center !important;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    animation: none !important;
 }
 
-.offering-card.magical-card.doodle-card:nth-child(2) .doodle-icon-circle {
-    animation-delay: -1s !important;
-}
-
-.offering-card.magical-card.doodle-card:nth-child(3) .doodle-icon-circle {
-    animation-delay: -2s !important;
-}
-
-.offering-card.magical-card.doodle-card:nth-child(4) .doodle-icon-circle {
-    animation-delay: -3s !important;
+.offering-card.magical-card.doodle-card:hover .doodle-icon-circle,
+.offering-card.magical-card.doodle-card:active .doodle-icon-circle {
+    transform: translateY(-2px) scale(1.06) rotate(3deg) !important;
 }
 
 /* Reduced Card Size in Mobile View (<= 768px) */
@@ -12064,5 +12017,324 @@ body.mobile-nav-expanded {
         font-size: 0.68rem !important;
     }
 }
+
+/* =========================================================
+   10. Compact Mobile Footer & Navigation Standard Sizing
+========================================================= */
+@media (max-width: 768px) {
+    /* Compact Phone Footer */
+    .site-footer.modern-doodle-footer,
+    .site-footer {
+        margin-top: 1rem !important;
+    }
+
+    .footer-wave-divider svg {
+        height: 20px !important;
+    }
+
+    .footer-main-content {
+        padding: 1.25rem 1rem 0.85rem !important;
+    }
+
+    .footer-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1.25rem 0.85rem !important;
+        margin-bottom: 0.85rem !important;
+    }
+
+    .footer-brand-col {
+        grid-column: 1 / -1 !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin-bottom: 0.35rem !important;
+    }
+
+    .footer-brand-logo {
+        justify-content: center !important;
+        margin-bottom: 0.35rem !important;
+    }
+
+    .footer-title {
+        font-size: 1.25rem !important;
+    }
+
+    .footer-subtitle {
+        font-size: 0.52rem !important;
+    }
+
+    .footer-desc {
+        font-size: 0.78rem !important;
+        line-height: 1.45 !important;
+        margin-bottom: 0.65rem !important;
+        max-width: 90% !important;
+        opacity: 0.85 !important;
+    }
+
+    .footer-social-links {
+        justify-content: center !important;
+        margin-bottom: 0.35rem !important;
+        gap: 0.55rem !important;
+    }
+
+    .social-icon {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .social-icon svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .footer-links-col {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .footer-col-heading {
+        font-size: 0.92rem !important;
+        margin-bottom: 0.35rem !important;
+        color: #f7d0a4 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        padding-bottom: 0.25rem !important;
+    }
+
+    .footer-nav-list {
+        gap: 0.25rem !important;
+    }
+
+    .footer-nav-list a {
+        font-size: 0.78rem !important;
+        line-height: 1.4 !important;
+        padding: 0.15rem 0 !important;
+    }
+
+    /* Hide large decorative quote seal on mobile phones to save extensive scrolling */
+    .footer-seal-col {
+        display: none !important;
+    }
+
+    .footer-bottom-bar {
+        padding-top: 0.65rem !important;
+        margin-top: 0.65rem !important;
+        font-size: 0.72rem !important;
+        text-align: center !important;
+        flex-direction: column !important;
+        gap: 0.25rem !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Mobile Horizontal Scrollable Category Filter Pills (Poetry, Articles, Stories) */
+    .category-pills-bar {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        justify-content: flex-start !important;
+        gap: 0.45rem !important;
+        padding: 0.25rem 0.5rem 0.55rem !important;
+        margin: 0.5rem auto 0.75rem !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .category-pills-bar::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .category-pill {
+        flex-shrink: 0 !important;
+        padding: 0.38rem 0.85rem !important;
+        font-size: 0.82rem !important;
+        border-radius: 20px !important;
+        white-space: nowrap !important;
+        min-height: 34px !important;
+    }
+
+    /* Standard Header Banner & Typography on Mobile (Poetry, Articles, Stories) */
+    .poetry-page-hero {
+        padding: 1.5rem 0 0.85rem !important;
+    }
+
+    .page-eyebrow {
+        font-size: 0.72rem !important;
+        letter-spacing: 1.2px !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .page-main-title {
+        font-size: clamp(1.65rem, 5.5vw, 2.1rem) !important;
+        line-height: 1.15 !important;
+        margin-bottom: 0.35rem !important;
+    }
+
+    .heading-artistic-underline {
+        margin: 0.25rem auto 0.65rem !important;
+        width: 48px !important;
+        height: 3px !important;
+    }
+
+    .page-lead-subtitle {
+        font-size: 0.86rem !important;
+        line-height: 1.55 !important;
+        margin: 0.35rem auto 1rem !important;
+        padding: 0 0.5rem !important;
+        max-width: 95% !important;
+    }
+
+    /* Toolbar & Sort Controls on Mobile (Poetry, Articles, Stories) */
+    .poetry-content-section {
+        padding: 0.5rem 0 3.5rem !important;
+    }
+
+    .poetry-toolbar-card {
+        padding: 0.85rem 1rem !important;
+        margin-bottom: 1.25rem !important;
+        border-radius: 14px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+    }
+
+    .toolbar-left-group {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.65rem !important;
+        width: 100% !important;
+    }
+
+    .custom-select-wrap {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    .custom-select {
+        flex: 1 !important;
+        max-width: 65% !important;
+        min-height: 40px !important;
+        font-size: 0.88rem !important;
+        border-radius: 8px !important;
+    }
+
+    .results-count-badge {
+        align-self: flex-start !important;
+        font-size: 0.78rem !important;
+        padding: 0.25rem 0.65rem !important;
+    }
+
+    .toolbar-search-box {
+        max-width: 100% !important;
+        min-width: 100% !important;
+        width: 100% !important;
+        height: 44px !important;
+    }
+
+    .toolbar-search-box input {
+        font-size: 16px !important;
+    }
+
+    /* Matra & Meter Analyzer Widget (Picture 1) on Mobile */
+    .pro-matra-calculator-widget {
+        padding: 1.15rem 0.85rem !important;
+        border-radius: 14px !important;
+        margin-top: 1rem !important;
+    }
+
+    .calc-widget-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.65rem !important;
+        padding-bottom: 0.75rem !important;
+    }
+
+    .calc-widget-title {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+
+    .calc-widget-title h3 {
+        font-size: 1.12rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 0.2rem !important;
+    }
+
+    .calc-widget-title p {
+        font-size: 0.74rem !important;
+        line-height: 1.35 !important;
+    }
+
+    .calc-badge-pro {
+        font-size: 0.68rem !important;
+        padding: 0.2rem 0.5rem !important;
+        border-radius: 16px !important;
+    }
+
+    .calc-mode-toggles {
+        width: 100% !important;
+        display: flex !important;
+        gap: 0.25rem !important;
+    }
+
+    .btn-mode-toggle {
+        flex: 1 !important;
+        font-size: 0.78rem !important;
+        padding: 0.45rem 0.4rem !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        border-radius: 8px !important;
+    }
+
+    .calc-presets-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+        margin-bottom: 0.85rem !important;
+    }
+
+    .calc-presets-left {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.35rem !important;
+        align-items: center !important;
+    }
+
+    .preset-label {
+        width: 100% !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 0.15rem !important;
+        color: var(--primary, #c85a17) !important;
+    }
+
+    .btn-calc-preset {
+        font-size: 0.75rem !important;
+        padding: 0.3rem 0.65rem !important;
+        border-radius: 16px !important;
+    }
+
+    .btn-calc-clear {
+        align-self: flex-start !important;
+        padding: 0.3rem 0.75rem !important;
+        font-size: 0.75rem !important;
+        margin-top: 0.25rem !important;
+    }
+
+    .calc-textarea {
+        font-size: 1.05rem !important;
+        line-height: 1.65 !important;
+        padding: 0.75rem 0.85rem !important;
+        border-radius: 10px !important;
+    }
+}
+
 
 

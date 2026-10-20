@@ -131,6 +131,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <script>
 // Unified Mobile Navigation Controller
 (function() {
+    let isNavTransitioning = false;
+
     window.openMobileNav = function() {
         const menuBtn = document.getElementById('mobile-menu-btn');
         const nav = document.getElementById('main-nav');
@@ -143,7 +145,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             nav.classList.add('mobile-open');
             nav.classList.add('active');
         }
-        if (backdrop) backdrop.classList.add('show');
+        if (backdrop) {
+            backdrop.classList.add('show');
+        }
         document.body.classList.add('mobile-nav-expanded');
     };
 
@@ -159,7 +163,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             nav.classList.remove('mobile-open');
             nav.classList.remove('active');
         }
-        if (backdrop) backdrop.classList.remove('show');
+        if (backdrop) {
+            backdrop.classList.remove('show');
+        }
         document.body.classList.remove('mobile-nav-expanded');
     };
 
@@ -168,9 +174,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
             if (typeof e.preventDefault === 'function') e.preventDefault();
             if (typeof e.stopPropagation === 'function') e.stopPropagation();
         }
+        if (isNavTransitioning) return;
+        isNavTransitioning = true;
+        setTimeout(function() { isNavTransitioning = false; }, 280);
+
         const nav = document.getElementById('main-nav');
         if (!nav) return;
-        if (nav.classList.contains('mobile-open') || nav.classList.contains('active')) {
+        const isOpen = nav.classList.contains('mobile-open') || nav.classList.contains('active');
+        if (isOpen) {
             window.closeMobileNav();
         } else {
             window.openMobileNav();
@@ -178,18 +189,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
     };
 
     function initMobileNav() {
-        const menuBtn = document.getElementById('mobile-menu-btn');
         const nav = document.getElementById('main-nav');
         const backdrop = document.getElementById('nav-backdrop');
 
-        if (menuBtn) {
-            menuBtn.addEventListener('click', function(e) {
-                window.toggleMobileNav(e);
-            });
-        }
-
         if (backdrop) {
-            backdrop.addEventListener('click', function() {
+            backdrop.addEventListener('click', function(e) {
+                e.stopPropagation();
                 window.closeMobileNav();
             });
         }
