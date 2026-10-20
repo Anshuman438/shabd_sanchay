@@ -11,8 +11,8 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="preload" href="css/style.min.css?v=2.6" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.6">
+    <link rel="preload" href="css/style.min.css?v=2.7" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
@@ -162,7 +162,7 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
         localStorage.setItem('shabd_bookmarks', JSON.stringify(bookmarks));
     }
 
-    function escapeHtml(str) {
+        function escapeHtml(str) {
         if (!str) return '';
         return String(str)
             .replace(/&/g, '&amp;')
@@ -170,6 +170,23 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
+    }
+
+    function formatExcerpt(content) {
+        if (!content) return '';
+        const clean = content.replace(/<[^>]*>/g, '').trim();
+        return clean.length > 140 ? clean.substring(0, 140) + '...' : clean;
+    }
+
+    function getArticleDoodleSVG() {
+        return `
+            <svg viewBox="0 0 80 80" width="46" height="46" fill="none" stroke="currentColor">
+                <path d="M22 62 Q 35 48 55 22 Q 62 14 65 18 Q 63 26 50 42 Q 34 60 22 62 Z" stroke-width="2.2" stroke-linejoin="round" fill="rgba(200, 90, 23, 0.12)"/>
+                <path d="M22 62 L 15 67 L 23 60" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M38 38 L 48 48" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M57 18 Q62 12 66 14 Q65 19 60 22" stroke-width="1.6" fill="rgba(200, 90, 23, 0.25)"/>
+            </svg>
+        `;
     }
 
     // Filter and render articles with pagination
@@ -242,37 +259,23 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
 
         const bookmarks = getBookmarks();
 
-        // Render Articles Cards Grid
+                // Render Articles Cards Grid (Consistent Literary Poetry-Card Style - No Heavy Picture)
         container.innerHTML = paginated.map(article => {
             const displayDate = article.formatted_date || (article.created_at ? new Date(article.created_at).toLocaleDateString('hi-IN') : '');
             const readTime = article.read_time || 5;
-            const imageUrl = article.image_url && article.image_url.trim() !== '' ? article.image_url : 'images/article-default.jpg';
+            const hasCustomPhoto = article.image_url && 
+                                   article.image_url !== 'images/article-default.jpg' && 
+                                   !article.image_url.includes('default') && 
+                                   !article.image_url.includes('picsum') &&
+                                   article.image_url.trim().length > 0;
             const isBookmarked = bookmarks.includes(`article_${article.id}`);
 
             return `
-                <article class="article-grid-card">
-                    <!-- Image Banner with Badges -->
-                    <div class="article-card-thumb-wrap">
-                        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(article.title)}" class="article-card-thumb" loading="lazy" onerror="this.src='images/article-default.jpg';">
-                        <span class="article-card-category-badge">${escapeHtml(article.category || 'सामान्य')}</span>
-                        <span class="article-card-readtime-badge">
-                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            <span>${readTime} मिनट पठन</span>
-                        </span>
-                    </div>
-
-                    <!-- Article Body Content -->
-                    <div class="article-card-body">
-                        <h2 class="article-card-title">
-                            <a href="article.php?id=${article.id}">${escapeHtml(article.title)}</a>
-                        </h2>
-
-                        <p class="article-card-excerpt">
-                            ${escapeHtml(article.excerpt || article.content.substring(0, 160) + '...')}
-                        </p>
-
-                        <!-- Live Metrics -->
-                        <div class="article-card-metrics">
+                <article class="poetry-grid-card">
+                    <!-- 1. Full-Width Top Row: Category Tag & Live Metrics -->
+                    <div class="card-top-row">
+                        <span class="card-category-tag">${escapeHtml(article.category || 'आलेख')}</span>
+                        <div class="card-metrics">
                             <span class="metric-item" title="देखा गया">
                                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                 <span>${article.views || 0}</span>
@@ -287,15 +290,50 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
                         </div>
                     </div>
 
-                    <!-- Article Footer -->
-                    <div class="article-card-footer">
-                        <div class="article-author-meta">
-                            <span class="article-author-name">${escapeHtml(article.author_name)}</span>
-                            <span class="article-date-stamp">${displayDate}</span>
+                    <!-- 2. Middle Body: Article Details + Right Author Portrait / Doodle -->
+                    <div class="card-body-layout">
+                        <div class="card-main-content">
+                            <h2 class="card-poem-title">
+                                <a href="article.php?id=${article.id}">${escapeHtml(article.title)}</a>
+                            </h2>
+
+                            <div class="card-poet-row">
+                                <span class="poet-feather-icon">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>
+                                </span>
+                                <span class="poet-name">${escapeHtml(article.author_name || 'अंशुमान सिंह')}</span>
+                                <span class="card-readtime-pill">
+                                    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    <span>${readTime} मिनट</span>
+                                </span>
+                            </div>
+
+                            <div class="card-poem-excerpt">
+                                ${formatExcerpt(article.excerpt || article.content)}
+                            </div>
                         </div>
-                        <a href="article.php?id=${article.id}" class="article-read-btn">
-                            <span>पूरा पढ़ें</span>
-                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+
+                        <!-- Right Side: Author Avatar / Doodle Area -->
+                        <div class="card-author-avatar-wrap" title="${escapeHtml(article.author_name || 'लेखक')}">
+                            ${hasCustomPhoto ? `
+                                <img src="${escapeHtml(article.image_url)}" alt="${escapeHtml(article.author_name)}" class="author-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="author-doodle-fallback" style="display:none;">
+                                    ${getArticleDoodleSVG()}
+                                </div>
+                            ` : `
+                                <div class="author-doodle-fallback">
+                                    ${getArticleDoodleSVG()}
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                    <!-- 3. Footer Row: Date & CTA -->
+                    <div class="card-footer-row">
+                        <span class="card-date">${displayDate}</span>
+                        <a href="article.php?id=${article.id}" class="btn-card-read-more">
+                            <span>पूरा लेख पढ़ें</span>
+                            <span class="btn-arrow">→</span>
                         </a>
                     </div>
                 </article>

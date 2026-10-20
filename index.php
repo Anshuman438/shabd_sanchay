@@ -36,8 +36,8 @@ $total_works = $total_poems + $total_articles + $total_stories;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="preload" href="css/style.min.css?v=2.6" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.6">
+    <link rel="preload" href="css/style.min.css?v=2.7" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
@@ -862,45 +862,59 @@ $total_works = $total_poems + $total_articles + $total_stories;
                 ];
             }
 
-            container.innerHTML = allItems.map((item, index) => {
+                        container.innerHTML = allItems.map((item, index) => {
                 const dateObj = new Date(item.created_at);
                 const dateStr = !isNaN(dateObj) ? `${dateObj.getDate()} ${['जनवरी','फरवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'][dateObj.getMonth()]}` : '23 सितंबर';
                 const isBookmarked = bookmarks.includes(`${item.type}_${item.id}`);
 
                 return `
-                <article class="selected-work-card reveal-zoom-fade delay-${(index % 4) + 1} is-revealed">
-                    <div class="card-cover-wrapper">
-                        <img src="${item.image_url}" alt="${item.title}" class="card-cover-img" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(item.title)}/600/400';">
-                        <span class="card-floating-badge">${item.type}</span>
+                <article class="poetry-grid-card selected-work-card reveal-zoom-fade delay-${(index % 4) + 1} is-revealed">
+                    <!-- Top Row: Category Badge & Bookmark Action -->
+                    <div class="card-top-row">
+                        <span class="card-category-tag">${item.type}</span>
+                        <button type="button" class="btn-bookmark-action ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark(${item.id}, '${item.type}', this)" title="${isBookmarked ? 'सहेजा गया' : 'सहेजें'}">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                        </button>
                     </div>
-                    <div class="card-body-content">
-                        <div class="card-author-row">
-                            <div class="author-avatar-small">
-                                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&auto=format&fit=crop&q=80" alt="${item.author}">
+
+                    <!-- Body Layout: Title, Author Row, Excerpt -->
+                    <div class="card-body-layout">
+                        <div class="card-main-content">
+                            <h2 class="card-poem-title">
+                                <a href="${item.link}">${item.title}</a>
+                            </h2>
+
+                            <div class="card-poet-row">
+                                <span class="poet-feather-icon">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>
+                                </span>
+                                <span class="poet-name">${item.author}</span>
                             </div>
-                            <div class="author-info-wrap">
-                                <span class="author-name-text">${item.author}</span>
-                                <span class="publish-date-text">${dateStr}</span>
+
+                            <div class="card-poem-excerpt">
+                                “${item.content || 'विचारों और संवेदनाओं की गहराइयों में उतरती एक अनूठी रचना...'}”
                             </div>
                         </div>
 
-                        <h3 class="card-work-title"><a href="${item.link}">${item.title}</a></h3>
-
-                        <p class="card-work-excerpt">“${item.content || 'विचारों और शब्दों की गहराई में उतरती एक सुंदर साहित्यिक रचना...'}”</p>
-
-                        <div class="card-footer-action-row">
-                            <button class="btn-bookmark-action ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark(${item.id}, '${item.type}', this)" title="${isBookmarked ? 'सहेजा गया' : 'सहेजें'}">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                        <!-- Right Side: Mini Literary Doodle / Badge -->
+                        <div class="card-author-avatar-wrap" title="${item.author}">
+                            <div class="author-doodle-fallback">
+                                <svg viewBox="0 0 80 80" width="46" height="46" fill="none" stroke="currentColor">
+                                    <path d="M22 62 Q 35 48 55 22 Q 62 14 65 18 Q 63 26 50 42 Q 34 60 22 62 Z" stroke-width="2.2" stroke-linejoin="round" fill="rgba(200, 90, 23, 0.12)"/>
+                                    <path d="M22 62 L 15 67 L 23 60" stroke-width="2.2" stroke-linecap="round"/>
+                                    <path d="M38 38 L 48 48" stroke-width="1.8" stroke-linecap="round"/>
                                 </svg>
-                                <span>${isBookmarked ? 'सहेजा गया' : 'सहेजें'}</span>
-                            </button>
-
-                            <a href="${item.link}" class="btn-card-read">
-                                <span>पढ़ें</span>
-                                <span class="btn-arrow">→</span>
-                            </a>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Footer Row: Date & CTA -->
+                    <div class="card-footer-row">
+                        <span class="card-date">${dateStr}</span>
+                        <a href="${item.link}" class="btn-card-read-more">
+                            <span>रचना पढ़ें</span>
+                            <span class="btn-arrow">→</span>
+                        </a>
                     </div>
                 </article>
                 `;

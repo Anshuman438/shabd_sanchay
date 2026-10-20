@@ -11,8 +11,8 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="preload" href="css/style.min.css?v=2.6" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.6">
+    <link rel="preload" href="css/style.min.css?v=2.7" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
@@ -165,7 +165,7 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
         localStorage.setItem('shabd_bookmarks', JSON.stringify(bookmarks));
     }
 
-    function escapeHtml(str) {
+        function escapeHtml(str) {
         if (!str) return '';
         return String(str)
             .replace(/&/g, '&amp;')
@@ -173,6 +173,24 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
+    }
+
+    function formatExcerpt(content) {
+        if (!content) return '';
+        const clean = content.replace(/<[^>]*>/g, '').trim();
+        return clean.length > 140 ? clean.substring(0, 140) + '...' : clean;
+    }
+
+    function getStoryDoodleSVG() {
+        return `
+            <svg viewBox="0 0 80 80" width="46" height="46" fill="none" stroke="currentColor">
+                <path d="M18 24 C 28 20, 36 22, 40 28 C 44 22, 52 20, 62 24 L 62 60 C 52 56, 44 58, 40 64 C 36 58, 28 56, 18 60 Z" stroke-width="2.2" stroke-linejoin="round" fill="rgba(200, 90, 23, 0.12)"/>
+                <path d="M40 28 L 40 64" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M24 33 C 28 31, 33 32, 35 35" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M24 41 C 28 39, 33 40, 35 43" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M56 33 C 52 31, 47 32, 45 35" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+        `;
     }
 
     // Story cover illustration fallback
@@ -257,47 +275,23 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
 
         const bookmarks = getBookmarks();
 
-        // Render Stories Cards Grid
+                // Render Stories Cards Grid (Consistent Literary Poetry-Card Style - No Heavy Picture)
         container.innerHTML = paginated.map(story => {
             const displayDate = story.formatted_date || (story.created_at ? new Date(story.created_at).toLocaleDateString('hi-IN') : '');
             const readTime = story.read_time || 8;
-            const hasValidImage = story.image_url && 
-                                  story.image_url.trim() !== '' && 
-                                  !story.image_url.includes('picsum') && 
-                                  story.image_url !== 'images/story-default.jpg';
+            const hasCustomPhoto = story.image_url && 
+                                   story.image_url !== 'images/story-default.jpg' && 
+                                   !story.image_url.includes('default') && 
+                                   !story.image_url.includes('picsum') &&
+                                   story.image_url.trim().length > 0;
             const isBookmarked = bookmarks.includes(`story_${story.id}`);
 
             return `
-                <article class="article-grid-card story-grid-card">
-                    <!-- Image Banner with Badges -->
-                    <div class="article-card-thumb-wrap ${!hasValidImage ? 'story-gradient-thumb' : ''}" ${!hasValidImage ? `style="background: ${getStoryFallbackImage(story.category)};"` : ''}>
-                        ${hasValidImage ? `
-                            <img src="${escapeHtml(story.image_url)}" alt="${escapeHtml(story.title)}" class="article-card-thumb" loading="lazy" onerror="this.parentElement.classList.add('story-gradient-thumb'); this.style.display='none';">
-                        ` : `
-                            <div class="story-thumb-artistic">
-                                <span class="story-thumb-icon">📖</span>
-                                <span class="story-thumb-title">${escapeHtml(story.title)}</span>
-                            </div>
-                        `}
-                        <span class="article-card-category-badge">${escapeHtml(story.category || 'कहानी')}</span>
-                        <span class="article-card-readtime-badge">
-                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            <span>${readTime} मिनट पठन</span>
-                        </span>
-                    </div>
-
-                    <!-- Story Body Content -->
-                    <div class="article-card-body">
-                        <h2 class="article-card-title">
-                            <a href="story.php?id=${story.id}">${escapeHtml(story.title)}</a>
-                        </h2>
-
-                        <p class="article-card-excerpt">
-                            ${escapeHtml(story.excerpt || story.content.substring(0, 160) + '...')}
-                        </p>
-
-                        <!-- Live Metrics -->
-                        <div class="article-card-metrics">
+                <article class="poetry-grid-card">
+                    <!-- 1. Full-Width Top Row: Category Tag & Live Metrics -->
+                    <div class="card-top-row">
+                        <span class="card-category-tag">${escapeHtml(story.category || 'कहानी')}</span>
+                        <div class="card-metrics">
                             <span class="metric-item" title="देखा गया">
                                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                 <span>${story.views || 0}</span>
@@ -312,15 +306,50 @@ $initial_category = isset($_GET['category']) ? htmlspecialchars(trim($_GET['cate
                         </div>
                     </div>
 
-                    <!-- Story Footer -->
-                    <div class="article-card-footer">
-                        <div class="article-author-meta">
-                            <span class="article-author-name">${escapeHtml(story.author_name)}</span>
-                            <span class="article-date-stamp">${displayDate}</span>
+                    <!-- 2. Middle Body: Story Details + Right Author Portrait / Doodle -->
+                    <div class="card-body-layout">
+                        <div class="card-main-content">
+                            <h2 class="card-poem-title">
+                                <a href="story.php?id=${story.id}">${escapeHtml(story.title)}</a>
+                            </h2>
+
+                            <div class="card-poet-row">
+                                <span class="poet-feather-icon">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                </span>
+                                <span class="poet-name">${escapeHtml(story.author_name || 'अंशुमान सिंह')}</span>
+                                <span class="card-readtime-pill">
+                                    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    <span>${readTime} मिनट</span>
+                                </span>
+                            </div>
+
+                            <div class="card-poem-excerpt">
+                                ${formatExcerpt(story.excerpt || story.content)}
+                            </div>
                         </div>
-                        <a href="story.php?id=${story.id}" class="article-read-btn">
+
+                        <!-- Right Side: Author Avatar / Doodle Area -->
+                        <div class="card-author-avatar-wrap" title="${escapeHtml(story.author_name || 'कथाकार')}">
+                            ${hasCustomPhoto ? `
+                                <img src="${escapeHtml(story.image_url)}" alt="${escapeHtml(story.author_name)}" class="author-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="author-doodle-fallback" style="display:none;">
+                                    ${getStoryDoodleSVG()}
+                                </div>
+                            ` : `
+                                <div class="author-doodle-fallback">
+                                    ${getStoryDoodleSVG()}
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                    <!-- 3. Footer Row: Date & CTA -->
+                    <div class="card-footer-row">
+                        <span class="card-date">${displayDate}</span>
+                        <a href="story.php?id=${story.id}" class="btn-card-read-more">
                             <span>पूरी कहानी पढ़ें</span>
-                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <span class="btn-arrow">→</span>
                         </a>
                     </div>
                 </article>
