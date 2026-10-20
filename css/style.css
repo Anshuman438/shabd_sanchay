@@ -11779,33 +11779,238 @@ body.mobile-nav-expanded {
         white-space: nowrap !important;
     }
 
-    .poem-action-toolbar {
-        flex-direction: column !important;
+    /* -------------------------------------------------------------------------
+       Minimal, Clean & Balanced Reading Card on Mobile (poem.php, article.php)
+       ------------------------------------------------------------------------- */
+    .poem-breadcrumb {
+        font-size: 0.74rem !important;
+        margin-bottom: 0.65rem !important;
+        padding: 0.2rem 0 !important;
+        display: flex !important;
         align-items: center !important;
-        gap: 1rem !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 0.35rem !important;
     }
-
-    .action-left-group, .action-right-group {
-        width: 100% !important;
-        justify-content: center !important;
-        flex-wrap: wrap !important;
-        gap: 0.6rem !important;
+    .poem-breadcrumb::-webkit-scrollbar {
+        display: none !important;
+    }
+    .poem-breadcrumb a,
+    .poem-breadcrumb span {
+        white-space: nowrap !important;
+        font-size: 0.74rem !important;
+    }
+    .poem-breadcrumb .bc-current {
+        max-width: 140px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        opacity: 0.85 !important;
+    }
+    .poem-breadcrumb .bc-sep {
+        font-size: 0.68rem !important;
+        opacity: 0.45 !important;
     }
 
     .poem-reading-card,
     .article-reading-card {
-        padding: 1.5rem 1rem !important;
+        padding: 1.15rem 0.85rem !important;
         border-radius: 14px !important;
+        margin-bottom: 1.5rem !important;
     }
 
-    .poem-verses-wrapper {
-        font-size: 1.12rem !important;
-        line-height: 1.85 !important;
-        padding: 0.5rem 0 1rem 0 !important;
+    .poem-reading-top-nav {
+        margin-bottom: 0.75rem !important;
+        padding-bottom: 0.55rem !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    .poem-category-pill {
+        font-size: 0.72rem !important;
+        padding: 0.2rem 0.6rem !important;
+        border-radius: 16px !important;
+    }
+    .back-to-poems-link {
+        font-size: 0.74rem !important;
+        gap: 0.25rem !important;
+    }
+    .back-to-poems-link svg {
+        width: 14px !important;
+        height: 14px !important;
     }
 
     .poem-reading-title {
-        font-size: clamp(1.6rem, 5.5vw, 2.1rem) !important;
+        font-size: 1.35rem !important;
+        line-height: 1.32 !important;
+        margin-bottom: 0.25rem !important;
+        text-align: center !important;
+    }
+    .poem-reading-header .heading-artistic-underline {
+        width: 42px !important;
+        height: 3px !important;
+        margin: 0.35rem auto 0.65rem !important;
+        border-radius: 3px !important;
+    }
+
+    .poem-reading-meta {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.3rem 0.45rem !important;
+        font-size: 0.72rem !important;
+        margin-top: 0.35rem !important;
+        line-height: 1.35 !important;
+    }
+    .poem-reading-meta .meta-separator {
+        display: none !important;
+    }
+    .meta-author-tag,
+    .meta-date-tag,
+    .meta-views-tag,
+    .meta-stanza-tag {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.25rem !important;
+        font-size: 0.72rem !important;
+        padding: 0.15rem 0.45rem !important;
+        border-radius: 6px !important;
+        background: rgba(0, 0, 0, 0.03) !important;
+    }
+    [data-theme="dark"] .meta-author-tag,
+    [data-theme="dark"] .meta-date-tag,
+    [data-theme="dark"] .meta-views-tag,
+    [data-theme="dark"] .meta-stanza-tag {
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+    .meta-author-tag svg,
+    .meta-date-tag svg,
+    .meta-views-tag svg,
+    .meta-stanza-tag svg {
+        width: 12px !important;
+        height: 12px !important;
+        opacity: 0.8 !important;
+    }
+
+    .article-prose-paragraphs p {
+        font-size: 1rem !important;
+        line-height: 1.8 !important;
+        margin-bottom: 1.15rem !important;
+    }
+
+    .poem-verses-wrapper {
+        font-size: 1.08rem !important;
+        line-height: 1.8 !important;
+        padding: 0.4rem 0 0.85rem 0 !important;
+    }
+
+    /* Minimal, Clean, Smaller Action Toolbar */
+    .poem-action-toolbar {
+        margin-top: 1.35rem !important;
+        padding-top: 1rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.65rem !important;
+        border-top: 1px dashed rgba(200, 90, 23, 0.18) !important;
+        width: 100% !important;
+    }
+
+    /* Row 1: Actions (Like, Bookmark, Copy) - single compact line */
+    .action-left-group {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+        gap: 0.35rem !important;
+        width: 100% !important;
+    }
+    .poem-like-btn {
+        padding: 0.32rem 0.65rem !important;
+        font-size: 0.76rem !important;
+        border-radius: 18px !important;
+        gap: 0.3rem !important;
+        border-width: 1px !important;
+        flex-shrink: 0 !important;
+    }
+    .poem-like-btn .like-heart-icon {
+        width: 14px !important;
+        height: 14px !important;
+    }
+    .poem-like-btn .like-counter {
+        font-size: 0.7rem !important;
+        padding: 0.05rem 0.32rem !important;
+        border-radius: 10px !important;
+    }
+
+    .poem-bookmark-btn {
+        padding: 0.32rem 0.65rem !important;
+        font-size: 0.76rem !important;
+        border-radius: 18px !important;
+        gap: 0.3rem !important;
+        border-width: 1px !important;
+        flex-shrink: 0 !important;
+    }
+    .poem-bookmark-btn svg {
+        width: 13px !important;
+        height: 13px !important;
+    }
+
+    .poem-copy-btn {
+        padding: 0.32rem 0.65rem !important;
+        font-size: 0.76rem !important;
+        border-radius: 18px !important;
+        gap: 0.3rem !important;
+        border-width: 1px !important;
+        flex-shrink: 0 !important;
+    }
+    .poem-copy-btn svg {
+        width: 13px !important;
+        height: 13px !important;
+    }
+
+    /* Row 2: Font resizer + Share icons - single compact line */
+    .action-right-group {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+        gap: 0.45rem !important;
+        width: 100% !important;
+    }
+
+    .font-size-adjuster {
+        padding: 1px 3px !important;
+        border-radius: 16px !important;
+        gap: 0 !important;
+        flex-shrink: 0 !important;
+    }
+    .font-btn {
+        font-size: 0.72rem !important;
+        padding: 0.18rem 0.42rem !important;
+        border-radius: 12px !important;
+    }
+
+    .poem-social-share-group {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.3rem !important;
+        flex-shrink: 0 !important;
+    }
+    .share-icon-btn {
+        width: 29px !important;
+        height: 29px !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+    }
+    .share-icon-btn svg {
+        width: 13px !important;
+        height: 13px !important;
     }
 
     .btn, button, input[type="submit"] {
@@ -11815,6 +12020,27 @@ body.mobile-nav-expanded {
 
 /* 8. Ultra-Compact Screens (<= 360px) */
 @media (max-width: 360px) {
+    .action-left-group {
+        gap: 0.25rem !important;
+    }
+    .poem-like-btn,
+    .poem-bookmark-btn,
+    .poem-copy-btn {
+        padding: 0.26rem 0.48rem !important;
+        font-size: 0.72rem !important;
+    }
+    .share-icon-btn {
+        width: 27px !important;
+        height: 27px !important;
+    }
+    .share-icon-btn svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+    .font-btn {
+        padding: 0.14rem 0.32rem !important;
+        font-size: 0.68rem !important;
+    }
     .logo-brand-subtitle {
         display: none !important;
     }
