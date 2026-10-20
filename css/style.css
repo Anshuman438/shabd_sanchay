@@ -12973,3 +12973,250 @@ body.mobile-nav-expanded {
         border-radius: 20px !important;
     }
 }
+
+/* =========================================================
+   6. Mobile Standardization for Matra Calculator & Learn Page (learn.php)
+========================================================= */
+@media (max-width: 768px) {
+    /* Main Card Container */
+    .matra-calc-container {
+        padding: 1rem 0.75rem !important;
+        border-radius: 14px !important;
+        margin-bottom: 1.25rem !important;
+    }
+    .calc-card-header {
+        margin-bottom: 0.85rem !important;
+        padding-bottom: 0.75rem !important;
+    }
+    .calc-main-title {
+        font-size: 1.18rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 0.25rem !important;
+    }
+    .calc-subtitle {
+        font-size: 0.78rem !important;
+        line-height: 1.45 !important;
+        margin-bottom: 0.65rem !important;
+    }
+
+    /* Single-line horizontally scrollable Presets Bar */
+    .calc-preset-group {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        gap: 0.35rem !important;
+        align-items: center !important;
+        padding-bottom: 4px !important;
+        margin-bottom: 0.35rem !important;
+    }
+    .calc-preset-group::-webkit-scrollbar {
+        display: none !important;
+    }
+    .preset-label {
+        white-space: nowrap !important;
+        font-size: 0.72rem !important;
+        flex-shrink: 0 !important;
+        margin-right: 0.2rem !important;
+        opacity: 0.8 !important;
+    }
+    .calc-preset-btn {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        font-size: 0.72rem !important;
+        padding: 0.25rem 0.65rem !important;
+        border-radius: 16px !important;
+    }
+
+    /* Textarea & Actions */
+    .calc-input-wrap {
+        margin-bottom: 1.15rem !important;
+    }
+    .calc-textarea {
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+        padding: 0.65rem 0.75rem !important;
+        min-height: 70px !important;
+        border-radius: 8px !important;
+    }
+    .calc-action-bar {
+        margin-top: 0.45rem !important;
+    }
+    .calc-clear-btn {
+        font-size: 0.74rem !important;
+        padding: 0.25rem 0.55rem !important;
+    }
+    .calc-status-hint {
+        font-size: 0.72rem !important;
+    }
+
+    /* Result Card & Stack */
+    .calc-lines-stack {
+        gap: 0.85rem !important;
+        margin-bottom: 1.25rem !important;
+    }
+    .calc-line-result-card {
+        padding: 0.75rem 0.65rem !important;
+        border-radius: 10px !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .line-res-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 0.55rem !important;
+        gap: 0.35rem !important;
+    }
+    .line-index-badge {
+        font-size: 0.68rem !important;
+        padding: 0.15rem 0.45rem !important;
+    }
+    .line-meter-badge {
+        font-size: 0.78rem !important;
+        font-weight: 700 !important;
+    }
+    .line-total-pill {
+        padding: 0.2rem 0.6rem !important;
+        border-radius: 20px !important;
+        gap: 0.2rem !important;
+    }
+    .line-total-pill .count-num {
+        font-size: 0.95rem !important;
+    }
+    .line-total-pill .count-label {
+        font-size: 0.65rem !important;
+    }
+
+    /* Syllables Breakdown Flow & Compact Cells */
+    .line-breakdown-flow {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.35rem !important;
+        padding: 0.5rem 0.45rem !important;
+        border-radius: 8px !important;
+        margin-bottom: 0.55rem !important;
+    }
+    .word-metric-block {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 0.3rem 0.4rem !important;
+        gap: 0.2rem !important;
+        border-radius: 6px !important;
+        flex: 0 1 auto !important;
+    }
+    .word-text-row {
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+    }
+    .word-syllables-row {
+        display: flex !important;
+        gap: 0.15rem !important;
+    }
+    .syl-cell {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        min-width: 20px !important;
+        padding: 0.12rem 0.22rem !important;
+        border-radius: 3px !important;
+    }
+    .syl-char {
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+        line-height: 1.15 !important;
+    }
+    .syl-val {
+        font-size: 0.58rem !important;
+        font-weight: 800 !important;
+        line-height: 1.1 !important;
+    }
+    .word-total-tag {
+        font-size: 0.62rem !important;
+        font-weight: 800 !important;
+    }
+
+    /* Pattern Strip */
+    .line-pattern-strip {
+        font-size: 0.7rem !important;
+        gap: 0.3rem !important;
+        padding-top: 0.2rem !important;
+    }
+    .pattern-label {
+        font-size: 0.68rem !important;
+    }
+    .pattern-code {
+        font-size: 0.68rem !important;
+        letter-spacing: 1px !important;
+        padding: 0.12rem 0.4rem !important;
+    }
+
+    /* Legend & Explanations */
+    .calc-legend-card {
+        padding: 0.85rem 0.75rem !important;
+        border-radius: 10px !important;
+    }
+    .legend-title {
+        font-size: 0.92rem !important;
+        margin-bottom: 0.55rem !important;
+    }
+    .legend-items-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.45rem !important;
+    }
+    .legend-item {
+        font-size: 0.76rem !important;
+        line-height: 1.4 !important;
+        gap: 0.5rem !important;
+    }
+
+    /* Learn Parchment & Tabs */
+    .learn-article-parchment {
+        padding: 1.1rem 0.85rem !important;
+        border-radius: 12px !important;
+    }
+    .learn-chapter-title {
+        font-size: 1.25rem !important;
+        line-height: 1.35 !important;
+    }
+    .chapter-intro-lead {
+        font-size: 0.82rem !important;
+    }
+    .ghazal-element-card, .rule-card {
+        padding: 0.85rem 0.75rem !important;
+    }
+    .element-tag, .rule-badge {
+        font-size: 0.72rem !important;
+    }
+}
+
+/* Extra Small Screens (<= 380px) */
+@media (max-width: 380px) {
+    .matra-calc-container {
+        padding: 0.85rem 0.55rem !important;
+    }
+    .word-metric-block {
+        padding: 0.25rem 0.3rem !important;
+        gap: 0.15rem !important;
+    }
+    .word-text-row {
+        font-size: 0.76rem !important;
+    }
+    .syl-cell {
+        min-width: 17px !important;
+        padding: 0.1rem 0.18rem !important;
+    }
+    .syl-char {
+        font-size: 0.68rem !important;
+    }
+    .syl-val {
+        font-size: 0.52rem !important;
+    }
+    .line-breakdown-flow {
+        gap: 0.25rem !important;
+        padding: 0.4rem 0.35rem !important;
+    }
+}
