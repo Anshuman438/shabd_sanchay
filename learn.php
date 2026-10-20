@@ -12,8 +12,8 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
     <meta name="description" content="हिंदी छंद शास्त्र, लाइव मात्रा गणक टूल, दोहा, चौपाई, ग़ज़ल बहर और काव्य-शिल्प के प्रामाणिक नियम।">
-    <link rel="preload" href="css/style.min.css?v=3.0" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=3.0">
+    <link rel="preload" href="css/style.min.css?v=3.1" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=3.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&display=swap" rel="stylesheet">
@@ -422,7 +422,7 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
         let wordPatternList = [];
 
         words.forEach(word => {
-            const cleanWord = word.replace(/[^\u0900-\u097F]/g, '');
+            const cleanWord = word.replace(/[\u0964\u0965,\.!\?;:"'()«»।॥\-]/g, '').replace(/[^\u0900-\u097F]/g, '');
             if (!cleanWord) return;
 
             const syllables = parseWordSyllables(cleanWord);
