@@ -66,8 +66,8 @@ $seal_tagline = $about_c['seal_tagline'] ?? "साहित्य • संस
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
     <meta name="description" content="शब्द संचय - विचारों के नए प्रतिमान। हिंदी साहित्य, कविता, छंद शास्त्र, कहानियों और विचारों का समृद्ध डिजिटल मंच।">
-    <link rel="preload" href="css/style.min.css?v=2.1" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.1">
+    <link rel="preload" href="css/style.min.css?v=2.2" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">

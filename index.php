@@ -36,8 +36,8 @@ $total_works = $total_poems + $total_articles + $total_stories;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="preload" href="css/style.min.css?v=2.1" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.1">
+    <link rel="preload" href="css/style.min.css?v=2.2" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
@@ -181,6 +181,9 @@ $total_works = $total_poems + $total_articles + $total_stories;
             <div class="card-sheet-pill-handle">
                 <span class="pill-handle-bar"></span>
             </div>
+
+            <!-- Mobile Dedicated Slot for Poster Studio -->
+            <div id="mobile-poster-slot" class="mobile-poster-slot-container"></div>
 
             <!-- =========================================================
                  SECTION 2: WHAT WE OFFER (हम क्या साझा करते हैं?)
@@ -985,8 +988,9 @@ $total_works = $total_poems + $total_articles + $total_stories;
         });
     }
 
-    // 3D Perspective Tilt & Cursor Glare Controller for Magical Cards
+    // 3D Perspective Tilt & Cursor Glare Controller for Magical Cards (Desktop hover only)
     function initMagicalTiltCards() {
+        if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
         const cards = document.querySelectorAll('.magical-card');
         
         cards.forEach(card => {
@@ -1849,8 +1853,28 @@ $total_works = $total_poems + $total_articles + $total_stories;
         setTimeout(typeLine1, 200);
     }
 
+    // Dynamic Hero Layout Adjuster for Seamless Mobile & Desktop View
+    function adjustHeroLayoutForMobile() {
+        const heroRight = document.querySelector('.panoramic-hero-section .hero-right, #mobile-poster-slot .hero-right');
+        const heroContainer = document.getElementById('hero-content-wrap');
+        const mobileSlot = document.getElementById('mobile-poster-slot');
+        if (!heroRight || !heroContainer || !mobileSlot) return;
+
+        if (window.innerWidth <= 992) {
+            if (heroRight.parentElement !== mobileSlot) {
+                mobileSlot.appendChild(heroRight);
+            }
+        } else {
+            if (heroRight.parentElement !== heroContainer) {
+                heroContainer.appendChild(heroRight);
+            }
+        }
+    }
+    window.addEventListener('resize', adjustHeroLayoutForMobile, { passive: true });
+
     // Home Newsletter Handler & Initialization
     document.addEventListener('DOMContentLoaded', () => {
+        adjustHeroLayoutForMobile();
         initHeroTypingEffect();
         initScrollAnimations();
         initMagicalTiltCards();

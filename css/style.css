@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&display=swap');
 
 /* Base Styles */
 :root {
@@ -10910,8 +10910,34 @@ html, body {
 
 
 /* ==========================================================================
-   PERFECT FIXED HEADER & CINEMATIC SLIDING CARD SHEET SYSTEM
+   PERFECT FIXED HEADER, MOBILE DRAWER & CINEMATIC CARD ANIMATION SYSTEM
+   Engineered for 100% flawless responsiveness on both Desktop and Mobile
    ========================================================================== */
+
+/* 0. Global Zero-Overflow Safety */
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Compensate body padding so content on standard pages starts neatly below fixed header */
+body {
+    padding-top: 68px !important;
+}
+
+/* Home landing page hero starts at top: 0 seamlessly underneath the translucent fixed navbar */
+body.home-doodle-page,
+body.home-doodle-page main.main-content {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Lock scrolling when mobile navigation drawer is opened */
+body.mobile-nav-expanded {
+    overflow: hidden !important;
+}
 
 /* 1. Universal Fixed Navigation Bar */
 .site-header {
@@ -10938,42 +10964,374 @@ html, body {
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* Remove Active Tab Bottom Underline Bar */
-.main-nav a.active::after,
-.main-nav a::after {
-    display: none !important;
-    content: none !important;
+.header-container {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 68px !important;
+    padding: 0 clamp(0.75rem, 2vw, 2rem) !important;
+    max-width: 1440px !important;
+    margin: 0 auto !important;
+    gap: clamp(0.5rem, 1.5vw, 1.5rem) !important;
+    position: relative !important;
 }
 
-.main-nav a.active {
-    color: var(--primary, #c85a17) !important;
-    background: rgba(200, 90, 23, 0.1) !important;
-    border-radius: 20px !important;
+/* Logo Group */
+.logo {
+    flex-shrink: 0 !important;
+}
+
+.logo-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: clamp(0.4rem, 1vw, 0.75rem) !important;
+    text-decoration: none !important;
+}
+
+.logo-feather-icon svg {
+    width: clamp(22px, 2.5vw, 28px) !important;
+    height: clamp(22px, 2.5vw, 28px) !important;
+    display: block !important;
+}
+
+.logo-brand-title {
+    font-family: 'Biryani', 'Noto Sans Devanagari', sans-serif !important;
+    font-size: clamp(1.1rem, 1.8vw, 1.45rem) !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+}
+
+.logo-brand-subtitle {
+    font-size: clamp(0.5rem, 0.7vw, 0.62rem) !important;
     font-weight: 700 !important;
+    opacity: 0.75 !important;
+    margin: 0 !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
 }
 
-[data-theme="dark"] .main-nav a.active {
-    color: #f6ad55 !important;
-    background: rgba(246, 173, 85, 0.12) !important;
+/* Header Right Actions */
+.header-right-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: clamp(0.35rem, 1vw, 0.75rem) !important;
+    flex-shrink: 0 !important;
 }
 
-/* Compensate body padding so content on standard pages starts neatly below fixed header */
-body {
-    padding-top: 68px !important;
+.theme-toggle {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: rgba(0, 0, 0, 0.03) !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    transition: all 0.25s ease !important;
 }
 
-/* Home landing page hero starts at top: 0 seamlessly underneath the translucent fixed navbar */
-body.home-doodle-page {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
+[data-theme="dark"] .theme-toggle {
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
 }
 
-body.home-doodle-page main.main-content {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
+.btn-header-login {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 38px !important;
+    padding: 0 clamp(0.65rem, 1.2vw, 1.1rem) !important;
+    border-radius: 20px !important;
+    font-size: clamp(0.82rem, 1vw, 0.92rem) !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    transition: all 0.25s ease !important;
 }
 
-/* Hero Background Layer: seamless top: 0 positioning with center top alignment */
+/* Mobile Hamburger Menu Button */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 5px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+    background: rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    transition: all 0.25s ease !important;
+    flex-shrink: 0 !important;
+}
+
+[data-theme="dark"] .mobile-menu-btn {
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.mobile-menu-btn span {
+    display: block !important;
+    width: 20px !important;
+    height: 2px !important;
+    background-color: var(--text) !important;
+    border-radius: 2px !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, width 0.2s ease !important;
+}
+
+.mobile-menu-btn.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg) !important;
+}
+.mobile-menu-btn.open span:nth-child(2) {
+    opacity: 0 !important;
+    transform: scaleX(0) !important;
+}
+.mobile-menu-btn.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg) !important;
+}
+
+/* Mobile Backdrop Overlay */
+.nav-backdrop {
+    position: fixed !important;
+    top: 68px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - 68px) !important;
+    height: calc(100dvh - 68px) !important;
+    background: rgba(14, 10, 8, 0.5) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    z-index: 999998 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity 0.28s ease, visibility 0.28s ease !important;
+}
+
+.nav-backdrop.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+/* Desktop Navigation (> 1024px) */
+@media (min-width: 1025px) {
+    .main-nav {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 1 !important;
+        max-height: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        overflow: visible !important;
+        position: static !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .main-nav ul {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: clamp(0.35rem, 1vw, 1.25rem) !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        list-style: none !important;
+    }
+
+    .main-nav a {
+        display: inline-flex !important;
+        align-items: center !important;
+        padding: 0.45rem 0.85rem !important;
+        font-size: clamp(0.88rem, 0.98vw, 0.98rem) !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        border-radius: 20px !important;
+        background: transparent !important;
+        color: var(--text) !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .main-nav a:hover {
+        color: var(--primary, #c85a17) !important;
+        background: rgba(200, 90, 23, 0.08) !important;
+    }
+
+    .main-nav a.active {
+        color: var(--primary, #c85a17) !important;
+        background: rgba(200, 90, 23, 0.12) !important;
+        font-weight: 700 !important;
+    }
+
+    [data-theme="dark"] .main-nav a.active {
+        color: #f6ad55 !important;
+        background: rgba(246, 173, 85, 0.14) !important;
+    }
+
+    .main-nav a.active::after,
+    .main-nav a::after {
+        display: none !important;
+        content: none !important;
+    }
+
+    .mobile-menu-btn {
+        display: none !important;
+    }
+
+    .mobile-nav-search-container {
+        display: none !important;
+    }
+
+    .desktop-search-only {
+        display: block !important;
+    }
+}
+
+/* Mobile & Tablet Navigation Drawer (<= 1024px) */
+@media (max-width: 1024px) {
+    .desktop-search-only {
+        display: none !important;
+    }
+
+    .mobile-menu-btn {
+        display: flex !important;
+    }
+
+    .main-nav {
+        position: fixed !important;
+        top: 68px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        background: var(--bg, #fdfbf7) !important;
+        border-bottom: 1px solid rgba(200, 90, 23, 0.2) !important;
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25) !important;
+        backdrop-filter: blur(24px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transform: translateY(-8px) !important;
+        transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease !important;
+        z-index: 999999 !important;
+        flex-direction: column !important;
+        padding: 0 1.25rem !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    [data-theme="dark"] .main-nav {
+        background: rgba(18, 13, 10, 0.98) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85) !important;
+    }
+
+    .main-nav.mobile-open,
+    .main-nav.active {
+        max-height: calc(100vh - 78px) !important;
+        max-height: calc(100dvh - 78px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+        padding: 1rem 1.25rem 1.75rem !important;
+    }
+
+    .main-nav ul {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.45rem !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        list-style: none !important;
+    }
+
+    .main-nav a {
+        width: 100% !important;
+        padding: 0.85rem 1.15rem !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        background: rgba(0, 0, 0, 0.03) !important;
+        color: var(--text) !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    [data-theme="dark"] .main-nav a {
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .main-nav a:hover,
+    .main-nav a.active {
+        background: rgba(200, 90, 23, 0.14) !important;
+        color: var(--primary, #c85a17) !important;
+    }
+
+    .main-nav a.active::after,
+    .main-nav a::after {
+        display: none !important;
+        content: none !important;
+    }
+
+    .mobile-nav-search-container {
+        display: block !important;
+        margin-bottom: 0.85rem !important;
+        width: 100% !important;
+    }
+
+    .mobile-nav-search-form {
+        display: flex !important;
+        align-items: center !important;
+        background: var(--muted, #eef0f4) !important;
+        border: 1.5px solid rgba(0, 0, 0, 0.1) !important;
+        border-radius: 25px !important;
+        padding: 0 1rem !important;
+        height: 44px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    [data-theme="dark"] .mobile-nav-search-form {
+        border-color: rgba(255, 255, 255, 0.15) !important;
+        background: rgba(30, 24, 20, 0.9) !important;
+    }
+
+    .mobile-nav-search-form input {
+        border: none !important;
+        outline: none !important;
+        background: transparent !important;
+        color: var(--text) !important;
+        font-size: 16px !important;
+        width: 100% !important;
+        margin-left: 0.5rem !important;
+    }
+}
+
+/* 2. Hero Background Layer: seamless top: 0 positioning with vintage zoom */
 .hero-bg-layer {
     position: absolute !important;
     top: 0 !important;
@@ -11001,7 +11359,7 @@ body.home-doodle-page main.main-content {
     filter: brightness(0.75) contrast(1.15) !important;
 }
 
-/* 2. Hero Section: Truly Fixed Stationary Anchor (Never Moves On Scroll) */
+/* 3. Hero Section: Truly Fixed Stationary Anchor (Never Moves On Scroll) */
 .section-hero.panoramic-hero-section {
     position: fixed !important;
     top: 0 !important;
@@ -11009,8 +11367,11 @@ body.home-doodle-page main.main-content {
     right: 0 !important;
     width: 100% !important;
     height: 100vh !important;
+    height: 100dvh !important;
     min-height: 100vh !important;
+    min-height: 100dvh !important;
     max-height: 100vh !important;
+    max-height: 100dvh !important;
     z-index: 1 !important;
     display: flex !important;
     flex-direction: column !important;
@@ -11022,6 +11383,7 @@ body.home-doodle-page main.main-content {
     margin: 0 !important;
 }
 
+/* Desktop Hero Layout (> 992px) */
 @media (min-width: 993px) {
     .panoramic-hero-section .hero-container {
         position: relative !important;
@@ -11061,6 +11423,10 @@ body.home-doodle-page main.main-content {
         aspect-ratio: 1 / 1 !important;
         border-radius: 12px !important;
     }
+
+    .mobile-poster-slot-container {
+        display: none !important;
+    }
 }
 
 /* Fixed Clean Floating Scroll Cue in Viewport */
@@ -11071,16 +11437,19 @@ body.home-doodle-page main.main-content {
     transform: translateX(-50%) !important;
     z-index: 8 !important;
     margin: 0 !important;
+    transition: opacity 0.25s ease !important;
 }
 
-/* 3. The Sliding Card Sheet: Slides Directly Over The Fixed First Page */
+/* 4. The Sliding Card Sheet: Slides Directly Over The Fixed First Page */
 .sliding-card-sheet {
     position: relative !important;
     z-index: 10 !important;
     margin-top: 100vh !important;
+    margin-top: 100dvh !important;
     background-color: var(--bg, #fdfbf7) !important;
     width: 100% !important;
     min-height: 100vh !important;
+    min-height: 100dvh !important;
     border-top-left-radius: 44px !important;
     border-top-right-radius: 44px !important;
     box-shadow: 0 -32px 80px rgba(0, 0, 0, 0.22), 0 -6px 22px rgba(0, 0, 0, 0.08) !important;
@@ -11117,19 +11486,73 @@ body.home-doodle-page main.main-content {
     background: var(--primary, #c85a17) !important;
 }
 
-/* Mobile & Tablet Adjustments */
+/* 5. Mobile & Tablet Hero & Card Adjustments (<= 992px) */
 @media (max-width: 992px) {
     .section-hero.panoramic-hero-section {
-        padding: calc(68px + 0.5rem) 1rem 2rem 1rem !important;
+        padding: calc(68px + 0.5rem) 1.25rem 2.5rem 1.25rem !important;
+    }
+
+    .panoramic-hero-section .hero-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        max-width: 620px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+
+    .panoramic-hero-section .hero-left {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .hero-title {
+        font-size: clamp(1.65rem, 5.5vw, 2.35rem) !important;
+        line-height: 1.25 !important;
+        text-align: center !important;
+        margin-bottom: 0.85rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(0.92rem, 3.2vw, 1.05rem) !important;
+        line-height: 1.7 !important;
+        text-align: center !important;
+        max-width: 520px !important;
+        margin: 0 auto 1.35rem auto !important;
+    }
+
+    .hero-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        width: 100% !important;
+        margin-bottom: 1.25rem !important;
+    }
+
+    .hero-trust-strip {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 0.45rem !important;
     }
 
     .sliding-card-sheet {
         margin-top: 100vh !important;
+        margin-top: 100dvh !important;
         border-top-left-radius: 32px !important;
         border-top-right-radius: 32px !important;
-        box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.18) !important;
-        border-top: 1.5px solid rgba(200, 90, 23, 0.28) !important;
-        padding-top: 2.5rem !important;
+        box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.22) !important;
+        border-top: 1.5px solid rgba(200, 90, 23, 0.3) !important;
+        padding-top: 2.75rem !important;
     }
 
     .card-sheet-pill-handle {
@@ -11139,6 +11562,96 @@ body.home-doodle-page main.main-content {
     .pill-handle-bar {
         width: 44px !important;
         height: 4px !important;
+    }
+
+    /* Mobile Dedicated Poster Slot on Sliding Card */
+    .mobile-poster-slot-container {
+        display: block !important;
+        width: 100% !important;
+        max-width: 500px !important;
+        margin: 0 auto 2.5rem auto !important;
+        padding: 0 1rem !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-poster-slot-container .poster-studio-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+        border-radius: 18px !important;
+    }
+}
+
+/* 6. Compact Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+    .header-container {
+        padding: 0 0.75rem !important;
+        gap: 0.5rem !important;
+    }
+
+    .logo-brand-title {
+        font-size: 1.15rem !important;
+    }
+
+    .logo-brand-subtitle {
+        font-size: 0.5rem !important;
+    }
+
+    .btn-header-login {
+        padding: 0 0.65rem !important;
+        font-size: 0.8rem !important;
+        height: 34px !important;
+    }
+
+    .theme-toggle {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    .mobile-menu-btn {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .hero-actions {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 0.65rem !important;
+    }
+
+    .hero-actions a,
+    .hero-actions .btn-doodle-primary,
+    .hero-actions .btn-doodle-secondary {
+        width: 100% !important;
+        max-width: 320px !important;
+        text-align: center !important;
+        justify-content: center !important;
+        padding: 0.75rem 1.25rem !important;
+        font-size: 0.92rem !important;
+    }
+
+    .trust-pill {
+        font-size: 0.72rem !important;
+        padding: 0.25rem 0.55rem !important;
+    }
+}
+
+/* 7. Ultra-Compact Screens (<= 360px) */
+@media (max-width: 360px) {
+    .logo-brand-subtitle {
+        display: none !important;
+    }
+
+    .logo-brand-title {
+        font-size: 1.05rem !important;
+    }
+
+    .header-right-actions {
+        gap: 0.35rem !important;
+    }
+
+    .header-user-name-text {
+        display: none !important;
     }
 }
 

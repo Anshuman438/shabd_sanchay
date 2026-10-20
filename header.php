@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // header.php
 if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
     @session_start();
@@ -87,13 +87,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </div>
 </header>
 
+<!-- Mobile Navigation Backdrop Overlay -->
+<div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+
 <!-- Page Shift Loader Overlay -->
 <div id="page-shift-loader" style="
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
     background-color: var(--bg, #fdfbf7);
     z-index: 999999;
     display: flex;
@@ -125,7 +129,58 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </style>
 
 <script>
+// Unified Mobile Navigation Controller
 (function() {
+    function initMobileNav() {
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const nav = document.getElementById('main-nav');
+        const backdrop = document.getElementById('nav-backdrop');
+        if (!menuBtn || !nav) return;
+
+        function openNav() {
+            menuBtn.classList.add('open');
+            menuBtn.setAttribute('aria-expanded', 'true');
+            nav.classList.add('mobile-open');
+            nav.classList.add('active');
+            if (backdrop) backdrop.classList.add('show');
+            document.body.classList.add('mobile-nav-expanded');
+        }
+
+        function closeNav() {
+            menuBtn.classList.remove('open');
+            menuBtn.setAttribute('aria-expanded', 'false');
+            nav.classList.remove('mobile-open');
+            nav.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('show');
+            document.body.classList.remove('mobile-nav-expanded');
+        }
+
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (nav.classList.contains('mobile-open') || nav.classList.contains('active')) {
+                closeNav();
+            } else {
+                openNav();
+            }
+        });
+
+        if (backdrop) {
+            backdrop.addEventListener('click', closeNav);
+        }
+
+        nav.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeNav);
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeNav();
+        });
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024) closeNav();
+        }, { passive: true });
+    }
+
     function initLoader() {
         const loader = document.getElementById('page-shift-loader');
         if (!loader) return;
@@ -151,9 +206,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
             }
         });
     }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initLoader);
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileNav();
+            initLoader();
+        });
     } else {
+        initMobileNav();
         initLoader();
     }
 })();
