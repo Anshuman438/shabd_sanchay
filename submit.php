@@ -13,8 +13,8 @@ $page_title = "अपनी रचना भेजें | शब्द सं�
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
-    <link rel="preload" href="css/style.min.css?v=2.2" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.2">
+    <link rel="preload" href="css/style.min.css?v=2.3" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=2.3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700;900&family=Inter:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
@@ -379,21 +379,20 @@ $page_title = "अपनी रचना भेजें | शब्द सं�
                         <input type="text" name="title" id="input-title" class="submit-control" required placeholder="उदा. रश्मिरथी, ईदगाह, साहित्य और समाज..." oninput="updateLivePreview()">
                     </div>
 
-                    <div class="submit-row-2">
-                        <div class="submit-input-group">
-                            <label for="input-category">विधा / उप-श्रेणी (Category) *</label>
-                            <select name="category" id="input-category" class="submit-control" onchange="updateLivePreview()">
-                                <option value="सामाजिक">सामाजिक (Social)</option>
-                                <option value="शृंगार व प्रेम">शृंगार व प्रेम (Romantic/Love)</option>
-                                <option value="राष्ट्रभक्ति">राष्ट्रभक्ति (Patriotic)</option>
-                                <option value="प्रकृति व पर्यावरण">प्रकृति व पर्यावरण (Nature)</option>
-                                <option value="दर्शन व अध्यात्म">दर्शन व अध्यात्म (Philosophy)</option>
-                                <option value="हास्य-व्यंग्य">हास्य-व्यंग्य (Satire/Humor)</option>
-                                <option value="ऐतिहासिक">ऐतिहासिक (Historical)</option>
-                                <option value="रहस्य व रोमांच">रहस्य व रोमांच (Mystery/Suspense)</option>
-                                <option value="सामान्य" selected>सामान्य (General)</option>
-                            </select>
-                        </div>
+                    <div class="submit-input-group">
+                        <label for="input-category">विधा / उप-श्रेणी (Category) *</label>
+                        <select name="category" id="input-category" class="submit-control" onchange="updateLivePreview()">
+                            <option value="सामाजिक">सामाजिक (Social)</option>
+                            <option value="शृंगार व प्रेम">शृंगार व प्रेम (Romantic/Love)</option>
+                            <option value="राष्ट्रभक्ति">राष्ट्रभक्ति (Patriotic)</option>
+                            <option value="प्रकृति व पर्यावरण">प्रकृति व पर्यावरण (Nature)</option>
+                            <option value="दर्शन व अध्यात्म">दर्शन व अध्यात्म (Philosophy)</option>
+                            <option value="हास्य-व्यंग्य">हास्य-व्यंग्य (Satire/Humor)</option>
+                            <option value="ऐतिहासिक">ऐतिहासिक (Historical)</option>
+                            <option value="रहस्य व रोमांच">रहस्य व रोमांच (Mystery/Suspense)</option>
+                            <option value="सामान्य" selected>सामान्य (General)</option>
+                        </select>
+                    </div>
 
                     <div class="submit-row-2">
                         <div class="submit-input-group">

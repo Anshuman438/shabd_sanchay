@@ -1308,17 +1308,13 @@ body.home-doodle-page {
 ========================================================= */
 .section-offerings {
     position: relative;
-    padding: 2.2rem 0 2.8rem;
-    height: calc(100vh - 68px);
-    min-height: calc(100vh - 68px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0;
+    min-height: auto;
+    height: auto;
+    display: block;
     box-sizing: border-box;
     width: 100%;
-    overflow: hidden;
-    /* scroll-snap disabled */
-    scroll-snap-stop: always;
+    overflow: visible;
     scroll-margin-top: 68px;
 }
 
@@ -11636,7 +11632,168 @@ body.mobile-nav-expanded {
     }
 }
 
-/* 7. Ultra-Compact Screens (<= 360px) */
+/* 7. Deep Mobile View & Component Adjustments (<= 768px & <= 540px) */
+@media (max-width: 768px) {
+    .section-header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+
+    .section-main-heading {
+        font-size: clamp(1.6rem, 5vw, 2.1rem) !important;
+    }
+
+    .section-sub-heading {
+        font-size: 0.95rem !important;
+    }
+
+    .daily-card-header {
+        flex-wrap: wrap !important;
+        gap: 0.6rem !important;
+    }
+
+    .daily-card-actions {
+        flex-wrap: wrap !important;
+        gap: 0.35rem !important;
+    }
+
+    .pro-line-rhythm-strip {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        white-space: nowrap !important;
+        max-width: 100% !important;
+        padding: 0.45rem 0.75rem !important;
+    }
+
+    .poem-author-showcase-card {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 1.75rem 1.25rem !important;
+        gap: 1.25rem !important;
+    }
+
+    .author-details-column {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    .author-showcase-footer {
+        justify-content: center !important;
+        width: 100% !important;
+    }
+
+    .author-explore-btn {
+        width: 100% !important;
+        max-width: 300px !important;
+        justify-content: center !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .offerings-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+    }
+
+    .offering-card.magical-card.doodle-card {
+        padding: 1.5rem 1.25rem !important;
+    }
+}
+
+@media (max-width: 540px) {
+    .poster-author-row-input {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 0.65rem !important;
+    }
+
+    .poster-author-input {
+        width: 100% !important;
+        min-height: 44px !important;
+        font-size: 16px !important;
+        padding: 0.65rem 0.85rem !important;
+    }
+
+    .btn-download-poster {
+        width: 100% !important;
+        justify-content: center !important;
+        min-height: 44px !important;
+        padding: 0.75rem 1.25rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    .template-selector-pills {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex-wrap: nowrap !important;
+        padding-bottom: 4px !important;
+        scrollbar-width: none !important;
+    }
+
+    .template-selector-pills::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .tmpl-btn {
+        flex-shrink: 0 !important;
+        padding: 0.35rem 0.65rem !important;
+        font-size: 0.78rem !important;
+        min-height: 34px !important;
+    }
+
+    .calc-mode-toggles {
+        width: 100% !important;
+        display: flex !important;
+    }
+
+    .btn-mode-toggle {
+        flex: 1 !important;
+        text-align: center !important;
+        padding: 0.5rem 0.4rem !important;
+        font-size: 0.78rem !important;
+        white-space: nowrap !important;
+    }
+
+    .poem-action-toolbar {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1rem !important;
+    }
+
+    .action-left-group, .action-right-group {
+        width: 100% !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 0.6rem !important;
+    }
+
+    .poem-reading-card,
+    .article-reading-card {
+        padding: 1.5rem 1rem !important;
+        border-radius: 14px !important;
+    }
+
+    .poem-verses-wrapper {
+        font-size: 1.12rem !important;
+        line-height: 1.85 !important;
+        padding: 0.5rem 0 1rem 0 !important;
+    }
+
+    .poem-reading-title {
+        font-size: clamp(1.6rem, 5.5vw, 2.1rem) !important;
+    }
+
+    .btn, button, input[type="submit"] {
+        touch-action: manipulation;
+    }
+}
+
+/* 8. Ultra-Compact Screens (<= 360px) */
 @media (max-width: 360px) {
     .logo-brand-subtitle {
         display: none !important;
@@ -11652,6 +11809,11 @@ body.mobile-nav-expanded {
 
     .header-user-name-text {
         display: none !important;
+    }
+
+    .trust-pill {
+        font-size: 0.68rem !important;
+        padding: 0.2rem 0.45rem !important;
     }
 }
 
