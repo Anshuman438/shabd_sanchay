@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Biryani:wght@400;600;700;800;900&display=swap');
 
 /* Base Styles */
 :root {
@@ -3128,9 +3128,6 @@ body.home-doodle-page {
 }
 
 @media (max-width: 768px) {
-    .main-nav {
-        display: none;
-    }
     .mobile-menu-btn {
         display: flex;
     }
@@ -11204,12 +11201,29 @@ body.mobile-nav-expanded {
         display: none !important;
     }
 
+    .site-header {
+        overflow: visible !important;
+    }
+
+    .header-container {
+        position: static !important;
+    }
+
     .mobile-menu-btn {
         display: flex !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        z-index: 1000002 !important;
+        position: relative !important;
+        touch-action: manipulation !important;
+    }
+
+    .mobile-menu-btn span {
+        pointer-events: none !important;
     }
 
     .main-nav {
-        position: fixed !important;
+        position: absolute !important;
         top: 68px !important;
         left: 0 !important;
         right: 0 !important;
@@ -11224,9 +11238,11 @@ body.mobile-nav-expanded {
         overflow: hidden !important;
         opacity: 0 !important;
         visibility: hidden !important;
+        pointer-events: none !important;
         transform: translateY(-8px) !important;
         transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease !important;
         z-index: 999999 !important;
+        display: flex !important;
         flex-direction: column !important;
         padding: 0 1.25rem !important;
         margin: 0 !important;
@@ -11241,14 +11257,16 @@ body.mobile-nav-expanded {
 
     .main-nav.mobile-open,
     .main-nav.active {
+        display: flex !important;
         max-height: calc(100vh - 78px) !important;
         max-height: calc(100dvh - 78px) !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         opacity: 1 !important;
         visibility: visible !important;
+        pointer-events: auto !important;
         transform: translateY(0) !important;
-        padding: 1rem 1.25rem 1.75rem !important;
+        padding: 1.15rem 1.25rem 1.75rem !important;
     }
 
     .main-nav ul {
@@ -11695,12 +11713,14 @@ body.mobile-nav-expanded {
 
 @media (max-width: 640px) {
     .offerings-grid {
-        grid-template-columns: 1fr !important;
-        gap: 1.25rem !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
     }
 
     .offering-card.magical-card.doodle-card {
-        padding: 1.5rem 1.25rem !important;
+        padding: 0.95rem 0.65rem 0.85rem !important;
+        border-radius: 14px !important;
+        min-height: auto !important;
     }
 }
 
@@ -11816,4 +11836,233 @@ body.mobile-nav-expanded {
         padding: 0.2rem 0.45rem !important;
     }
 }
+
+/* =========================================================
+   9. "हम क्या साझा करते हैं?" - Circular Left-to-Right Rotation & Mobile Size Reduction
+========================================================= */
+
+/* Circular Orbit + Left-to-Right Tilt Rotation Keyframes */
+@keyframes cardCircularRotateLR {
+    0% {
+        transform: rotate(-3deg) translate3d(-3px, 0px, 0);
+    }
+    25% {
+        transform: rotate(-1deg) translate3d(0px, -3.5px, 0);
+    }
+    50% {
+        transform: rotate(3deg) translate3d(3px, 0px, 0);
+    }
+    75% {
+        transform: rotate(1deg) translate3d(0px, 3.5px, 0);
+    }
+    100% {
+        transform: rotate(-3deg) translate3d(-3px, 0px, 0);
+    }
+}
+
+@keyframes iconCircularSway {
+    0% {
+        transform: rotate(-6deg) scale(0.98);
+    }
+    50% {
+        transform: rotate(6deg) scale(1.03);
+    }
+    100% {
+        transform: rotate(-6deg) scale(0.98);
+    }
+}
+
+/* Base rotation applied to all 4 cards with staggered phase timing */
+.offering-card.magical-card.doodle-card {
+    animation: cardCircularRotateLR 5.5s ease-in-out infinite !important;
+    transform-origin: center center !important;
+    will-change: transform !important;
+}
+
+.offering-card.magical-card.doodle-card:nth-child(1) {
+    animation-delay: 0s !important;
+}
+
+.offering-card.magical-card.doodle-card:nth-child(2) {
+    animation-delay: -1.375s !important;
+}
+
+.offering-card.magical-card.doodle-card:nth-child(3) {
+    animation-delay: -2.75s !important;
+}
+
+.offering-card.magical-card.doodle-card:nth-child(4) {
+    animation-delay: -4.125s !important;
+}
+
+/* Pause smoothly when user interacts */
+.offering-card.magical-card.doodle-card:hover,
+.offering-card.magical-card.doodle-card:active {
+    animation-play-state: paused !important;
+}
+
+/* Complementary icon rotation sway */
+.offering-card.magical-card.doodle-card .doodle-icon-circle {
+    animation: iconCircularSway 4s ease-in-out infinite alternate !important;
+    transform-origin: center center !important;
+}
+
+.offering-card.magical-card.doodle-card:nth-child(2) .doodle-icon-circle {
+    animation-delay: -1s !important;
+}
+
+.offering-card.magical-card.doodle-card:nth-child(3) .doodle-icon-circle {
+    animation-delay: -2s !important;
+}
+
+.offering-card.magical-card.doodle-card:nth-child(4) .doodle-icon-circle {
+    animation-delay: -3s !important;
+}
+
+/* Reduced Card Size in Mobile View (<= 768px) */
+@media (max-width: 768px) {
+    .section-offerings .container {
+        padding-left: clamp(0.65rem, 3vw, 1.25rem) !important;
+        padding-right: clamp(0.65rem, 3vw, 1.25rem) !important;
+    }
+
+    .offerings-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
+        perspective: none !important;
+        margin-top: 0 !important;
+    }
+
+    .offering-card.magical-card.doodle-card {
+        padding: 0.95rem 0.65rem 0.85rem !important;
+        border-radius: 14px !important;
+        min-height: auto !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    .doodle-corner-accent {
+        font-size: 0.68rem !important;
+        top: 6px !important;
+    }
+    .doodle-corner-accent.top-left {
+        left: 8px !important;
+    }
+    .doodle-corner-accent.top-right {
+        right: 8px !important;
+    }
+
+    .doodle-icon-circle-wrapper {
+        margin-bottom: 0.45rem !important;
+    }
+
+    .doodle-icon-circle {
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 12px !important;
+    }
+
+    .doodle-icon-circle .doodle-svg {
+        width: 26px !important;
+        height: 26px !important;
+    }
+
+    .doodle-sparkle-dot {
+        font-size: 0.65rem !important;
+    }
+    .doodle-sparkle-dot.s1 {
+        top: -3px !important;
+        right: -5px !important;
+    }
+    .doodle-sparkle-dot.s2 {
+        bottom: 0px !important;
+        left: -4px !important;
+        font-size: 0.38rem !important;
+    }
+
+    .offering-details {
+        margin-bottom: 0.45rem !important;
+        width: 100% !important;
+    }
+
+    .offering-title {
+        font-size: 1.05rem !important;
+        margin-bottom: 0.1rem !important;
+        line-height: 1.25 !important;
+    }
+
+    .doodle-title-swash {
+        margin: 0.1rem auto 0.35rem !important;
+        opacity: 0.55 !important;
+    }
+
+    .doodle-title-swash svg {
+        width: 36px !important;
+        height: 6px !important;
+    }
+
+    .offering-desc {
+        font-size: 0.74rem !important;
+        line-height: 1.35 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin-bottom: 0 !important;
+        opacity: 0.85 !important;
+    }
+
+    .card-action-pill.doodle-pill {
+        padding: 0.28rem 0.7rem !important;
+        font-size: 0.72rem !important;
+        gap: 0.3rem !important;
+        margin-top: auto !important;
+        border-radius: 14px !important;
+        border-width: 1px !important;
+    }
+
+    .card-action-pill.doodle-pill .pill-arrow {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* Extra Compact Phones (<= 380px) */
+@media (max-width: 380px) {
+    .offerings-grid {
+        gap: 0.5rem !important;
+    }
+
+    .offering-card.magical-card.doodle-card {
+        padding: 0.8rem 0.45rem 0.75rem !important;
+    }
+
+    .doodle-icon-circle {
+        width: 42px !important;
+        height: 42px !important;
+    }
+
+    .doodle-icon-circle .doodle-svg {
+        width: 22px !important;
+        height: 22px !important;
+    }
+
+    .offering-title {
+        font-size: 0.95rem !important;
+    }
+
+    .offering-desc {
+        font-size: 0.68rem !important;
+    }
+
+    .card-action-pill.doodle-pill {
+        padding: 0.22rem 0.55rem !important;
+        font-size: 0.68rem !important;
+    }
+}
+
 

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // header.php
 if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
     @session_start();
@@ -78,7 +78,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <a href="login.php" class="btn-header-login">लॉग इन</a>
             <?php endif; ?>
 
-            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Menu">
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Menu" onclick="window.toggleMobileNav(event)">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -88,7 +88,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </header>
 
 <!-- Mobile Navigation Backdrop Overlay -->
-<div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+<div id="nav-backdrop" class="nav-backdrop" onclick="window.closeMobileNav()" aria-hidden="true"></div>
 
 <!-- Page Shift Loader Overlay -->
 <div id="page-shift-loader" style="
@@ -131,53 +131,83 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <script>
 // Unified Mobile Navigation Controller
 (function() {
+    window.openMobileNav = function() {
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const nav = document.getElementById('main-nav');
+        const backdrop = document.getElementById('nav-backdrop');
+        if (menuBtn) {
+            menuBtn.classList.add('open');
+            menuBtn.setAttribute('aria-expanded', 'true');
+        }
+        if (nav) {
+            nav.classList.add('mobile-open');
+            nav.classList.add('active');
+        }
+        if (backdrop) backdrop.classList.add('show');
+        document.body.classList.add('mobile-nav-expanded');
+    };
+
+    window.closeMobileNav = function() {
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const nav = document.getElementById('main-nav');
+        const backdrop = document.getElementById('nav-backdrop');
+        if (menuBtn) {
+            menuBtn.classList.remove('open');
+            menuBtn.setAttribute('aria-expanded', 'false');
+        }
+        if (nav) {
+            nav.classList.remove('mobile-open');
+            nav.classList.remove('active');
+        }
+        if (backdrop) backdrop.classList.remove('show');
+        document.body.classList.remove('mobile-nav-expanded');
+    };
+
+    window.toggleMobileNav = function(e) {
+        if (e) {
+            if (typeof e.preventDefault === 'function') e.preventDefault();
+            if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        }
+        const nav = document.getElementById('main-nav');
+        if (!nav) return;
+        if (nav.classList.contains('mobile-open') || nav.classList.contains('active')) {
+            window.closeMobileNav();
+        } else {
+            window.openMobileNav();
+        }
+    };
+
     function initMobileNav() {
         const menuBtn = document.getElementById('mobile-menu-btn');
         const nav = document.getElementById('main-nav');
         const backdrop = document.getElementById('nav-backdrop');
-        if (!menuBtn || !nav) return;
 
-        function openNav() {
-            menuBtn.classList.add('open');
-            menuBtn.setAttribute('aria-expanded', 'true');
-            nav.classList.add('mobile-open');
-            nav.classList.add('active');
-            if (backdrop) backdrop.classList.add('show');
-            document.body.classList.add('mobile-nav-expanded');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', function(e) {
+                window.toggleMobileNav(e);
+            });
         }
-
-        function closeNav() {
-            menuBtn.classList.remove('open');
-            menuBtn.setAttribute('aria-expanded', 'false');
-            nav.classList.remove('mobile-open');
-            nav.classList.remove('active');
-            if (backdrop) backdrop.classList.remove('show');
-            document.body.classList.remove('mobile-nav-expanded');
-        }
-
-        menuBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (nav.classList.contains('mobile-open') || nav.classList.contains('active')) {
-                closeNav();
-            } else {
-                openNav();
-            }
-        });
 
         if (backdrop) {
-            backdrop.addEventListener('click', closeNav);
+            backdrop.addEventListener('click', function() {
+                window.closeMobileNav();
+            });
         }
 
-        nav.querySelectorAll('a').forEach(function(link) {
-            link.addEventListener('click', closeNav);
-        });
+        if (nav) {
+            nav.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    window.closeMobileNav();
+                });
+            });
+        }
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeNav();
+            if (e.key === 'Escape') window.closeMobileNav();
         });
 
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 1024) closeNav();
+            if (window.innerWidth > 1024) window.closeMobileNav();
         }, { passive: true });
     }
 
