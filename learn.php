@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config.php';
 require_once 'includes/helpers.php';
 
@@ -12,47 +12,87 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?></title>
     <meta name="description" content="हिंदी छंद शास्त्र, लाइव मात्रा गणक टूल, दोहा, चौपाई, ग़ज़ल बहर और काव्य-शिल्प के प्रामाणिक नियम।">
-    <link rel="preload" href="css/style.min.css?v=2.9" as="style">
-    <link rel="stylesheet" href="css/style.min.css?v=2.9">
+    <link rel="preload" href="css/style.min.css?v=3.0" as="style">
+    <link rel="stylesheet" href="css/style.min.css?v=3.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;700&family=Rozha+One&display=swap" rel="stylesheet">
 </head>
 <body class="learn-craft-page">
     <?php include 'header.php'; ?>
 
     <main class="main-content">
         <div class="learn-page-wrapper">
-            <!-- Hero Banner -->
-            <section class="poetry-page-hero">
+            <!-- Hero Banner Section -->
+            <section class="learn-hero-section">
                 <div class="container">
-                    <div class="poetry-hero-content">
-                        <span class="page-eyebrow">काव्य-शिल्प, छंद शास्त्र व मात्रा विज्ञान • LITERARY METRICS & CRAFT</span>
-                        <h1 class="page-main-title">मात्रा गणना एवं काव्य-शिल्प</h1>
-                        <div class="heading-artistic-underline"></div>
-                        <p class="page-lead-subtitle">हिंदी छंद शास्त्र के प्रामाणिक नियम, लाइव मात्रा गणक यंत्र, दोहा-चौपाई शिल्प और ग़ज़ल की बहर का संपूर्ण मार्गदर्शक।</p>
-
-                        <!-- Interactive Learn Navigation Tabs -->
-                        <div class="category-pills-bar learn-tabs-bar" id="learn-tabs-bar">
-                            <button type="button" class="category-pill <?= $active_tab === 'calculator' ? 'active' : '' ?>" data-tab="calculator">
-                                <span>🧮 लाइव मात्रा गणक (Tool)</span>
-                            </button>
-                            <button type="button" class="category-pill <?= $active_tab === 'matra_rules' ? 'active' : '' ?>" data-tab="matra_rules">
-                                <span>📜 मात्रा गणना नियम</span>
-                            </button>
-                            <button type="button" class="category-pill <?= $active_tab === 'doha' ? 'active' : '' ?>" data-tab="doha">
-                                <span>🖋️ दोहा शिल्प</span>
-                            </button>
-                            <button type="button" class="category-pill <?= $active_tab === 'ghazal' ? 'active' : '' ?>" data-tab="ghazal">
-                                <span>🎼 ग़ज़ल व अरूज़</span>
-                            </button>
-                            <button type="button" class="category-pill <?= $active_tab === 'chaupai' ? 'active' : '' ?>" data-tab="chaupai">
-                                <span>📖 चौपाई व अन्य छंद</span>
-                            </button>
-                            <button type="button" class="category-pill <?= $active_tab === 'alankar' ? 'active' : '' ?>" data-tab="alankar">
-                                <span>🎭 रस व अलंकार</span>
-                            </button>
+                    <div class="learn-hero-inner">
+                        <div class="learn-hero-text">
+                            <span class="learn-eyebrow">काव्य-शिल्प • छंद शास्त्र • मात्रा विज्ञान</span>
+                            <h1 class="learn-page-title">मात्रा गणना एवं <br><span class="hero-title-highlight">काव्य-शिल्प</span></h1>
+                            <div class="hero-accent-bar"></div>
                         </div>
+
+                        <!-- Delicate Literary Watercolour Art Illustration -->
+                        <div class="learn-hero-art" aria-hidden="true">
+                            <svg viewBox="0 0 200 180" width="160" height="144" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <radialGradient id="sunGlow" cx="60%" cy="45%" r="50%">
+                                        <stop offset="0%" stop-color="#fae7d4" stop-opacity="0.9"/>
+                                        <stop offset="65%" stop-color="#fdf2e9" stop-opacity="0.5"/>
+                                        <stop offset="100%" stop-color="#faf7f2" stop-opacity="0"/>
+                                    </radialGradient>
+                                </defs>
+                                <circle cx="120" cy="80" r="65" fill="url(#sunGlow)"/>
+                                <path d="M68 48 Q73 44 78 48 Q83 44 88 48" stroke="#b08d75" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+                                <path d="M96 40 Q100 37 104 40 Q108 37 112 40" stroke="#b08d75" stroke-width="1" stroke-linecap="round" fill="none"/>
+                                <!-- Vintage Books Stack -->
+                                <path d="M125 125 L180 120 L185 132 L130 137 Z" fill="#c49a75" stroke="#936a46" stroke-width="1"/>
+                                <path d="M123 133 L182 128 L185 142 L126 147 Z" fill="#dfc0a2" stroke="#a77a52" stroke-width="1"/>
+                                <path d="M120 142 L185 137 L188 152 L123 157 Z" fill="#b88358" stroke="#87532a" stroke-width="1"/>
+                                <line x1="180" y1="120" x2="185" y2="132" stroke="#ebd4be" stroke-width="2"/>
+                                <line x1="182" y1="128" x2="185" y2="142" stroke="#ebd4be" stroke-width="2"/>
+                                <line x1="185" y1="137" x2="188" y2="152" stroke="#ebd4be" stroke-width="2"/>
+                                <!-- Inkpot -->
+                                <ellipse cx="112" cy="148" rx="14" ry="7" fill="#3b322c"/>
+                                <path d="M98 148 C98 138 103 132 112 132 C121 132 126 138 126 148 Z" fill="#4d413a"/>
+                                <ellipse cx="112" cy="132" rx="7" ry="2.5" fill="#241e1a"/>
+                                <!-- Feather Quill -->
+                                <path d="M112 132 Q130 90 155 45 C150 62 142 85 128 115 Z" fill="#b58d67"/>
+                                <path d="M112 132 Q130 90 155 45 C146 52 138 72 122 108 Z" fill="#9e754f"/>
+                                <path d="M112 132 Q132 90 155 45" stroke="#68482d" stroke-width="1.2" stroke-linecap="round"/>
+                                <!-- Leaf Foliage -->
+                                <path d="M175 140 Q185 110 178 80" stroke="#7e9c7a" stroke-width="1.2" fill="none"/>
+                                <ellipse cx="180" cy="95" rx="5" ry="2.5" transform="rotate(-30 180 95)" fill="#9bbd96"/>
+                                <ellipse cx="177" cy="110" rx="6" ry="3" transform="rotate(25 177 110)" fill="#8eaf89"/>
+                                <ellipse cx="183" cy="125" rx="5" ry="2.5" transform="rotate(-20 183 125)" fill="#9bbd96"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Learn Navigation Tabs -->
+                    <div class="category-pills-bar learn-tabs-bar" id="learn-tabs-bar">
+                        <button type="button" class="category-pill <?= $active_tab === 'calculator' ? 'active' : '' ?>" data-tab="calculator">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                            <span>लाइव मात्रा गणक</span>
+                        </button>
+                        <button type="button" class="category-pill <?= $active_tab === 'matra_rules' ? 'active' : '' ?>" data-tab="matra_rules">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            <span>मात्रा गणना नियम</span>
+                        </button>
+                        <button type="button" class="category-pill <?= $active_tab === 'doha' ? 'active' : '' ?>" data-tab="doha">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                            <span>उदाहरण व शिल्प</span>
+                        </button>
+                        <button type="button" class="category-pill <?= $active_tab === 'ghazal' ? 'active' : '' ?>" data-tab="ghazal">
+                            <span>🎼 ग़ज़ल व अरूज़</span>
+                        </button>
+                        <button type="button" class="category-pill <?= $active_tab === 'chaupai' ? 'active' : '' ?>" data-tab="chaupai">
+                            <span>📖 चौपाई छंद</span>
+                        </button>
+                        <button type="button" class="category-pill <?= $active_tab === 'alankar' ? 'active' : '' ?>" data-tab="alankar">
+                            <span>🎭 रस व अलंकार</span>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -65,59 +105,71 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
                          TAB 1: LIVE MATRA CALCULATOR & METRIC ANALYZER
                          ========================================================================= -->
                     <div class="learn-tab-pane <?= $active_tab === 'calculator' ? 'active' : '' ?>" id="pane-calculator">
-                        <div class="matra-calc-container">
-                            <div class="calc-card-header">
-                                <div class="calc-title-group">
-                                    <h2 class="calc-main-title">लाइव हिंदी मात्रा गणक (Interactive Meter Calculator)</h2>
-                                    <p class="calc-subtitle">अपनी काव्य पंक्ति नीचे लिखें या पेस्ट करें। हमारा सिस्टम तुरंत प्रत्येक वर्ण का लघु (।) / गुरु (ऽ) मान, कुल मात्राएँ और संभावित छंद का विश्लेषण करेगा।</p>
+                        
+                        <!-- Card 1: Input Box Card -->
+                        <div class="calc-input-card">
+                            <div class="calc-card-top">
+                                <div class="card-heading-group">
+                                    <svg class="pencil-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d85a1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                    </svg>
+                                    <h2 class="card-title-text">अपनी काव्य पंक्ति लिखें</h2>
                                 </div>
-                                <div class="calc-preset-group">
-                                    <span class="preset-label">त्वरित उदाहरण:</span>
-                                    <button type="button" class="calc-preset-btn" onclick="applyPreset('रहिमन पानी राखिये, बिन पानी सब सून।\nपानी गये न ऊबरे, मोती मानुष चून॥')">रहिमन पानी (दोहा)</button>
-                                    <button type="button" class="calc-preset-btn" onclick="applyPreset('जय हनुमान ज्ञान गुन सागर। जय कपीस तिहुँ लोक उजागर॥')">हनुमान चालीसा (चौपाई)</button>
-                                    <button type="button" class="calc-preset-btn" onclick="applyPreset('लहरों से डर कर नौका पार नहीं होती,\nकोशिश करने वालों की कभी हार नहीं होती।')">कोशिश करने वालों (कविता)</button>
-                                    <button type="button" class="calc-preset-btn" onclick="applyPreset('हो गई है पीर पर्वत सी पिघलनी चाहिए,\nइस हिमालय से कोई गंगा निकलनी चाहिए।')">पीर पर्वत सी (ग़ज़ल)</button>
-                                </div>
+                                <button type="button" class="btn-clear-soft" onclick="clearCalculator()" title="टेक्स्ट साफ़ करें">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    <span>साफ़ करें</span>
+                                </button>
                             </div>
 
-                            <!-- Input Area -->
-                            <div class="calc-input-wrap">
-                                <textarea id="matra-input-text" class="calc-textarea" rows="4" placeholder="यहाँ अपनी कविता, दोहा, चौपाई या ग़ज़ल की पंक्तियाँ टाइप करें... (उदा. रहिमन देखि बड़ेन को...)"></textarea>
-                                <div class="calc-action-bar">
-                                    <button type="button" class="calc-clear-btn" onclick="clearCalculator()">
-                                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                        <span>साफ़ करें</span>
-                                    </button>
-                                    <span class="calc-status-hint">⚡ वास्तविक समय में गणना (Real-time Instant Evaluation)</span>
-                                </div>
+                            <div class="calc-textarea-container">
+                                <textarea id="matra-input-text" class="calc-textarea-clean" rows="3" placeholder="यहाँ अपनी काव्य पंक्ति लिखें... (उदा. रहिमन पानी राखिये, बिन पानी सब सून...)" oninput="handleInputUpdate()"></textarea>
+                                <div class="textarea-counter" id="char-counter">0/500</div>
                             </div>
 
-                            <!-- Real-Time Results Display -->
-                            <div class="calc-results-wrapper" id="calc-results-output">
-                                <!-- Rendered dynamically via JS -->
-                            </div>
+                            <button type="button" class="btn-calc-execute" onclick="performLiveCalculation()">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>
+                                <span>वास्तविक समय में गणना करें</span>
+                            </button>
 
-                            <!-- Quick Reference Key -->
-                            <div class="calc-legend-card">
-                                <h3 class="legend-title">मात्रा संकेत एवं नियम निर्देशिका</h3>
-                                <div class="legend-items-grid">
-                                    <div class="legend-item">
-                                        <span class="legend-symbol laghu">।</span>
-                                        <div class="legend-text">
-                                            <strong>लघु वर्ण (1 मात्रा):</strong> अ, इ, उ, ऋ, चंद्रबिंदु (ँ) तथा बिना मात्रा वाले शुद्ध व्यंजन (क, ख, ग...)।
-                                        </div>
+                            <div class="calc-presets-bar">
+                                <span class="preset-label">त्वरित उदाहरण:</span>
+                                <button type="button" class="calc-preset-btn" onclick="applyPreset('रहिमन पानी राखिये, बिन पानी सब सून।\nपानी गये न ऊबरे, मोती मानुष चून॥')">रहिमन पानी (दोहा)</button>
+                                <button type="button" class="calc-preset-btn" onclick="applyPreset('जय हनुमान ज्ञान गुन सागर। जय कपीस तिहुँ लोक उजागर॥')">हनुमान चालीसा (चौपाई)</button>
+                                <button type="button" class="calc-preset-btn" onclick="applyPreset('लहरों से डर कर नौका पार नहीं होती,\nकोशिश करने वालों की कभी हार नहीं होती।')">कोशिश करने वालों (कविता)</button>
+                                <button type="button" class="calc-preset-btn" onclick="applyPreset('हो गई है पीर पर्वत सी पिघलनी चाहिए,\nइस हिमालय से कोई गंगा निकलनी चाहिए।')">पीर पर्वत सी (ग़ज़ल)</button>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Real-Time Results Display Output -->
+                        <div class="calc-results-wrapper" id="calc-results-output">
+                            <!-- Rendered dynamically via JS -->
+                        </div>
+
+                        <!-- Card 3: Quick Reference Key -->
+                        <div class="calc-legend-card">
+                            <h3 class="legend-title">मात्रा संकेत एवं नियम निर्देशिका</h3>
+                            <div class="legend-items-grid">
+                                <div class="legend-item">
+                                    <span class="legend-symbol laghu">।</span>
+                                    <div class="legend-text">
+                                        <strong>लघु वर्ण (1 मात्रा):</strong> अ, इ, उ, ऋ, चंद्रबिंदु (ँ) तथा बिना मात्रा वाले शुद्ध व्यंजन (क, ख, ग...)।
                                     </div>
-                                    <div class="legend-item">
-                                        <span class="legend-symbol guru">ऽ</span>
-                                        <div class="legend-text">
-                                            <strong>गुरु वर्ण (2 मात्रा):</strong> आ, ई, ऊ, ए, ऐ, ओ, औ, अनुस्वार (ं), विसर्ग (ः) एवं संयुक्ताक्षर से पूर्व का वर्ण।
-                                        </div>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-symbol guru">ऽ</span>
+                                    <div class="legend-text">
+                                        <strong>गुरु वर्ण (2 मात्रा):</strong> आ, ई, ऊ, ए, ऐ, ओ, औ, अनुस्वार (ं), विसर्ग (ः) एवं संयुक्ताक्षर से पूर्व का वर्ण।
                                     </div>
-                                    <div class="legend-item">
-                                        <span class="legend-symbol rule">⚡</span>
-                                        <div class="legend-text">
-                                            <strong>संयुक्ताक्षर का प्रभाव:</strong> यदि किसी लघु वर्ण के ठीक बाद आधा अक्षर (जैसे 'क्त', 'प्र', 'त्य') आए, तो पूर्व लघु वर्ण <strong>गुरु (2)</strong> हो जाता है।
-                                        </div>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-symbol rule">⚡</span>
+                                    <div class="legend-text">
+                                        <strong>संयुक्ताक्षर का प्रभाव:</strong> यदि किसी लघु वर्ण के ठीक बाद आधा अक्षर (जैसे 'क्त', 'प्र', 'त्य') आए, तो पूर्व लघु वर्ण <strong>गुरु (2)</strong> हो जाता है।
                                     </div>
                                 </div>
                             </div>
@@ -228,26 +280,26 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
                                 </div>
                                 <div class="craft-point">
                                     <h4>3. विषम चरण का प्रारंभ:</h4>
-                                    <p>13 मात्राओं वाले विषम चरण के आरंभ में कभी भी <strong>'जगण' (। ऽ ।)</strong> नहीं आना चाहिए। (उदा. 'महान', 'नदी' जैसे 1-2-1 शब्द से प्रारंभ वर्जित है)।</p>
+                                    <p>13 मात्राओं वाले विषम चरण के प्रारंभ में कभी भी जगण (। ऽ ।) नहीं आना चाहिए। उदाहरणार्थ 'कहे कबीर' (। ऽ । ऽ) से दोहे का प्रारंभ दोषपूर्ण माना जाता है।</p>
                                 </div>
                             </div>
 
-                            <div class="literary-masterpiece-example">
-                                <h3 class="example-title">आदर्श उदाहरण (कबीरदास जी):</h3>
-                                <blockquote class="poetic-quote-block">
-                                    पोथी पढ़ि पढ़ि जग मुआ, पंडित भया न कोय। (13 + 11 = 24)<br>
-                                    ढाई आखर प्रेम का, पढ़े सो पंडित होय॥ (13 + 11 = 24)
-                                </blockquote>
+                            <div class="craft-example-highlight">
+                                <h3>आदर्श दोहा उदाहरण (कविवर बिहारी):</h3>
+                                <div class="doha-lines">
+                                    <p>कनकु कनक ते सौ गुनी, मादकता अधिकाइ। <span class="tag-matra">(13 + 11 = 24 मात्राएँ)</span></p>
+                                    <p>इहि खाये बौराइ जग, उहि पाये बौराइ॥ <span class="tag-matra">(13 + 11 = 24 मात्राएँ)</span></p>
+                                </div>
                             </div>
                         </article>
                     </div>
 
                     <!-- =========================================================================
-                         TAB 4: GHAZAL AND ARŪZ
+                         TAB 4: GHAZAL AND ARUZ
                          ========================================================================= -->
                     <div class="learn-tab-pane <?= $active_tab === 'ghazal' ? 'active' : '' ?>" id="pane-ghazal">
                         <article class="learn-article-parchment">
-                            <span class="article-section-badge">अध्याय 3 • अरूज़ शास्त्र</span>
+                            <span class="article-section-badge">अध्याय 3 • ग़ज़ल शिल्प</span>
                             <h2 class="learn-chapter-title">ग़ज़ल का शिल्प, अरूज़ एवं बहर</h2>
                             <div class="heading-artistic-underline" style="margin-left:0;"></div>
 
@@ -352,7 +404,6 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
     // ADVANCED HINDI DEVANAGARI MATRA PARSER & METRIC ANALYZER
     // =========================================================================
 
-    // Devanagari Characters Classifications
     const VOWELS_LAGHU = ['अ', 'इ', 'उ', 'ऋ'];
     const VOWELS_GURU  = ['आ', 'ई', 'ऊ', 'ए', 'ऐ', 'ओ', 'औ', 'अं', 'अः'];
     const MATRAS_LAGHU = ['\u093F', '\u0941', '\u0943']; // िक, ुक, ृक
@@ -364,15 +415,13 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
     function analyzeLineMatras(line) {
         if (!line || line.trim().length === 0) return null;
 
-        // Clean punctuation while keeping Devanagari and spaces
         const rawLine = line.trim();
         const words = rawLine.split(/\s+/);
         let lineTotalMatras = 0;
-        let lineSymbolString = '';
         let wordDetails = [];
+        let wordPatternList = [];
 
         words.forEach(word => {
-            // Clean non-devanagari characters from word for counting
             const cleanWord = word.replace(/[^\u0900-\u097F]/g, '');
             if (!cleanWord) return;
 
@@ -382,11 +431,16 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
 
             syllables.forEach(syl => {
                 wordMatraCount += syl.weight;
-                wordSymbols += syl.weight === 2 ? 'ऽ' : '।';
+                wordSymbols += syl.weight === 2 ? 'S' : '।';
             });
 
             lineTotalMatras += wordMatraCount;
-            lineSymbolString += (lineSymbolString ? ' ' : '') + wordSymbols;
+
+            // Format word symbols for pattern row: e.g. "SS", "| | | |", "S | S"
+            let syms = syllables.map(s => s.weight === 2 ? 'S' : '|');
+            let isAllS = syms.every(x => x === 'S');
+            let wordPatFormatted = isAllS ? syms.join('') : syms.join(' ');
+            wordPatternList.push(wordPatFormatted);
 
             wordDetails.push({
                 word: cleanWord,
@@ -396,13 +450,14 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
             });
         });
 
-        // Identify Meter / Chhand Characteristics
+        if (wordDetails.length === 0) return null;
+
         let chhandGuess = identifyMeter(lineTotalMatras, line);
 
         return {
             originalText: rawLine,
             totalMatras: lineTotalMatras,
-            symbolString: lineSymbolString,
+            patternSpaced: wordPatternList.join('   '),
             words: wordDetails,
             meterGuess: chhandGuess
         };
@@ -419,12 +474,12 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
 
             // Independent Vowel
             if (VOWELS_LAGHU.includes(char)) {
-                units.push({ text: char, weight: 1 });
+                units.push({ text: char, weight: 1, hasHalant: false });
                 i++;
                 continue;
             }
             if (VOWELS_GURU.includes(char)) {
-                units.push({ text: char, weight: 2 });
+                units.push({ text: char, weight: 2, hasHalant: false });
                 i++;
                 continue;
             }
@@ -432,9 +487,8 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
             // Consonant
             if (char >= '\u0915' && char <= '\u0939' || char >= '\u0958' && char <= '\u095F') {
                 let unitText = char;
-                let weight = 1; // Default inherent 'a' = 1
+                let weight = 1;
 
-                // Check next modifiers
                 let nextIdx = i + 1;
                 let hasHalant = false;
 
@@ -475,7 +529,6 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
         // Apply Conjunct / Samyuktakshar stress rule (Halant makes preceding syllable Guru)
         for (let j = 0; j < units.length - 1; j++) {
             if (units[j + 1].hasHalant) {
-                // If halant is followed by another consonant, previous syllable becomes Guru
                 if (j >= 0 && units[j].weight === 1) {
                     units[j].weight = 2;
                 }
@@ -495,7 +548,7 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
             if (line.includes(',') || line.includes('।') || line.includes('॥')) {
                 return 'दोहा दल (13 + 11 = 24 मात्राएँ)';
             }
-            return 'रोला / दोहा दल (24 मात्राएँ)';
+            return 'दोहा दल (24 मात्राएँ)';
         }
         if (total === 28) return 'हरिगीतिका छंद (28 मात्राएँ)';
         if (total === 32) return 'घनाक्षरी / सवैया छंद आधार';
@@ -513,7 +566,7 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
             output.innerHTML = `
                 <div class="calc-placeholder-state">
                     <span class="placeholder-icon">✍️</span>
-                    <p class="placeholder-text">ऊपर बॉक्स में कोई भी काव्य पंक्ति लिखें या उदाहरण बटन पर क्लिक करें।</p>
+                    <p class="placeholder-text">ऊपर बॉक्स में कोई भी काव्य पंक्ति लिखें या त्वरित उदाहरण पर क्लिक करें।</p>
                 </div>
             `;
             return;
@@ -535,11 +588,8 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
                     <!-- Line Top Summary -->
                     <div class="line-res-header">
                         <span class="line-index-badge">पंक्ति ${index + 1}</span>
-                        <div class="line-meter-badge">${escapeHtml(res.meterGuess)}</div>
-                        <div class="line-total-pill">
-                            <span class="count-num">${res.totalMatras}</span>
-                            <span class="count-label">मात्राएँ</span>
-                        </div>
+                        <h3 class="line-meter-title">${escapeHtml(res.meterGuess)}</h3>
+                        <span class="line-total-badge">${res.totalMatras} मात्राएँ</span>
                     </div>
 
                     <!-- Syllables Breakdown Visual -->
@@ -548,12 +598,15 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
                             <div class="word-metric-block">
                                 <div class="word-text-row">${escapeHtml(w.word)}</div>
                                 <div class="word-syllables-row">
-                                    ${w.syllables.map(s => `
-                                        <div class="syl-cell ${s.weight === 2 ? 'is-guru' : 'is-laghu'}" title="${escapeHtml(s.text)} = ${s.weight} मात्रा">
-                                            <span class="syl-char">${escapeHtml(s.text)}</span>
-                                            <span class="syl-val">${s.weight === 2 ? 'ऽ (2)' : '। (1)'}</span>
-                                        </div>
-                                    `).join('')}
+                                    ${w.syllables.map(s => {
+                                        let sylValText = s.weight === 2 ? 'S' : (s.text.length > 1 ? '(।)' : '।');
+                                        return `
+                                            <div class="syl-cell ${s.weight === 2 ? 'is-guru' : 'is-laghu'}" title="${escapeHtml(s.text)} = ${s.weight} मात्रा">
+                                                <span class="syl-char">${escapeHtml(s.text)}</span>
+                                                <span class="syl-val">${sylValText}</span>
+                                            </div>
+                                        `;
+                                    }).join('')}
                                 </div>
                                 <div class="word-total-tag">${w.total}</div>
                             </div>
@@ -563,7 +616,7 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
                     <!-- Pattern Row -->
                     <div class="line-pattern-strip">
                         <span class="pattern-label">मात्रा विन्यास:</span>
-                        <code class="pattern-code">${escapeHtml(res.symbolString)}</code>
+                        <div class="pattern-symbols-display">${escapeHtml(res.patternSpaced)}</div>
                     </div>
                 </div>
             `;
@@ -573,10 +626,23 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
         output.innerHTML = html;
     }
 
+    function handleInputUpdate() {
+        const input = document.getElementById('matra-input-text');
+        const counter = document.getElementById('char-counter');
+        if (input && counter) {
+            counter.textContent = `${input.value.length}/500`;
+        }
+        performLiveCalculation();
+    }
+
     function applyPreset(text) {
         const input = document.getElementById('matra-input-text');
+        const counter = document.getElementById('char-counter');
         if (input) {
             input.value = text;
+            if (counter) {
+                counter.textContent = `${text.length}/500`;
+            }
             performLiveCalculation();
             input.focus();
         }
@@ -584,8 +650,12 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
 
     function clearCalculator() {
         const input = document.getElementById('matra-input-text');
+        const counter = document.getElementById('char-counter');
         if (input) {
             input.value = '';
+            if (counter) {
+                counter.textContent = '0/500';
+            }
             performLiveCalculation();
             input.focus();
         }
@@ -605,8 +675,7 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
     document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById('matra-input-text');
         if (input) {
-            input.addEventListener('input', performLiveCalculation);
-            // Run initial demo
+            // Run initial demo with Dohas as in the design pattern
             applyPreset('रहिमन पानी राखिये, बिन पानी सब सून।\nपानी गये न ऊबरे, मोती मानुष चून॥');
         }
 
@@ -629,14 +698,12 @@ $active_tab = isset($_GET['tab']) ? htmlspecialchars(trim($_GET['tab']), ENT_QUO
                     activePane.classList.add('active');
                 }
 
-                // Update URL parameter without full reload
                 const url = new URL(window.location);
                 url.searchParams.set('tab', targetTab);
                 window.history.replaceState({}, '', url);
             });
         }
 
-        // Auto scroll to content if specific tab is requested in URL
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('tab') && urlParams.get('tab') !== 'calculator') {
             const activePane = document.getElementById('pane-' + urlParams.get('tab'));
